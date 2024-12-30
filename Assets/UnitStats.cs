@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Unit")]
 public class UnitStats : ScriptableObject
 {
-    public float Hp, MaxHp;
+    [Header("Basics")]
+    public float Hp;
+    public float MaxHp;
     public float Range;
     public float MaxMana;
     public float AtkDamage, AbilityPower;
@@ -15,4 +14,9 @@ public class UnitStats : ScriptableObject
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
+    [Header("Abilities")]
+    public GameObject Attack;
+    public GameObject Ability;
+    [Header("Visuals")]
+    public Sprite ShopIcon;
 }

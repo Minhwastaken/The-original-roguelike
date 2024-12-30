@@ -1,10 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class GridGen : MonoBehaviour
 {
@@ -12,6 +8,7 @@ public class GridGen : MonoBehaviour
     public float HexLength, HexHeight;
     public GameObject Hex, Grid;
     [SerializeField] public static GameObject[,] Hexes = new GameObject[1000, 1000];
+    [SerializeField] public static GameObject[] BenchSlots = new GameObject[9];
     public static List<GameObject> Units = new List<GameObject>(), Enemies = new List<GameObject>();
     public Color ColorOne, ColorTwo;
     
@@ -19,6 +16,10 @@ public class GridGen : MonoBehaviour
     [HideInInspector] public InputField LengthIP, CrossIP, HeightIP;
     private void Start()
     {
+        foreach(GameObject BenchSlot in BenchSlots)
+        {
+            Debug.Log(BenchSlot.name);
+        }
         HexLength = Hex.transform.localScale.x / 1.15f;
         HexHeight = HexLength * Mathf.Cos(30 * Mathf.Deg2Rad);
         WorldGridHeight = GridHeight * HexHeight;

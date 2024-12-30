@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +7,7 @@ public class Hex : MonoBehaviour
     public List<int> DirX, DirY;
     public List<GameObject> AdjHexes;
     public bool Taken;
+    public GameObject Reserved;
     private void Start()
     {
         GridGen.Hexes[X,Y] = gameObject; 
