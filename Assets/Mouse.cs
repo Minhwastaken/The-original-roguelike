@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Mouse : MonoBehaviour
@@ -5,7 +6,7 @@ public class Mouse : MonoBehaviour
     private Camera Cam;
     private Vector2 OriMousePos, OriHex = new Vector2(-1,-1);
     public GameObject ChosenObject;
-    public float DragThres = 0.1f;
+    public float DragThres = 0.1f, SnapDist;
     public bool IsFollowing, IsDragging;
     private readonly int UnitLayer = 3, HexLayer = 6;
     void Start()
@@ -29,13 +30,18 @@ public class Mouse : MonoBehaviour
                     else
                     {
                         ChosenObject = Hit.transform.gameObject;
+                        if(ChosenObject.GetComponent<Unit>().Hex)
+                        {
+                            OriHex = ChosenObject.GetComponent<Unit>().Hex.transform.position;
+                        }
                         OriMousePos = Cam.ScreenToWorldPoint(Input.mousePosition);
-                        Debug.Log("Chosen GameObject: " + Hit.transform.gameObject.name);
+                        //Debug.Log("Chosen GameObject: " + Hit.transform.gameObject.name);
                     }
                 }
+                /*
                 else if(Hit.transform.gameObject.layer == HexLayer)
                 {
-                    Hit.transform.GetComponent<Hex>().Taken = !Hit.transform.GetComponent<Hex>().Taken;
+                    Hit.transform.GetComponent<Hex>().Taken = Camera.main.gameObject;
                     if(Hit.transform.GetComponent<Hex>().Taken)
                     {
                         Hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
@@ -44,7 +50,7 @@ public class Mouse : MonoBehaviour
                     {
                         Hit.transform.GetComponent<SpriteRenderer>().color = Color.white;
                     }
-                }
+                }*/
             }
             else
             {
@@ -82,17 +88,11 @@ public class Mouse : MonoBehaviour
                 if(IsDragging)
                 {
                     DropUnit();
-                 //add stuff that happens on release
                 }
                 else if(IsDragging == false || IsFollowing == false)
                 {
                     IsFollowing = true;
                 }
-                /*else if(IsFollowing)
-                {
-                    DropUnit();
-                    //add stuff that happens on release
-                }*/
             }
             
         }
@@ -101,32 +101,73 @@ public class Mouse : MonoBehaviour
     private void HexLockIn()
     {
         float MinDist = 1;
-        GameObject NearestHex = null;
-        for(int i = 0; i < 8; i++)
+        GameObject Nearest = null;
+        Unit UnitScript = ChosenObject.GetComponent<Unit>();
+        for(int i = 0; i < GridGen.Instance.GridLength; i++)
         {
-            for(int j = 0; j < 8; j++)
+            for(int j = 0; j < GridGen.Instance.GridHeight; j++)
             {
-                //Debug.Log(GridGen.Hexes[i,j]);
-                if(GridGen.Hexes[i,j])
+                if(!GridGen.Instance.Hexes[i,j].GetComponent<Hex>().Taken)
                 {
-                    float Dist = Vector2.Distance(ChosenObject.transform.position, GridGen.Hexes[i,j].transform.position);
-                     if(Dist < 0.5f && Dist < MinDist)
+                    float Dist = Vector2.Distance(ChosenObject.transform.position, GridGen.Instance.Hexes[i,j].transform.position);
+                     if(Dist < SnapDist && Dist < MinDist)
                     {
                         MinDist = Dist;
-                        NearestHex = GridGen.Hexes[i,j];
+                        Nearest = GridGen.Instance.Hexes[i,j];
                     }
                 }
             }
         }
-        if(NearestHex)
+
+        //Debug.Log("Nearest Hex: " + NearestHex.name);
+        if(Nearest)
         {
-            ChosenObject.transform.position = (Vector2) NearestHex.transform.position;
-            OriHex = (Vector2) NearestHex.transform.position;
-            ChosenObject.GetComponent<Unit>().Hex = NearestHex;
+            Debug.Log("Nearest Hex: " + Nearest.name);
+            ResetOGHex(UnitScript);
+            ChosenObject.transform.position = (Vector2) Nearest.transform.position;
+            OriHex = (Vector2) Nearest.transform.position;
+            UnitScript.Hex = Nearest;
+            UnitScript.OGHex = Nearest;
+            Nearest.GetComponent<Hex>().Taken = ChosenObject;
+            if(UnitScript.Benched)
+            {
+                UnitScript.Benched = false;
+                GridGen.Instance.BenchedUnits.Remove(ChosenObject);
+                GridGen.Instance.Units.Add(ChosenObject);
+            }
         }
-        else if(OriHex != new Vector2(-1,-1))
+        else
         {
-            ChosenObject.transform.position = OriHex;
+            foreach(GameObject BenchSlot in GridGen.Instance.BenchSlots)
+            {
+                if(!BenchSlot.GetComponent<BenchSlot>().Taken)
+                {
+                    float Dist = Vector2.Distance(ChosenObject.transform.position, BenchSlot.transform.position);
+                    if(Dist < SnapDist && Dist < MinDist)
+                    {
+                        MinDist = Dist;
+                        Nearest = BenchSlot;
+                    }
+                }
+            }
+            if(Nearest)
+            {
+                ResetOGHex(UnitScript);
+                ChosenObject.transform.position = (Vector2) Nearest.transform.position;
+                UnitScript.Hex = Nearest;
+                UnitScript.OGHex = Nearest;
+                Nearest.GetComponent<BenchSlot>().Taken = ChosenObject;
+                if(UnitScript.Benched == false)
+                {
+                    UnitScript.Benched = true;
+                    GridGen.Instance.BenchedUnits.Add(ChosenObject);
+                    GridGen.Instance.Units.Remove(ChosenObject);
+                }
+            }
+            else if(OriHex != new Vector2(-1,-1))
+            {
+                ChosenObject.transform.position = OriHex;
+            }
         }
     }
 
@@ -145,5 +186,34 @@ public class Mouse : MonoBehaviour
             HexLockIn();
         }
         Drop();
+    }
+
+    private void ResetOGHex(Unit UnitScript)
+    {
+        if(UnitScript.Hex)
+        {
+            if(UnitScript.Hex.GetComponent<Hex>())
+            {
+                Debug.Log("Resetting Hex");
+                UnitScript.Hex.GetComponent<Hex>().Taken = null;
+            }
+            else if(UnitScript.Hex.GetComponent<BenchSlot>())
+            {
+                Debug.Log("Resetting BenchSlot");
+                UnitScript.Hex.GetComponent<BenchSlot>().Taken = null;
+            }
+        }
+    }
+
+    private void Field(GameObject Unit)
+    {
+        if(Unit.GetComponent<Unit>().Team == 0)
+        {
+            GridGen.Instance.Units.Add(Unit);
+        }
+        else
+        {
+            GridGen.Instance.Enemies.Add(Unit);
+        }
     }
 }

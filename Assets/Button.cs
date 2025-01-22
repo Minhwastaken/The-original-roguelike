@@ -2,9 +2,25 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
-      public void Buy(GameObject Unit)
+    public static int Count = 0;
+    public void Buy(GameObject Unit)
     {
-        Instantiate(Unit, new Vector2(Random.Range(-5f, 5f), Random.Range(-3f, 1f)), Quaternion.identity);
-        gameObject.SetActive(false);
+        foreach(GameObject BenchSlot in GridGen.Instance.BenchSlots)
+        {
+            if(BenchSlot.GetComponent<BenchSlot>().Taken == null)
+            {
+                GameObject SpawnedUnit = Instantiate(Unit);
+                GridGen.Instance.BenchedUnits.Add(SpawnedUnit);
+                SpawnedUnit.transform.position = BenchSlot.transform.position;
+                SpawnedUnit.GetComponent<Unit>().Benched = true;
+                Unit.GetComponent<Unit>().Hex = BenchSlot;
+                BenchSlot.GetComponent<BenchSlot>().Taken = Unit;
+                gameObject.SetActive(false);
+
+                Count++;
+                SpawnedUnit.name = Unit.name + " " + Count;
+                break;
+            }
+        }
     }
 }

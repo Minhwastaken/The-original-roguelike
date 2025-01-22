@@ -3,18 +3,34 @@ using UnityEngine;
 
 public class UI : MonoBehaviour
 {
-    public List<GameObject> ShopButtons, BenchSlots;
-    public void Buy(GameObject Champ)
-    {
-        Instantiate(Champ, new Vector2(Random.Range(-5, 5), Random.Range(-3, 1)), Quaternion.identity);
-        gameObject.SetActive(false);
-        Debug.Log("asdasd");
-    }
+    public GameObject Shop, RerollButton, ShopButton;
+    public List<GameObject> BuyButtons;
     public void Reroll()
     {
-        foreach(GameObject Button in ShopButtons)
+        foreach(GameObject Button in BuyButtons)
         {
             Button.SetActive(true);
         }
+    }
+    public void ToggleShop()
+    {
+        if(Shop.activeSelf)
+        {
+            CloseShop();
+        }
+        else
+        {
+            OpenShop();
+        }
+    }
+    private void OpenShop()
+    {
+        Shop.SetActive(true);
+        RerollButton.SetActive(true);
+    }
+    private void CloseShop()
+    {
+        Shop.SetActive(false);
+        RerollButton.SetActive(false);
     }
 }

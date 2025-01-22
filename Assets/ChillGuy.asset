@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Hp: 10
   MaxHp: 10
-  Range: 1
+  Range: 1.1
   MaxMana: 50
   AtkDamage: 0.1
   AbilityPower: 1
   AtkSpeed: 1
   Armor: 0
   MagicResist: 0
-  Movespeed: 50
+  Movespeed: 100
   DamageAmp: 0
   Durability: 0
   Omnivamp: 0

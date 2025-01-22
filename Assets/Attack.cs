@@ -33,7 +33,7 @@ public class Attack : MonoBehaviour
     }
     public void GetStats()
     {
-        UnitStats Stats = Attacker.GetComponent<Unit>().Stats;
+        Unit Stats = Attacker.GetComponent<Unit>();
         Hp = Stats.Hp;
         MaxHp = Stats.MaxHp;
         AtkDamage = Stats.AtkDamage;

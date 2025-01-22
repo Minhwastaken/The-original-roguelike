@@ -1,25 +1,27 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GridGen : MonoBehaviour
 {
+    public static GridGen Instance;
     public int GridLength, GridHeight;
     public float HexLength, HexHeight;
     public GameObject Hex, Grid;
-    [SerializeField] public static GameObject[,] Hexes = new GameObject[1000, 1000];
-    [SerializeField] public static GameObject[] BenchSlots = new GameObject[9];
-    public static List<GameObject> Units = new List<GameObject>(), Enemies = new List<GameObject>();
+    public GameObject[,] Hexes = new GameObject[1000, 1000];
+    public GameObject[] BenchSlots = new GameObject[9];
+    public List<GameObject> Units = new List<GameObject>(), Enemies = new List<GameObject>(), BenchedUnits = new List<GameObject>();
     public Color ColorOne, ColorTwo;
     
     private float WorldGridHeight, WorldGridLength;
     [HideInInspector] public InputField LengthIP, CrossIP, HeightIP;
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Start()
     {
-        foreach(GameObject BenchSlot in BenchSlots)
-        {
-            Debug.Log(BenchSlot.name);
-        }
         HexLength = Hex.transform.localScale.x / 1.15f;
         HexHeight = HexLength * Mathf.Cos(30 * Mathf.Deg2Rad);
         WorldGridHeight = GridHeight * HexHeight;
@@ -81,10 +83,11 @@ public class GridGen : MonoBehaviour
         {
             for(int y = 0; y < GridHeight; y++)
             {
-                Hex TempHex = Hexes[i,y].GetComponent<Hex>();
+                Hex TempHex = Hexes[y,i].GetComponent<Hex>();
+                Debug.Log(TempHex);
                 for(int z = 0; z < 6; z++)
                 {
-                    if(TempHex.X + TempHex.DirX[z] >= 0 && TempHex.X + TempHex.DirX[z] < 8 && TempHex.Y + TempHex.DirY[z] >= 0 && TempHex.Y + TempHex.DirY[z] < 8)
+                    if(TempHex.X + TempHex.DirX[z] >= 0 && TempHex.X + TempHex.DirX[z] < GridLength && TempHex.Y + TempHex.DirY[z] >= 0 && TempHex.Y + TempHex.DirY[z] < GridHeight)
                     {
                         TempHex.AdjHexes.Add(Hexes[TempHex.Y + TempHex.DirY[z],TempHex.X + TempHex.DirX[z]]);
                     }

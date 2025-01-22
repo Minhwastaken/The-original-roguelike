@@ -6,11 +6,10 @@ public class Hex : MonoBehaviour
     public int X, Y;
     public List<int> DirX, DirY;
     public List<GameObject> AdjHexes;
-    public bool Taken;
-    public GameObject Reserved;
+    public GameObject Taken = null;
     private void Start()
     {
-        GridGen.Hexes[X,Y] = gameObject; 
+        GridGen.Instance.Hexes[X,Y] = gameObject; 
         /*
         for(int i = 0; i < 6; i++)
         {
