@@ -11,7 +11,13 @@ public class GridGen : MonoBehaviour
     public GameObject Hex, Grid;
     public GameObject[,] Hexes = new GameObject[1000, 1000];
     public GameObject[] BenchSlots = new GameObject[9];
-    public List<GameObject> Units = new List<GameObject>(), Enemies = new List<GameObject>(), BenchedUnits = new List<GameObject>();
+    public List<GameObject> UnitList = new List<GameObject>(), EnemyList = new List<GameObject>(),
+    OneCosts = new List<GameObject>(), TwoCosts = new List<GameObject>(), ThreeCosts = new List<GameObject>(),
+    FourCosts = new List<GameObject>(), FiveCosts = new List<GameObject>(),
+    Units = new List<GameObject>(), Enemies = new List<GameObject>(),
+    BenchedUnits = new List<GameObject>(), DeadUnits = new List<GameObject>();
+    public List<List<(GameObject Unit, int Count)>> UnitPool = new List<List<(GameObject Unit, int Count)>>();
+    public int OneCostCount, TwoCostCount, ThreeCostCount, FourCostCount, FiveCostCount;
     public Color ColorOne, ColorTwo;
     
     private float WorldGridHeight, WorldGridLength;
@@ -26,6 +32,8 @@ public class GridGen : MonoBehaviour
         HexHeight = HexLength * Mathf.Cos(30 * Mathf.Deg2Rad);
         WorldGridHeight = GridHeight * HexHeight;
         WorldGridLength = GridLength * HexLength;
+
+        GameManager.Instance.OnBattleEnd.AddListener(() => ResetGrid());
         //GenerateGrid();
         //AddAdjHexes();
     }
@@ -102,6 +110,91 @@ public class GridGen : MonoBehaviour
         foreach (GameObject SpawnedHex in Hexes)
         {
             DestroyImmediate(SpawnedHex);
+        }
+    }
+    [ContextMenu("Sort Units by cost")]
+    public void SortUnitsByCost()
+    {
+        OneCosts.Clear();
+        TwoCosts.Clear();
+        ThreeCosts.Clear();
+        FourCosts.Clear();
+        FiveCosts.Clear();
+        for(int i = 0; i < 5; i++)
+        {
+            UnitPool.Add(new List<(GameObject Unit, int Count)>());
+        }
+        foreach(GameObject Unit in UnitList)
+        {
+            Unit UnitScript = Unit.GetComponent<Unit>();
+            if(UnitScript.Stats.Cost == 1)
+            {
+                OneCosts.Add(Unit);
+                UnitPool[0].Add((Unit, OneCostCount));
+            }
+            else if(UnitScript.Stats.Cost == 2)
+            {
+                TwoCosts.Add(Unit);
+                UnitPool[1].Add((Unit, TwoCostCount));
+            }
+            else if(UnitScript.Stats.Cost == 3)
+            {
+                ThreeCosts.Add(Unit);
+                UnitPool[2].Add((Unit, ThreeCostCount));
+            }
+            else if(UnitScript.Stats.Cost == 4)
+            {
+                FourCosts.Add(Unit);
+                UnitPool[3].Add((Unit, FourCostCount));
+            }
+            else if(UnitScript.Stats.Cost == 5)
+            {
+                FiveCosts.Add(Unit);
+                UnitPool[4].Add((Unit, FiveCostCount));
+            }
+        }
+    }
+    public void ResetGrid()
+    {
+        foreach(GameObject Unit in DeadUnits)
+        {
+            Unit.SetActive(true);
+            Units.Add(Unit);
+        }
+        DeadUnits.Clear();
+        
+        foreach(GameObject Unit in Units)
+        {
+            Unit UnitScript = Unit.GetComponent<Unit>();
+            UnitScript.GetStats();
+            UnitScript.UpdateStats();
+            UnitScript.Hex = UnitScript.OGHex;
+            UnitScript.IsMoving = false;
+            UnitScript.Path = (null, null);
+            Unit.transform.position = (Vector2) UnitScript.Hex.transform.position;
+        }
+        if(GameManager.Instance.Stage >= 32)
+        {
+            SpawnEnemies(32);
+        }
+        else
+            SpawnEnemies(GameManager.Instance.Stage);
+    }
+
+    public void SpawnEnemies(float Credit)
+    {
+        for(int i = 0; i < Credit; i++)
+        {
+            GameObject Enemy = Instantiate(EnemyList[Random.Range(0, EnemyList.Count)]);
+            GameObject RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2 + 1, GridHeight)];
+            while(RandomHex.GetComponent<Hex>().Taken)
+            {
+                RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2 + 1, GridHeight)];
+            }
+            Enemy.GetComponent<Unit>().Hex = RandomHex;
+            RandomHex.GetComponent<Hex>().Taken = Enemy;
+            Enemy.transform.position = (Vector2) Enemy.GetComponent<Unit>().Hex.transform.position;
+            //Enemies.Add(Enemy);
         }
     }
 }

@@ -3,14 +3,17 @@ using UnityEngine;
 
 public class Mouse : MonoBehaviour
 {
+    public static Mouse Instance;
     private Camera Cam;
     private Vector2 OriMousePos, OriHex = new Vector2(-1,-1);
     public GameObject ChosenObject;
     public float DragThres = 0.1f, SnapDist;
     public bool IsFollowing, IsDragging;
-    private readonly int UnitLayer = 3, HexLayer = 6;
+    private readonly int UnitLayer = 3;
+    // HexLayer = 6;
     void Start()
     {
+        Instance = this;
         Cam = Camera.main;
     }
     void Update()
@@ -41,20 +44,11 @@ public class Mouse : MonoBehaviour
                 /*
                 else if(Hit.transform.gameObject.layer == HexLayer)
                 {
-                    Hit.transform.GetComponent<Hex>().Taken = Camera.main.gameObject;
-                    if(Hit.transform.GetComponent<Hex>().Taken)
-                    {
-                        Hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
-                    }
-                    else
-                    {
-                        Hit.transform.GetComponent<SpriteRenderer>().color = Color.white;
-                    }
                 }*/
             }
             else
             {
-                Debug.Log("You clicked nothing!");
+                //Debug.Log("You clicked nothing!");
             }
         }
 
@@ -103,22 +97,26 @@ public class Mouse : MonoBehaviour
         float MinDist = 1;
         GameObject Nearest = null;
         Unit UnitScript = ChosenObject.GetComponent<Unit>();
-        for(int i = 0; i < GridGen.Instance.GridLength; i++)
+
+        //if unit cap is not yet reached, or unit is alr on field, then check the grid
+        if(GridGen.Instance.Units.Count < GameManager.Instance.Level || ChosenObject.GetComponent<Unit>().Hex.GetComponent<Hex>() || ChosenObject.GetComponent<Unit>().Team != 0)
         {
-            for(int j = 0; j < GridGen.Instance.GridHeight; j++)
+            for(int i = 0; i < GridGen.Instance.GridLength; i++)
             {
-                if(!GridGen.Instance.Hexes[i,j].GetComponent<Hex>().Taken)
+                for(int j = 0; j < GridGen.Instance.GridHeight; j++)
                 {
-                    float Dist = Vector2.Distance(ChosenObject.transform.position, GridGen.Instance.Hexes[i,j].transform.position);
-                     if(Dist < SnapDist && Dist < MinDist)
+                    if(!GridGen.Instance.Hexes[i,j].GetComponent<Hex>().Taken)
                     {
-                        MinDist = Dist;
-                        Nearest = GridGen.Instance.Hexes[i,j];
+                        float Dist = Vector2.Distance(ChosenObject.transform.position, GridGen.Instance.Hexes[i,j].transform.position);
+                        if(Dist < SnapDist && Dist < MinDist)
+                        {
+                            MinDist = Dist;
+                            Nearest = GridGen.Instance.Hexes[i,j];
+                        }
                     }
                 }
             }
         }
-
         //Debug.Log("Nearest Hex: " + NearestHex.name);
         if(Nearest)
         {
@@ -188,7 +186,7 @@ public class Mouse : MonoBehaviour
         Drop();
     }
 
-    private void ResetOGHex(Unit UnitScript)
+    public void ResetOGHex(Unit UnitScript)
     {
         if(UnitScript.Hex)
         {
@@ -215,5 +213,43 @@ public class Mouse : MonoBehaviour
         {
             GridGen.Instance.Enemies.Add(Unit);
         }
+    }
+    public void RemoveUnit(GameObject Unit)
+    {
+        if(Unit.GetComponent<Unit>().Team == 0)
+        {
+            if(Unit.GetComponent<Unit>().Benched)
+            {
+                GridGen.Instance.BenchedUnits.Remove(Unit);
+            }
+            else
+            {
+                GridGen.Instance.Units.Remove(Unit);
+            }
+            ResetOGHex(Unit.GetComponent<Unit>());
+            /*
+            if(GridGen.Instance.Units.Count == 0)
+            {
+                GameManager.Instance.ChangeState();
+            }*/
+        }
+        else
+        {
+            if(Unit.GetComponent<Unit>().Benched)
+            {
+                GridGen.Instance.BenchedUnits.Remove(Unit);
+            }
+            else
+            {
+                GridGen.Instance.Units.Remove(Unit);
+            }
+            ResetOGHex(Unit.GetComponent<Unit>());
+            /*
+            if(GridGen.Instance.Enemies.Count == 0)
+            {
+                GameManager.Instance.ChangeState();
+            }*/
+        }
+        Destroy(Unit);
     }
 }

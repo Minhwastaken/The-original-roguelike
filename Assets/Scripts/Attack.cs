@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Attack : MonoBehaviour
+public abstract class Attack : MonoBehaviour
 {
-    public GameObject Attacker, Target;
+    public Unit Attacker, Target;
     public Unit.DamageType DamageType;
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
@@ -14,13 +15,16 @@ public class Attack : MonoBehaviour
     public float Omnivamp;
     public float CritChance, CritDamage;
     public float Lifespan;
+    public UnityEvent OnAttack, OnDamageDealt;
     // Start is called before the first frame update
     void Start()
     {
         GetStats();
         if(Target)
         {
-            Target.GetComponent<Unit>().TakeDamage(AtkDamage, DamageType);
+            OnAttack.Invoke();
+            Target.GetComponent<Unit>().TakeDamage(AtkDamage, DamageType, Attacker);
+            OnDamageDealt.Invoke();
         }
     }
 
@@ -48,5 +52,7 @@ public class Attack : MonoBehaviour
         Omnivamp = Stats.Omnivamp;
         CritChance = Stats.CritChance;
         CritDamage = Stats.CritDamage;
-    }      
+    }
+    public abstract void AttackLogic();
+    public abstract void DamageDealtLogic();
 }

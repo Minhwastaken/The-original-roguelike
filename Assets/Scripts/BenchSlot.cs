@@ -3,6 +3,7 @@ using UnityEngine;
 public class BenchSlot : MonoBehaviour
 {
     public GameObject Taken;
+    /*
     private void Start() 
     {
         char id = gameObject.name[^2];
@@ -15,5 +16,5 @@ public class BenchSlot : MonoBehaviour
         {
             GridGen.Instance.BenchSlots[0] = gameObject;
         }
-    }
+    }*/
 }

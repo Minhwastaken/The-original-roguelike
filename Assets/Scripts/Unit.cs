@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using System.Diagnostics.Tracing;
 
 public class Unit : MonoBehaviour
 {
     public int Team;
     public UnitStats Stats;
     public float Hp, MaxHp;
-    public float AtkDamage, AbilityPower;
+    public float AtkDamage, BonusAD, AbilityPower, BonusAP;
     public float AtkSpeed;
     public float Range;
     public float Armor, MagicResist; 
@@ -24,48 +23,21 @@ public class Unit : MonoBehaviour
     public AnimationClip AtkAnim, WalkAnim, IdleAnim;
     private GameObject Target, TargetHex;
     public enum DamageType {AD, AP, True};
+    public int Star = 1;
     public (GameObject From, GameObject To) Path;
+    private float OGScale;
     private void Start() 
     {
         GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
-        /*if(Hex)
-        {
-            OGHex = Hex;
-            Hex.GetComponent<Hex>().Taken = gameObject;
-        }*/
         if(Team == 1)
             GridGen.Instance.Enemies.Add(gameObject);
         GetStats();
         Anim = GetComponent<Animator>();
+        OGScale = transform.localScale.x;
     }
     private void Update()
     {
-        /*
-        if(!AttackableTarget())
-        {
-            //Debug.Log("No target");
-            if(GetTargetInRange())
-            {
-                //Debug.Log("Target in range available");
-                Target = GetTargetInRange();
-            }
-            else if(GetTarget() && Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-            {
-                if(!IsMoving)
-                {
-                    TargetHex = Pathfind(Hex, GetTarget().GetComponent<Unit>().Hex)[0];
-                    IsMoving = true;
-                }
-                //Debug.Log("Moving to next target");
-                MoveTo(TargetHex);
-            }
-        }
-        else if(Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-        {
-            //Debug.Log("Target attackable");
-            Attack();
-        }
-        */
+
     }
 
     public IEnumerator Action()
@@ -115,8 +87,9 @@ public class Unit : MonoBehaviour
     public void SpawnAttack()
     {
         GameObject Attack = Instantiate(AttackGO, transform.position + transform.up, transform.rotation * Quaternion.Euler(0,0,45));
-        Attack.GetComponent<Attack>().Attacker = gameObject;
-        Attack.GetComponent<Attack>().Target = Target;
+        Attack.GetComponent<Attack>().Attacker = this;
+        if(Target)
+            Attack.GetComponent<Attack>().Target = Target.GetComponent<Unit>();
     }
     private void MoveTo(GameObject EndHex)
     {
@@ -303,7 +276,8 @@ public class Unit : MonoBehaviour
         if(Target)
             if(Vector2.Distance(transform.position, Target.transform.position) < Range || HexDist(Hex, Target.GetComponent<Unit>().Hex) <= Range)
             {
-                return true;
+                if(Target.activeSelf)
+                    return true;
             }
         return false;
     }
@@ -340,7 +314,7 @@ public class Unit : MonoBehaviour
         }
     }
     
-    public void TakeDamage(float damage, DamageType type)
+    public void TakeDamage(float damage, DamageType type, Unit Attacker)
     {
         Hp -= damage;
         if(Hp <= 0)
@@ -348,6 +322,8 @@ public class Unit : MonoBehaviour
             if(Team == 0)
             {
                 GridGen.Instance.Units.Remove(gameObject);
+                GridGen.Instance.DeadUnits.Add(gameObject);
+                gameObject.SetActive(false);
                 if(GridGen.Instance.Units.Count == 0)
                 {
                     GameManager.Instance.ChangeState();
@@ -356,15 +332,26 @@ public class Unit : MonoBehaviour
             else
             {
                 GridGen.Instance.Enemies.Remove(gameObject);
+                Destroy(gameObject);
                 if(GridGen.Instance.Enemies.Count == 0)
                 {
                     GameManager.Instance.ChangeState();
                 }
             }
-            Destroy(gameObject);
+            Attacker.gameObject.transform.rotation = Quaternion.identity;
         }
     }
 
+    [ContextMenu("Update Stats")]
+    public void UpdateStats()
+    {
+        MaxHp = Stats.MaxHp * Mathf.Pow(Stats.HpScale, Star - 1);
+        Hp = MaxHp;
+        AtkDamage = Stats.AtkDamage * Mathf.Pow(Stats.ADScale, Star - 1);
+        float Scale = Mathf.Pow(Stats.SizeScale, Star - 1) * OGScale;
+        transform.localScale = new Vector3(Scale, Scale, 1);
+        Debug.Log(Scale + "  " + OGScale);
+    }
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;

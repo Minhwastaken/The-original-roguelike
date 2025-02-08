@@ -3,6 +3,7 @@ using UnityEngine;
 public class UnitStats : ScriptableObject
 {
     [Header("Basics")]
+    public int Cost = 1;
     public float Hp;
     public float MaxHp;
     public float Range;
@@ -14,9 +15,13 @@ public class UnitStats : ScriptableObject
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
+    public float ADScale = 1.8f, HpScale = 1.8f;
+    public float SizeScale = 1.1f;
     [Header("Abilities")]
     public GameObject Attack;
     public GameObject Ability;
     [Header("Visuals")]
+    public GameObject Unit;
     public Sprite ShopIcon;
+    public enum Role {AttackCarry, MagicCarry, AttackCaster, MagicCaster, AttackTank, MagicTank, AttackFighter, MagicFighter}
 }

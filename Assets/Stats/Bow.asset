@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
-  m_Name: ChillGuy
+  m_Name: Bow
   m_EditorClassIdentifier: 
-  Hp: 10
-  MaxHp: 10
-  Range: 1.1
+  Cost: 2
+  Hp: 5
+  MaxHp: 5
+  Range: 3.1
   MaxMana: 50
-  AtkDamage: 0.1
+  AtkDamage: 1
   AbilityPower: 1
-  AtkSpeed: 1
+  AtkSpeed: 2
   Armor: 0
   MagicResist: 0
   Movespeed: 100
@@ -27,6 +28,10 @@ MonoBehaviour:
   Omnivamp: 0
   CritChance: 0
   CritDamage: 0
+  ADScale: 1.8
+  HpScale: 1.8
+  SizeScale: 1.1
   Attack: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
   Ability: {fileID: 0}
+  Unit: {fileID: 7348070789959115077, guid: 7756fc98504a38e43b21dfb4cdfac565, type: 3}
   ShopIcon: {fileID: 0}

@@ -6,15 +6,15 @@ public class AttackStateScript : StateMachineBehaviour
     private float AtkTimer = 0;
     private bool AtkTriggered = false;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.speed = animator.GetComponent<Unit>().AtkSpeed;
+    }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        AtkTimer += Time.deltaTime;
+        AtkTimer += Time.deltaTime * animator.speed;
         if (AtkTimer >= AtkTriggerTime && !AtkTriggered)
         {
             AtkTriggered = true;

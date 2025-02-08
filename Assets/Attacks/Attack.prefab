@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4762095295031391478}
-  - component: {fileID: 6783595739493902049}
   - component: {fileID: 4268696863591175344}
+  - component: {fileID: 2613963135864906790}
   m_Layer: 0
   m_Name: Attack
   m_TagString: Untagged
@@ -34,36 +34,6 @@ Transform:
   - {fileID: 2115973384849069250}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6783595739493902049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8412880745274351775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e2d91bd9bf14ba4bbf16c4cf8e501e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Attacker: {fileID: 0}
-  Target: {fileID: 0}
-  DamageType: 0
-  Hp: 0
-  MaxHp: 0
-  AtkDamage: 0
-  AbilityPower: 0
-  AtkSpeed: 0
-  Range: 0
-  Armor: 0
-  MagicResist: 0
-  Movespeed: 0
-  DamageAmp: 0
-  Durability: 0
-  Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
-  Lifespan: 1
 --- !u!61 &4268696863591175344
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -109,6 +79,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2613963135864906790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8412880745274351775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc8cb1ef2919892428a05043a0e9d5f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9045250023221557362
 GameObject:
   m_ObjectHideFlags: 0
