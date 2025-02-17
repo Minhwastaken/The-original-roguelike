@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -21,10 +22,13 @@ public class GridGen : MonoBehaviour
     public Color ColorOne, ColorTwo;
     
     private float WorldGridHeight, WorldGridLength;
+    public List<GameObject> Attacks = new List<GameObject>();
     [HideInInspector] public InputField LengthIP, CrossIP, HeightIP;
+    [HideInInspector] public readonly int UnitLayer = 3, HexLayer = 6;
     private void Awake()
     {
         Instance = this;
+        SortUnitsByCost();
     }
     private void Start()
     {
@@ -33,7 +37,7 @@ public class GridGen : MonoBehaviour
         WorldGridHeight = GridHeight * HexHeight;
         WorldGridLength = GridLength * HexLength;
 
-        GameManager.Instance.OnBattleEnd.AddListener(() => ResetGrid());
+        GameManager.Instance.OnBattleEnd.AddListener(ResetGrid);
         //GenerateGrid();
         //AddAdjHexes();
     }
@@ -162,16 +166,20 @@ public class GridGen : MonoBehaviour
             Units.Add(Unit);
         }
         DeadUnits.Clear();
-        
+        ClearAttacks();
+
         foreach(GameObject Unit in Units)
         {
             Unit UnitScript = Unit.GetComponent<Unit>();
             UnitScript.GetStats();
-            UnitScript.UpdateStats();
+            UnitScript.UpdateBaseStats();
+            UnitScript.ClearBuffs();
             UnitScript.Hex = UnitScript.OGHex;
             UnitScript.IsMoving = false;
+            UnitScript.LerpProgress = 0;
             UnitScript.Path = (null, null);
             Unit.transform.position = (Vector2) UnitScript.Hex.transform.position;
+            Unit.GetComponent<Animator>().Play("Idle");
         }
         if(GameManager.Instance.Stage >= 32)
         {
@@ -181,10 +189,21 @@ public class GridGen : MonoBehaviour
             SpawnEnemies(GameManager.Instance.Stage);
     }
 
+    public IEnumerator ClearAttacks()
+    {
+        yield return new WaitForSeconds(5f);
+        foreach(GameObject Attack in Attacks)
+        {
+            Destroy(Attack);
+        }
+        Attacks.Clear();
+    }
     public void SpawnEnemies(float Credit)
     {
         for(int i = 0; i < Credit; i++)
         {
+            if(Enemies.Count >= 32)
+                break;
             GameObject Enemy = Instantiate(EnemyList[Random.Range(0, EnemyList.Count)]);
             GameObject RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2 + 1, GridHeight)];
             while(RandomHex.GetComponent<Hex>().Taken)

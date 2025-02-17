@@ -15,7 +15,7 @@ MonoBehaviour:
   Cost: 3
   Hp: 5
   MaxHp: 5
-  Range: 3.1
+  Range: 1
   MaxMana: 50
   AtkDamage: 1
   AbilityPower: 1

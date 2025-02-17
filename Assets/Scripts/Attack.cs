@@ -5,6 +5,9 @@ public abstract class Attack : MonoBehaviour
 {
     public Unit Attacker, Target;
     public Unit.DamageType DamageType;
+    public GameObject HitEffect;
+    public Transform HitEffectPos;
+    public float ADScale = 1, APScale;
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
@@ -14,26 +17,20 @@ public abstract class Attack : MonoBehaviour
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
-    public float Lifespan;
+    public float Lifespan = 5, Duration;
     public UnityEvent OnAttack, OnDamageDealt;
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         GetStats();
-        if(Target)
-        {
-            OnAttack.Invoke();
-            Target.GetComponent<Unit>().TakeDamage(AtkDamage, DamageType, Attacker);
-            OnDamageDealt.Invoke();
-        }
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        Lifespan-=Time.deltaTime;
-        if(Lifespan<=0)
-            Destroy(gameObject);
+        Duration += Time.deltaTime;
+        if(Lifespan<=Duration)
+            DestroySelf();
     }
     public void GetStats()
     {
@@ -52,6 +49,30 @@ public abstract class Attack : MonoBehaviour
         Omnivamp = Stats.Omnivamp;
         CritChance = Stats.CritChance;
         CritDamage = Stats.CritDamage;
+    }
+    public void TriggerAttack(Unit Target)
+    {
+        if(Target)
+        {
+            AttackLogic();
+            OnAttack.Invoke();
+            Target.GetComponent<Unit>().TakeDamage(AtkDamage * ADScale + AbilityPower * APScale, DamageType, Attacker);
+            DamageDealtLogic();
+            OnDamageDealt.Invoke();
+        }
+    }
+    public void DestroySelf()
+    {
+        if(HitEffectPos)
+        {
+            Instantiate(HitEffect, HitEffectPos.position, Quaternion.identity);
+        }
+        else if(HitEffect)
+        {
+            Instantiate(HitEffect, transform.position, Quaternion.identity);
+        }
+        GridGen.Instance.Attacks.Remove(gameObject);
+        Destroy(gameObject);
     }
     public abstract void AttackLogic();
     public abstract void DamageDealtLogic();

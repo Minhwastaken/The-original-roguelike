@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,10 +35,45 @@ public class UI : MonoBehaviour
         foreach(GameObject Button in BuyButtons)
         {
             Button.SetActive(true);
-            GameObject RandomUnit = GridGen.Instance.UnitList[Random.Range(0, GridGen.Instance.UnitList.Count)];
+            int UnitCost = RollForCost();
+            Debug.Log("Rolling for cost " + UnitCost);
+            GameObject RandomUnit = RandomUnitFromPool(UnitCost);
             Button.GetComponent<Button>().Unit = RandomUnit;
             Button.transform.GetChild(0).GetComponent<Text>().text = RandomUnit.GetComponent<Unit>().Stats.Cost.ToString();
         }
+    }
+    public int RollForCost()
+    {
+        int Roll = Random.Range(0, 100);
+        int Total = 0;
+        for(int i = 0; i < 5; i++)
+        {
+            Total += RollChance[GameManager.Instance.Level - 1, i];
+            if(Roll < Total)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+    public GameObject RandomUnitFromPool(int Cost)
+    {
+        int Sum = 0;
+        foreach((GameObject Unit, int Count) Tuple in GridGen.Instance.UnitPool[Cost])
+        {
+            Sum += Tuple.Count;
+        }
+        int Roll = Random.Range(0, Sum);
+        foreach((GameObject Unit, int Count) Tuple in GridGen.Instance.UnitPool[Cost])
+        {
+            Roll -= Tuple.Count;
+            if(Roll <= 0)
+            {
+                return Tuple.Unit;
+            }
+        }
+        Debug.LogError("Couldn't find a unit of cost " + Cost);
+        return null;
     }
     public void ToggleShop()
     {

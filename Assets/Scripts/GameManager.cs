@@ -6,11 +6,11 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public int Gold, Level = 1, Xp, Stage = 1;
+    public int Gold, Level = 1, Xp, Stage = 1, MaxInterest = 5;
     public List<int> XpCost = new List<int>{0, 2, 2, 6, 10, 20, 36, 48, 72, 84, 120};
     public enum GameState {Prep, Battle};
     public GameState State;
-    public UnityEvent OnPrepStart, OnPrepEnd, OnBattleStart, OnBattleEnd;
+    public UnityEvent OnPrepStart, OnPrepEnd, OnBattleStart, OnBattleEnd, OnGoldGain;
     // Start is called before the first frame update
     private void Awake() 
     {
@@ -19,15 +19,21 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         State = GameState.Prep;
-        OnPrepStart.AddListener(() => GainGold());
+        OnPrepStart.AddListener(GainGoldWithInterest);
         OnPrepStart.AddListener(() => GainXp(2));
     }
 
     // Update is called once per frame
-    public void GainGold()
+    public void GainGoldWithInterest()
     {
-        Gold += 5 + Mathf.Min(Gold/10, 5);
+        Gold += 5 + Mathf.Min(Gold/10, MaxInterest);
         UI.Instance.GoldText.text = Gold + "G";
+    }
+    public void GainGold(int Amount)
+    {
+        Gold += Amount;
+        UI.Instance.GoldText.text = Gold + "G";
+        OnGoldGain.Invoke();
     }
     public void LoseGold(int amount)
     {

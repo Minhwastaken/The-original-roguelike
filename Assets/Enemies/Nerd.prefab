@@ -133,12 +133,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 1
-  Stats: {fileID: 11400000, guid: 219abaab9d59a92419d4f9f17167edac, type: 2}
+  Stats: {fileID: 11400000, guid: c9ba4ca14605c214c8b5a9703c7646d1, type: 2}
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
+  BonusAD: 0
   AbilityPower: 0
+  BonusAP: 0
   AtkSpeed: 0
+  Mana: 0
+  MaxMana: 0
   Range: 0
   Armor: 0
   MagicResist: 0
@@ -150,16 +154,17 @@ MonoBehaviour:
   CritDamage: 0
   Hex: {fileID: 0}
   OGHex: {fileID: 0}
-  AttackGO: {fileID: 0}
   IsMoving: 0
   Benched: 0
-  LerpProgress: 0
-  WalkCD: 0.5
-  WalkTimer: 1
-  AtkAnim: {fileID: 7400000, guid: 6d75b3e9c80093241993d589dbde22e3, type: 2}
-  WalkAnim: {fileID: 0}
-  IdleAnim: {fileID: 0}
+  Anim: {fileID: 0}
+  Target: {fileID: 0}
+  TargetHex: {fileID: 0}
   Star: 1
+  AttackPoint: {fileID: 0}
+  BuffName: []
+  OnAbilityUse:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &7458768832038800678
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ public class UnitStats : ScriptableObject
     public float Hp;
     public float MaxHp;
     public float Range;
-    public float MaxMana;
+    public float Mana, MaxMana;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
     public float Armor, MagicResist; 
@@ -24,4 +24,6 @@ public class UnitStats : ScriptableObject
     public GameObject Unit;
     public Sprite ShopIcon;
     public enum Role {AttackCarry, MagicCarry, AttackCaster, MagicCaster, AttackTank, MagicTank, AttackFighter, MagicFighter}
+    [Header("Specials")]
+    public bool AbilityAffectedByAtkSpeed = false;
 }

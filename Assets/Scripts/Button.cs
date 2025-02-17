@@ -23,7 +23,7 @@ public class Button : MonoBehaviour
                 gameObject.SetActive(false);
 
                 Count++;
-                SpawnedUnit.name = Unit.name + " " + Count;
+                SpawnedUnit.name = Unit.name + " *";
                 CheckStarUp(SpawnedUnit);
 
                 GameManager.Instance.LoseGold(SpawnedUnit.GetComponent<Unit>().Stats.Cost);
@@ -70,7 +70,8 @@ public class Button : MonoBehaviour
         {
             Unit UpgradedUnitScript = UnitCopies[0].GetComponent<Unit>();
             UpgradedUnitScript.Star++;
-            UpgradedUnitScript.UpdateStats();
+            UnitCopies[0].name += "*";
+            UpgradedUnitScript.UpdateBaseStats();
             Debug.Log("Star Up! " + UpgradedUnitScript.Star + " Star ");
             for(int i = 0; i < 3; i++)
             {

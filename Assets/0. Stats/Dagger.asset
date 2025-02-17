@@ -15,8 +15,9 @@ MonoBehaviour:
   Cost: 1
   Hp: 10
   MaxHp: 10
-  Range: 1.1
-  MaxMana: 50
+  Range: 1
+  Mana: 0
+  MaxMana: 80
   AtkDamage: 1
   AbilityPower: 1
   AtkSpeed: 1
@@ -32,6 +33,6 @@ MonoBehaviour:
   HpScale: 1.8
   SizeScale: 1.1
   Attack: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
-  Ability: {fileID: 0}
+  Ability: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
   Unit: {fileID: 7348070789959115077, guid: 7756fc98504a38e43b21dfb4cdfac565, type: 3}
   ShopIcon: {fileID: 0}

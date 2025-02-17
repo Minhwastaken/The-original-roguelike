@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: Apple
   m_EditorClassIdentifier: 
   Cost: 4
-  Hp: 5
-  MaxHp: 5
-  Range: 3.1
+  Hp: 50
+  MaxHp: 50
+  Range: 1
   MaxMana: 50
-  AtkDamage: 1
-  AbilityPower: 1
-  AtkSpeed: 2
+  AtkDamage: 6
+  AbilityPower: 5
+  AtkSpeed: 1
   Armor: 0
   MagicResist: 0
   Movespeed: 100

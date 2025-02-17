@@ -88,7 +88,23 @@ public class Mouse : MonoBehaviour
                     IsFollowing = true;
                 }
             }
-            
+        }
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            RaycastHit2D Hit = Physics2D.Raycast(Cam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if(Hit)
+            {
+                if(Hit.transform.gameObject.layer == UnitLayer)
+                {
+                    Unit HitUnit = Hit.transform.gameObject.GetComponent<Unit>();
+                    Debug.Log("Unit: " + HitUnit.name);
+                    foreach(Buff buff in HitUnit.Buffs)
+                    {
+                        Debug.Log("Buff: " + buff.Name);
+                    }
+                }
+            }
         }
     }
 

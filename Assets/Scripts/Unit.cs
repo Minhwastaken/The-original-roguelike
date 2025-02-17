@@ -1,31 +1,34 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.Events;
+using UnityEditor;
 public class Unit : MonoBehaviour
 {
     public int Team;
     public UnitStats Stats;
     public float Hp, MaxHp;
-    public float AtkDamage, BonusAD, AbilityPower, BonusAP;
+    public float AtkDamage, AbilityPower;
     public float AtkSpeed;
+    public float Mana, MaxMana;
     public float Range;
     public float Armor, MagicResist; 
     public float Movespeed;
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
-    public GameObject Hex, OGHex;
-    public GameObject AttackGO;
-    public bool IsMoving = false, Benched;
-    public float LerpProgress = 0, WalkCD = 2, WalkTimer = 0;
-    private Animator Anim;
-    public AnimationClip AtkAnim, WalkAnim, IdleAnim;
-    private GameObject Target, TargetHex;
     public enum DamageType {AD, AP, True};
+    public GameObject Hex, OGHex;
+    public bool IsMoving = false, Benched;
+    public float LerpProgress = 0;
+    [HideInInspector]public Animator Anim;
+    public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
     private float OGScale;
+    public Transform AttackPoint;
+    public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
+    public UnityEvent OnAbilityUse = new UnityEvent();
     private void Start() 
     {
         GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
@@ -34,12 +37,23 @@ public class Unit : MonoBehaviour
         GetStats();
         Anim = GetComponent<Animator>();
         OGScale = transform.localScale.x;
+        OnStart();
     }
     private void Update()
     {
-
+        if(Buffs.Count > 0)
+        {
+            for (int i = Buffs.Count - 1; i >= 0; i--)
+            {
+                Buffs[i].Duration -= Time.deltaTime;
+                if (Buffs[i].Duration <= 0 && Buffs[i].Duration != -1)
+                {
+                    UpdateTrueStats(Buffs[i].Type);
+                    Buffs.RemoveAt(i);
+                }
+            }
+        }
     }
-
     public IEnumerator Action()
     {
         if(!Benched)
@@ -64,47 +78,106 @@ public class Unit : MonoBehaviour
                             TargetHex.GetComponent<Hex>().Taken = gameObject;
                         }   
                         //Debug.Log("Moving to next target");
-                        MoveTo(TargetHex);
+                        else
+                            Move();
                     }
                 }
                 else if(Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 {
+                    if(Stats.Ability && Mana >= MaxMana)
+                    {
+                        UseAbility();
+                    }
                     //Debug.Log("Target attackable");
-                    Attack();
+                    else
+                        Attack();
                 }
                 yield return null;
             }
         }
     }
-    private void Attack()
+    protected virtual void Attack()
     {
         if(Target)
         {
             transform.up = (Vector2) (Target.transform.position - transform.position);
-            Anim.Play(AtkAnim.name);
+            GainMana(10);
+            Anim.Play("Attack");
         }
     }
-    public void SpawnAttack()
+    protected virtual void UseAbility()
     {
-        GameObject Attack = Instantiate(AttackGO, transform.position + transform.up, transform.rotation * Quaternion.Euler(0,0,45));
+        if(Target)
+        {
+            transform.up = (Vector2) (Target.transform.position - transform.position);
+            Mana -= MaxMana;
+            OnAbilityUse.Invoke();
+            Anim.Play("Ability");
+        }
+    }
+    public void SpawnAttack(GameObject AttackGO)
+    {
+        GameObject Attack = Instantiate(AttackGO, transform.position, transform.rotation);
+        GridGen.Instance.Attacks.Add(Attack);
+        Attack.transform.localScale = new Vector3(Attack.transform.localScale.x * Mathf.Pow(Stats.SizeScale, Star - 1), Attack.transform.localScale.y * Mathf.Pow(Stats.SizeScale, Star - 1), 1);
         Attack.GetComponent<Attack>().Attacker = this;
         if(Target)
+        {
             Attack.GetComponent<Attack>().Target = Target.GetComponent<Unit>();
+            if(Attack.GetComponent<Projectile>())
+            {
+                SetUpProjectile(Attack, Target);
+            }
+            if(Attack.GetComponent<AOEAttack>())
+            {
+                if(Attack.GetComponent<AOEAttack>().SpawnAtTarget)
+                {
+                    Attack.transform.position = Target.transform.position;
+                }
+            }
+        }
+        else
+        {
+            if(Attack.GetComponent<Projectile>())
+            {
+                SetUpProjectile(Attack, GetTarget());
+            }
+            if(Attack.GetComponent<AOEAttack>())
+            {
+                if(Attack.GetComponent<AOEAttack>().SpawnAtTarget)
+                {
+                    Attack.transform.position = GetTarget().transform.position;
+                }
+            }
+        }
     }
-    private void MoveTo(GameObject EndHex)
+    protected void GainMana(int amount)
+    {
+        Mana += amount;
+    }
+    private void SetUpProjectile(GameObject Attack, GameObject Target)
+    {
+        Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - transform.position)).normalized;
+        Attack.transform.position = AttackPoint.position;
+        Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
+    }
+    private void Move()
     {
        // Debug.Log(Hex + " " + EndHex);
         LerpProgress += Time.deltaTime * Movespeed / 100f;
-        transform.position = Vector2.Lerp(Hex.transform.position, EndHex.transform.position, LerpProgress);
+        transform.position = Vector2.Lerp(Path.From.transform.position, Path.To.transform.position, LerpProgress);
         if(LerpProgress >= 0.1f && Hex.GetComponent<Hex>().Taken == gameObject)
         {
             Hex.GetComponent<Hex>().Taken = null;
         }
+        if(LerpProgress > 0.8f && Hex!=Path.To)
+        {
+            Hex = Path.To;
+        }
         if(LerpProgress > 0.95f)
         {
             LerpProgress = 0;
-            transform.position = EndHex.transform.position + new Vector3(0,0,-1);
-            Hex = EndHex;
+            transform.position = Path.To.transform.position + new Vector3(0,0,-1);
             IsMoving = false;
             Path = (null, null);
         }
@@ -113,6 +186,8 @@ public class Unit : MonoBehaviour
     {
         Hp = Stats.Hp;
         MaxHp = Stats.MaxHp;
+        Mana = Stats.Mana;
+        MaxMana = Stats.MaxMana;
         AtkDamage = Stats.AtkDamage;
         AbilityPower = Stats.AbilityPower;
         AtkSpeed = Stats.AtkSpeed;
@@ -125,8 +200,6 @@ public class Unit : MonoBehaviour
         Omnivamp = Stats.Omnivamp;
         CritChance = Stats.CritChance;
         CritDamage = Stats.CritDamage;
-
-        AttackGO = Stats.Attack;
     }
     private List<GameObject> Pathfind(GameObject StartHex, GameObject EndHex)
     {
@@ -200,7 +273,7 @@ public class Unit : MonoBehaviour
         //Debug.Log("Build Succeeded");
         return Path;
     }
-    private GameObject GetTarget()
+    public GameObject GetTarget()
     {
         int MinCnt = 99;
         GameObject ClosestEnemy = null;
@@ -215,7 +288,7 @@ public class Unit : MonoBehaviour
         }
         foreach(GameObject Target in Targets)
         {
-            if(Target == null)
+            if(!ValidTarget(Target))
                 continue;
             int PathLen = Pathfind(Hex, Target.GetComponent<Unit>().Hex).Count;
             if(PathLen != 0 && PathLen < MinCnt)
@@ -245,7 +318,7 @@ public class Unit : MonoBehaviour
 
         foreach(GameObject Target in Targets)
         {
-            if(Target == null)
+            if(!ValidTarget(Target))
                 continue;
             float Dist = Vector2.Distance(transform.position, Target.transform.position);
             if(Dist < MinDist && Dist < Range)
@@ -273,11 +346,10 @@ public class Unit : MonoBehaviour
     }
     private bool AttackableTarget()
     {
-        if(Target)
+        if(ValidTarget(Target))
             if(Vector2.Distance(transform.position, Target.transform.position) < Range || HexDist(Hex, Target.GetComponent<Unit>().Hex) <= Range)
             {
-                if(Target.activeSelf)
-                    return true;
+                return true;
             }
         return false;
     }
@@ -317,12 +389,14 @@ public class Unit : MonoBehaviour
     public void TakeDamage(float damage, DamageType type, Unit Attacker)
     {
         Hp -= damage;
-        if(Hp <= 0)
+        if(Hp <= 0 && gameObject.activeSelf)
         {
             if(Team == 0)
             {
                 GridGen.Instance.Units.Remove(gameObject);
                 GridGen.Instance.DeadUnits.Add(gameObject);
+                Hex.GetComponent<Hex>().Taken = null;
+                Path = (null, null);
                 gameObject.SetActive(false);
                 if(GridGen.Instance.Units.Count == 0)
                 {
@@ -332,6 +406,7 @@ public class Unit : MonoBehaviour
             else
             {
                 GridGen.Instance.Enemies.Remove(gameObject);
+                Hex.GetComponent<Hex>().Taken = null;
                 Destroy(gameObject);
                 if(GridGen.Instance.Enemies.Count == 0)
                 {
@@ -341,23 +416,200 @@ public class Unit : MonoBehaviour
             Attacker.gameObject.transform.rotation = Quaternion.identity;
         }
     }
+    private bool ValidTarget(GameObject Target)
+    {
+        if(Target == null || !Target.activeSelf)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    protected virtual void OnStart()
+    {
+    }
 
     [ContextMenu("Update Stats")]
-    public void UpdateStats()
+    public void UpdateBaseStats()
     {
         MaxHp = Stats.MaxHp * Mathf.Pow(Stats.HpScale, Star - 1);
-        Hp = MaxHp;
         AtkDamage = Stats.AtkDamage * Mathf.Pow(Stats.ADScale, Star - 1);
         float Scale = Mathf.Pow(Stats.SizeScale, Star - 1) * OGScale;
         transform.localScale = new Vector3(Scale, Scale, 1);
-        Debug.Log(Scale + "  " + OGScale);
+    }
+    public void UpdateTrueStats(Buff.BuffType Type)
+    {
+        float FlatAmount = 0, PercentAmount = 0;
+        ref float Stat = ref BuffTypeToStat(Type);
+        float BaseStat = BuffTypeToBaseStat(Type);
+
+        foreach(Buff buff in Buffs)
+        {
+            if(buff.Type == Type)
+            {
+                FlatAmount += buff.FlatAmount;
+                PercentAmount += buff.PercentAmount;
+            }
+        }
+
+        Stat = BaseStat + FlatAmount;
+        Stat *= 1 + PercentAmount;
+    }
+    public void GainBuff(Buff buff)
+    {
+        for (int i = 0; i < Buffs.Count; i++)
+        {   
+            if (Buffs[i].Name == buff.Name)
+            {
+                if (buff.Stack)
+                {
+                    Buffs[i].FlatAmount += buff.FlatAmount;
+                    Buffs[i].PercentAmount += buff.PercentAmount;
+                    return;
+                }
+                else
+                {   
+                    Buffs[i] = buff;
+                    return;
+                }
+            }
+        }
+
+        Buffs.Add(buff);
+        Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
+        UpdateTrueStats(buff.Type);
+    }
+    public void ClearBuffs()
+    {
+        HashSet<Buff.BuffType> CurrentlyBuffedStats = new HashSet<Buff.BuffType>();
+        foreach(Buff buff in Buffs)
+        {
+            CurrentlyBuffedStats.Add(buff.Type);
+        }
+        Buffs.Clear();
+        foreach(Buff.BuffType Type in CurrentlyBuffedStats)
+        {
+            UpdateTrueStats(Type);
+        }
+    }
+    private ref float BuffTypeToStat(Buff.BuffType Type)
+    {
+        if(Type == Buff.BuffType.Hp)
+        {
+            return ref Hp;
+        }
+        else if(Type == Buff.BuffType.AD)
+        {
+            return ref AtkDamage;
+        }
+        else if(Type == Buff.BuffType.AP)
+        {
+            return ref AbilityPower;
+        }
+        else if(Type == Buff.BuffType.AtkSpeed)
+        {
+            return ref AtkSpeed;
+        }
+        else if(Type == Buff.BuffType.Armor)
+        {
+            return ref Armor;
+        }
+        else if(Type == Buff.BuffType.MagicResist)
+        {
+            return ref MagicResist;
+        }
+        else if(Type == Buff.BuffType.Movespeed)
+        {
+            return ref Movespeed;
+        }
+        else if(Type == Buff.BuffType.DamageAmp)
+        {
+            return ref DamageAmp;
+        }
+        else if(Type == Buff.BuffType.Durability)
+        {
+            return ref Durability;
+        }
+        else if(Type == Buff.BuffType.Omnivamp)
+        {
+            return ref Omnivamp;
+        }
+        else if(Type == Buff.BuffType.CritChance)
+        {
+            return ref CritChance;
+        }
+        else if(Type == Buff.BuffType.CritDamage)
+        {
+            return ref CritDamage;
+        }
+        else
+        {
+            Debug.Log(Type);
+            return ref AtkDamage;
+        }
+    }
+    private float BuffTypeToBaseStat(Buff.BuffType Type)
+    {
+        if(Type == Buff.BuffType.Hp)
+        {
+            return Stats.MaxHp * Mathf.Pow(Stats.HpScale, Star - 1);
+        }
+        else if(Type == Buff.BuffType.AD)
+        {
+            return Stats.AtkDamage * Mathf.Pow(Stats.ADScale, Star - 1);
+        }
+        else if(Type == Buff.BuffType.AP)
+        {
+            return Stats.AbilityPower;
+        }
+        else if(Type == Buff.BuffType.AtkSpeed)
+        {
+            return Stats.AtkSpeed;
+        }
+        else if(Type == Buff.BuffType.Armor)
+        {
+            return Stats.Armor;
+        }
+        else if(Type == Buff.BuffType.MagicResist)
+        {
+            return Stats.MagicResist;
+        }
+        else if(Type == Buff.BuffType.Movespeed)
+        {
+            return Stats.Movespeed;
+        }
+        else if(Type == Buff.BuffType.DamageAmp)
+        {
+            return Stats.DamageAmp;
+        }
+        else if(Type == Buff.BuffType.Durability)
+        {
+            return Stats.Durability;
+        }
+        else if(Type == Buff.BuffType.Omnivamp)
+        {
+            return Stats.Omnivamp;
+        }
+        else if(Type == Buff.BuffType.CritChance)
+        {
+            return Stats.CritChance;
+        }
+        else if(Type == Buff.BuffType.CritDamage)
+        {
+            return Stats.CritDamage;
+        }
+        else
+        {
+            Debug.Log(Type);
+            return Stats.AtkDamage;
+        }
     }
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;
         for(int i = 0; i<360; i++)
         {
-            Gizmos.DrawLine(transform.position + new Vector3(Mathf.Sin(i * Mathf.Deg2Rad), Mathf.Cos(i * Mathf.Deg2Rad), 0) * Stats.Range, transform.position + new Vector3(Mathf.Sin((i+1) * Mathf.Deg2Rad), Mathf.Cos((i+1) * Mathf.Deg2Rad), 0) * Stats.Range);
+            //Gizmos.DrawLine(transform.position + new Vector3(Mathf.Sin(i * Mathf.Deg2Rad), Mathf.Cos(i * Mathf.Deg2Rad), 0) * Stats.Range, transform.position + new Vector3(Mathf.Sin((i+1) * Mathf.Deg2Rad), Mathf.Cos((i+1) * Mathf.Deg2Rad), 0) * Stats.Range);
         }
         Gizmos.color = Color.blue;
         if(Path.From && Path.To)
