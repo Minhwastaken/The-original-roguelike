@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEditor;
+using UnityEngine.UI;
 public class Unit : MonoBehaviour
 {
     public int Team;
@@ -25,34 +25,22 @@ public class Unit : MonoBehaviour
     public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
-    private float OGScale;
+    private float OGScale = 1, HealAmount;
     public Transform AttackPoint;
+    public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
-    public UnityEvent OnAbilityUse = new UnityEvent();
+    public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent();
     private void Start() 
     {
-        GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
-        if(Team == 1)
-            GridGen.Instance.Enemies.Add(gameObject);
-        GetStats();
         Anim = GetComponent<Animator>();
         OGScale = transform.localScale.x;
+        GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
+        GetStats();
         OnStart();
     }
     private void Update()
     {
-        if(Buffs.Count > 0)
-        {
-            for (int i = Buffs.Count - 1; i >= 0; i--)
-            {
-                Buffs[i].Duration -= Time.deltaTime;
-                if (Buffs[i].Duration <= 0 && Buffs[i].Duration != -1)
-                {
-                    UpdateTrueStats(Buffs[i].Type);
-                    Buffs.RemoveAt(i);
-                }
-            }
-        }
+        UpdateRealTimeBuffs();
     }
     public IEnumerator Action()
     {
@@ -100,7 +88,7 @@ public class Unit : MonoBehaviour
     {
         if(Target)
         {
-            transform.up = (Vector2) (Target.transform.position - transform.position);
+            Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
             GainMana(10);
             Anim.Play("Attack");
         }
@@ -109,7 +97,7 @@ public class Unit : MonoBehaviour
     {
         if(Target)
         {
-            transform.up = (Vector2) (Target.transform.position - transform.position);
+            Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
             Mana -= MaxMana;
             OnAbilityUse.Invoke();
             Anim.Play("Ability");
@@ -158,12 +146,14 @@ public class Unit : MonoBehaviour
     private void SetUpProjectile(GameObject Attack, GameObject Target)
     {
         Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - transform.position)).normalized;
-        Attack.transform.position = AttackPoint.position;
+        if(AttackPoint)
+            Attack.transform.position = AttackPoint.position;
         Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
     }
     private void Move()
     {
        // Debug.Log(Hex + " " + EndHex);
+        Sprites.transform.up = (Vector2) (Path.To.transform.position - Path.From.transform.position);
         LerpProgress += Time.deltaTime * Movespeed / 100f;
         transform.position = Vector2.Lerp(Path.From.transform.position, Path.To.transform.position, LerpProgress);
         if(LerpProgress >= 0.1f && Hex.GetComponent<Hex>().Taken == gameObject)
@@ -389,32 +379,74 @@ public class Unit : MonoBehaviour
     public void TakeDamage(float damage, DamageType type, Unit Attacker)
     {
         Hp -= damage;
+        OnTakeDamage.Invoke();
         if(Hp <= 0 && gameObject.activeSelf)
         {
-            if(Team == 0)
+            Attacker.OnKill.Invoke();
+            OnDeath.Invoke();
+            Die(Attacker);
+        }
+    }
+    public void Die(Unit Attacker)
+    {
+        Attacker.OnKill.Invoke();
+        OnDeath.Invoke();
+        if(Team == 0)
+        {
+            GridGen.Instance.Units.Remove(gameObject);
+            GridGen.Instance.DeadUnits.Add(gameObject);
+            Hex.GetComponent<Hex>().Taken = null;
+            Path = (null, null);
+            gameObject.SetActive(false);
+            if(GridGen.Instance.Units.Count == 0)
             {
-                GridGen.Instance.Units.Remove(gameObject);
-                GridGen.Instance.DeadUnits.Add(gameObject);
-                Hex.GetComponent<Hex>().Taken = null;
-                Path = (null, null);
-                gameObject.SetActive(false);
-                if(GridGen.Instance.Units.Count == 0)
-                {
-                    GameManager.Instance.ChangeState();
-                }
+                GameManager.Instance.ChangeState();
+            }
+        }
+        else
+        {
+            GridGen.Instance.Enemies.Remove(gameObject);
+            Hex.GetComponent<Hex>().Taken = null;
+            Destroy(gameObject);
+            if(GridGen.Instance.Enemies.Count == 0)
+            {
+                GameManager.Instance.ChangeState();
+            }
+        }
+    }
+    public void RemoveUnit()
+    {
+        if(Team == 0)
+        {
+            GridGen.Instance.Units.Remove(gameObject);
+            if(Benched)
+            {
+                Hex.GetComponent<BenchSlot>().Taken = null;
             }
             else
             {
-                GridGen.Instance.Enemies.Remove(gameObject);
+                GameManager.Instance.RemoveTraits(this);
                 Hex.GetComponent<Hex>().Taken = null;
-                Destroy(gameObject);
-                if(GridGen.Instance.Enemies.Count == 0)
-                {
-                    GameManager.Instance.ChangeState();
-                }
             }
-            Attacker.gameObject.transform.rotation = Quaternion.identity;
         }
+        else
+        {
+            GridGen.Instance.Enemies.Remove(gameObject);
+            Hex.GetComponent<Hex>().Taken = null;
+        }
+        Destroy(gameObject);
+    }
+    public void Heal(Unit Target, float amount)
+    {
+        Debug.Log(amount);
+        if(Target.Hp + amount > Target.MaxHp)
+        {
+            amount = Target.MaxHp - Target.Hp;
+            Debug.Log("capped");
+        }
+        Target.Hp += amount;
+        Target.HealAmount = amount;
+        Target.OnHeal.Invoke();
     }
     private bool ValidTarget(GameObject Target)
     {
@@ -437,11 +469,11 @@ public class Unit : MonoBehaviour
         float Scale = Mathf.Pow(Stats.SizeScale, Star - 1) * OGScale;
         transform.localScale = new Vector3(Scale, Scale, 1);
     }
-    public void UpdateTrueStats(Buff.BuffType Type)
+    public void UpdateTrueStats(Buff.StatType Type)
     {
         float FlatAmount = 0, PercentAmount = 0;
-        ref float Stat = ref BuffTypeToStat(Type);
-        float BaseStat = BuffTypeToBaseStat(Type);
+        ref float Stat = ref StatTypeToStat(Type);
+        float BaseStat = StatTypeToBaseStat(Type);
 
         foreach(Buff buff in Buffs)
         {
@@ -457,6 +489,7 @@ public class Unit : MonoBehaviour
     }
     public void GainBuff(Buff buff)
     {
+        Buff BuffCopy = new Buff(buff.Name, buff.Duration, buff.FlatAmount, buff.PercentAmount, buff.Type, buff.DurType, buff.Stack);
         for (int i = 0; i < Buffs.Count; i++)
         {   
             if (Buffs[i].Name == buff.Name)
@@ -465,80 +498,93 @@ public class Unit : MonoBehaviour
                 {
                     Buffs[i].FlatAmount += buff.FlatAmount;
                     Buffs[i].PercentAmount += buff.PercentAmount;
+                    Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
+                    UpdateTrueStats(buff.Type);
                     return;
                 }
                 else
                 {   
-                    Buffs[i] = buff;
+                    Buffs[i] = BuffCopy;
+                    UpdateTrueStats(buff.Type);
                     return;
                 }
             }
         }
 
-        Buffs.Add(buff);
+        Buffs.Add(BuffCopy);
         Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
         UpdateTrueStats(buff.Type);
     }
+    public void RemoveBuff(Buff buff)
+    {
+        Buff.StatType BuffType = buff.Type;
+        Buffs.Remove(buff);
+        UpdateTrueStats(BuffType);
+    }
     public void ClearBuffs()
     {
-        HashSet<Buff.BuffType> CurrentlyBuffedStats = new HashSet<Buff.BuffType>();
+        HashSet<Buff.StatType> CurrentlyBuffedStats = new HashSet<Buff.StatType>();
         foreach(Buff buff in Buffs)
         {
             CurrentlyBuffedStats.Add(buff.Type);
         }
-        Buffs.Clear();
-        foreach(Buff.BuffType Type in CurrentlyBuffedStats)
+        for(int i = Buffs.Count - 1; i >= 0; i--)
+        {
+            if(Buffs[i].DurType == Buff.DurationType.RealTime)
+                Buffs.RemoveAt(i);
+        }
+        foreach(Buff.StatType Type in CurrentlyBuffedStats)
         {
             UpdateTrueStats(Type);
         }
     }
-    private ref float BuffTypeToStat(Buff.BuffType Type)
+    private ref float StatTypeToStat(Buff.StatType Type)
     {
-        if(Type == Buff.BuffType.Hp)
+        if(Type == Buff.StatType.Hp)
         {
             return ref Hp;
         }
-        else if(Type == Buff.BuffType.AD)
+        else if(Type == Buff.StatType.AD)
         {
             return ref AtkDamage;
         }
-        else if(Type == Buff.BuffType.AP)
+        else if(Type == Buff.StatType.AP)
         {
             return ref AbilityPower;
         }
-        else if(Type == Buff.BuffType.AtkSpeed)
+        else if(Type == Buff.StatType.AtkSpeed)
         {
             return ref AtkSpeed;
         }
-        else if(Type == Buff.BuffType.Armor)
+        else if(Type == Buff.StatType.Armor)
         {
             return ref Armor;
         }
-        else if(Type == Buff.BuffType.MagicResist)
+        else if(Type == Buff.StatType.MagicResist)
         {
             return ref MagicResist;
         }
-        else if(Type == Buff.BuffType.Movespeed)
+        else if(Type == Buff.StatType.Movespeed)
         {
             return ref Movespeed;
         }
-        else if(Type == Buff.BuffType.DamageAmp)
+        else if(Type == Buff.StatType.DamageAmp)
         {
             return ref DamageAmp;
         }
-        else if(Type == Buff.BuffType.Durability)
+        else if(Type == Buff.StatType.Durability)
         {
             return ref Durability;
         }
-        else if(Type == Buff.BuffType.Omnivamp)
+        else if(Type == Buff.StatType.Omnivamp)
         {
             return ref Omnivamp;
         }
-        else if(Type == Buff.BuffType.CritChance)
+        else if(Type == Buff.StatType.CritChance)
         {
             return ref CritChance;
         }
-        else if(Type == Buff.BuffType.CritDamage)
+        else if(Type == Buff.StatType.CritDamage)
         {
             return ref CritDamage;
         }
@@ -548,53 +594,53 @@ public class Unit : MonoBehaviour
             return ref AtkDamage;
         }
     }
-    private float BuffTypeToBaseStat(Buff.BuffType Type)
+    private float StatTypeToBaseStat(Buff.StatType Type)
     {
-        if(Type == Buff.BuffType.Hp)
+        if(Type == Buff.StatType.Hp)
         {
             return Stats.MaxHp * Mathf.Pow(Stats.HpScale, Star - 1);
         }
-        else if(Type == Buff.BuffType.AD)
+        else if(Type == Buff.StatType.AD)
         {
             return Stats.AtkDamage * Mathf.Pow(Stats.ADScale, Star - 1);
         }
-        else if(Type == Buff.BuffType.AP)
+        else if(Type == Buff.StatType.AP)
         {
             return Stats.AbilityPower;
         }
-        else if(Type == Buff.BuffType.AtkSpeed)
+        else if(Type == Buff.StatType.AtkSpeed)
         {
             return Stats.AtkSpeed;
         }
-        else if(Type == Buff.BuffType.Armor)
+        else if(Type == Buff.StatType.Armor)
         {
             return Stats.Armor;
         }
-        else if(Type == Buff.BuffType.MagicResist)
+        else if(Type == Buff.StatType.MagicResist)
         {
             return Stats.MagicResist;
         }
-        else if(Type == Buff.BuffType.Movespeed)
+        else if(Type == Buff.StatType.Movespeed)
         {
             return Stats.Movespeed;
         }
-        else if(Type == Buff.BuffType.DamageAmp)
+        else if(Type == Buff.StatType.DamageAmp)
         {
             return Stats.DamageAmp;
         }
-        else if(Type == Buff.BuffType.Durability)
+        else if(Type == Buff.StatType.Durability)
         {
             return Stats.Durability;
         }
-        else if(Type == Buff.BuffType.Omnivamp)
+        else if(Type == Buff.StatType.Omnivamp)
         {
             return Stats.Omnivamp;
         }
-        else if(Type == Buff.BuffType.CritChance)
+        else if(Type == Buff.StatType.CritChance)
         {
             return Stats.CritChance;
         }
-        else if(Type == Buff.BuffType.CritDamage)
+        else if(Type == Buff.StatType.CritDamage)
         {
             return Stats.CritDamage;
         }
@@ -602,6 +648,23 @@ public class Unit : MonoBehaviour
         {
             Debug.Log(Type);
             return Stats.AtkDamage;
+        }
+    }
+    private void UpdateRealTimeBuffs()
+    {
+        if(Buffs.Count > 0)
+        {
+            for (int i = Buffs.Count - 1; i >= 0; i--)
+            {
+                if(Buffs[i].DurType == Buff.DurationType.RealTime)
+                {
+                    Buffs[i].Duration -= Time.deltaTime;
+                    if (Buffs[i].Duration <= 0)
+                    {
+                        RemoveBuff(Buffs[i]);
+                    }
+                }
+            }
         }
     }
     private void OnDrawGizmos() 

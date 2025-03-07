@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Bow
   m_EditorClassIdentifier: 
   Cost: 2
+  Traits: 0000000006000000
   Hp: 5
   MaxHp: 5
   Range: 3
-  Mana: 10
-  MaxMana: 10
+  Mana: 0
+  MaxMana: 100
   AtkDamage: 2
   AbilityPower: 1
   AtkSpeed: 1
@@ -34,6 +35,6 @@ MonoBehaviour:
   SizeScale: 1.1
   Attack: {fileID: 8412880745274351775, guid: 61a1222240d25134d9ec0090057a6c33, type: 3}
   Ability: {fileID: 947315176613465897, guid: 81007e41f0d025044be3f255c3069a75, type: 3}
-  Unit: {fileID: 7348070789959115077, guid: 7756fc98504a38e43b21dfb4cdfac565, type: 3}
+  Unit: {fileID: 7348070789959115077, guid: 82e8b33643974674db2b93921412743d, type: 3}
   ShopIcon: {fileID: 0}
   AbilityAffectedByAtkSpeed: 1

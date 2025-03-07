@@ -28,7 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6550040850536726714}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.59, y: 2.39}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -137,9 +137,7 @@ MonoBehaviour:
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
-  BonusAD: 0
   AbilityPower: 0
-  BonusAP: 0
   AtkSpeed: 0
   Mana: 0
   MaxMana: 0
@@ -156,13 +154,22 @@ MonoBehaviour:
   OGHex: {fileID: 0}
   IsMoving: 0
   Benched: 0
+  LerpProgress: 0
   Anim: {fileID: 0}
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
   AttackPoint: {fileID: 0}
-  BuffName: []
   OnAbilityUse:
+    m_PersistentCalls:
+      m_Calls: []
+  OnKill:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
     m_PersistentCalls:
       m_Calls: []
 --- !u!61 &7458768832038800678

@@ -101,8 +101,9 @@ public class Mouse : MonoBehaviour
                     Debug.Log("Unit: " + HitUnit.name);
                     foreach(Buff buff in HitUnit.Buffs)
                     {
-                        Debug.Log("Buff: " + buff.Name);
+                        Debug.Log(buff.Type + " " + buff.Name + " - Flat: " + buff.FlatAmount + ", Percent: " + buff.PercentAmount + ", Duration: " + buff.Duration + ", DurationType: " + buff.DurType);
                     }
+                    Debug.Log("Target: " + HitUnit.Target);
                 }
             }
         }
@@ -148,6 +149,7 @@ public class Mouse : MonoBehaviour
                 UnitScript.Benched = false;
                 GridGen.Instance.BenchedUnits.Remove(ChosenObject);
                 GridGen.Instance.Units.Add(ChosenObject);
+                OnField();
             }
         }
         else
@@ -176,6 +178,7 @@ public class Mouse : MonoBehaviour
                     UnitScript.Benched = true;
                     GridGen.Instance.BenchedUnits.Add(ChosenObject);
                     GridGen.Instance.Units.Remove(ChosenObject);
+                    OnBench();
                 }
             }
             else if(OriHex != new Vector2(-1,-1))
@@ -184,7 +187,28 @@ public class Mouse : MonoBehaviour
             }
         }
     }
-
+    private void OnBench()
+    {
+        foreach(GameObject Unit in GridGen.Instance.Units)
+        {
+            if(Unit.GetComponent<Unit>().Stats == ChosenObject.GetComponent<Unit>().Stats && Unit != ChosenObject)
+            {
+                return;
+            }
+        }
+        GameManager.Instance.RemoveTraits(ChosenObject.GetComponent<Unit>());
+    }
+    private void OnField()
+    {
+        foreach(GameObject Unit in GridGen.Instance.Units)
+        {
+            if(Unit.GetComponent<Unit>().Stats == ChosenObject.GetComponent<Unit>().Stats && Unit != ChosenObject)
+            {
+                return;
+            }
+        }
+        GameManager.Instance.AddTraits(ChosenObject.GetComponent<Unit>());
+    }
     private void Drop()
     {
         IsFollowing = false;
@@ -217,55 +241,5 @@ public class Mouse : MonoBehaviour
                 UnitScript.Hex.GetComponent<BenchSlot>().Taken = null;
             }
         }
-    }
-
-    private void Field(GameObject Unit)
-    {
-        if(Unit.GetComponent<Unit>().Team == 0)
-        {
-            GridGen.Instance.Units.Add(Unit);
-        }
-        else
-        {
-            GridGen.Instance.Enemies.Add(Unit);
-        }
-    }
-    public void RemoveUnit(GameObject Unit)
-    {
-        if(Unit.GetComponent<Unit>().Team == 0)
-        {
-            if(Unit.GetComponent<Unit>().Benched)
-            {
-                GridGen.Instance.BenchedUnits.Remove(Unit);
-            }
-            else
-            {
-                GridGen.Instance.Units.Remove(Unit);
-            }
-            ResetOGHex(Unit.GetComponent<Unit>());
-            /*
-            if(GridGen.Instance.Units.Count == 0)
-            {
-                GameManager.Instance.ChangeState();
-            }*/
-        }
-        else
-        {
-            if(Unit.GetComponent<Unit>().Benched)
-            {
-                GridGen.Instance.BenchedUnits.Remove(Unit);
-            }
-            else
-            {
-                GridGen.Instance.Units.Remove(Unit);
-            }
-            ResetOGHex(Unit.GetComponent<Unit>());
-            /*
-            if(GridGen.Instance.Enemies.Count == 0)
-            {
-                GameManager.Instance.ChangeState();
-            }*/
-        }
-        Destroy(Unit);
     }
 }

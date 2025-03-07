@@ -174,16 +174,22 @@ public class GridGen : MonoBehaviour
             UnitScript.GetStats();
             UnitScript.UpdateBaseStats();
             UnitScript.ClearBuffs();
+            UnitScript.Hex.GetComponent<Hex>().Taken = null;
             UnitScript.Hex = UnitScript.OGHex;
             UnitScript.IsMoving = false;
             UnitScript.LerpProgress = 0;
             UnitScript.Path = (null, null);
             Unit.transform.position = (Vector2) UnitScript.Hex.transform.position;
+            UnitScript.Sprites.transform.rotation = Quaternion.identity;
             Unit.GetComponent<Animator>().Play("Idle");
+            if(Unit.GetComponent<HPBarManager>())
+            {   
+                Unit.GetComponent<HPBarManager>().UpdateHP();
+            }
         }
-        if(GameManager.Instance.Stage >= 32)
+        if(GameManager.Instance.Stage >= 28)
         {
-            SpawnEnemies(32);
+            SpawnEnemies(28);
         }
         else
             SpawnEnemies(GameManager.Instance.Stage);
@@ -200,20 +206,31 @@ public class GridGen : MonoBehaviour
     }
     public void SpawnEnemies(float Credit)
     {
+        int num = 0;
         for(int i = 0; i < Credit; i++)
         {
-            if(Enemies.Count >= 32)
-                break;
-            GameObject Enemy = Instantiate(EnemyList[Random.Range(0, EnemyList.Count)]);
+            if(Enemies.Count >= 28)
+                return;
+
             GameObject RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2 + 1, GridHeight)];
             while(RandomHex.GetComponent<Hex>().Taken)
             {
-                RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2 + 1, GridHeight)];
+                RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2, GridHeight)];
+                num++;
+                if(num > 100)
+                    return;
             }
+
+            GameObject Enemy = Instantiate(UnitList[Random.Range(0, UnitList.Count)]);
+            Enemy.GetComponent<Unit>().Team = 1;
             Enemy.GetComponent<Unit>().Hex = RandomHex;
             RandomHex.GetComponent<Hex>().Taken = Enemy;
             Enemy.transform.position = (Vector2) Enemy.GetComponent<Unit>().Hex.transform.position;
-            //Enemies.Add(Enemy);
+            Enemies.Add(Enemy);
         }
+    }
+    public void SpawnBacklineEnemy(GameObject Enemy)
+    {
+
     }
 }

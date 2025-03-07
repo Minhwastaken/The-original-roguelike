@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class UI : MonoBehaviour
 {
     public static UI Instance;
-    public GameObject Shop, RerollButton, ShopButton;
+    public GameObject Shop, RollChanceText, RerollButton, ShopButton, TraitHolder;
+    public bool ShopLocked = false;
     public int[,] RollChance = new int[11, 5] {
         {100, 0, 0, 0, 0}, 
         {100, 0, 0, 0, 0}, 
@@ -21,7 +22,8 @@ public class UI : MonoBehaviour
         {1, 2, 12, 50, 35}
     };
     public Text GoldText, XpText, StageText;
-    public List<GameObject> BuyButtons;
+    public List<GameObject> BuyButtons, TraitVisuals;
+    public List<Text> RollChanceTexts;
     private void Awake()
     {
         Instance = this;
@@ -29,6 +31,7 @@ public class UI : MonoBehaviour
     private void Start()
     {
         Reroll();
+        GameManager.Instance.OnPrepStart.AddListener(RollIfUnlocked);
     }
     public void Reroll()
     {
@@ -36,7 +39,7 @@ public class UI : MonoBehaviour
         {
             Button.SetActive(true);
             int UnitCost = RollForCost();
-            Debug.Log("Rolling for cost " + UnitCost);
+            Debug.Log("Rolling for cost " + (UnitCost + 1));
             GameObject RandomUnit = RandomUnitFromPool(UnitCost);
             Button.GetComponent<Button>().Unit = RandomUnit;
             Button.transform.GetChild(0).GetComponent<Text>().text = RandomUnit.GetComponent<Unit>().Stats.Cost.ToString();
@@ -75,6 +78,13 @@ public class UI : MonoBehaviour
         Debug.LogError("Couldn't find a unit of cost " + Cost);
         return null;
     }
+    public void UpdateRollChance()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            RollChanceTexts[i].text = RollChance[GameManager.Instance.Level - 1, i] + "%";
+        }
+    }
     public void ToggleShop()
     {
         if(Shop.activeSelf)
@@ -89,11 +99,28 @@ public class UI : MonoBehaviour
     private void OpenShop()
     {
         Shop.SetActive(true);
+        //RollChanceText.SetActive(true);
         RerollButton.SetActive(true);
     }
     private void CloseShop()
     {
         Shop.SetActive(false);
+        //RollChanceText.SetActive(false);
         RerollButton.SetActive(false);
+    }
+    public void ToggleShopLock()
+    {
+        ShopLocked = !ShopLocked;
+    }
+    private void RollIfUnlocked()
+    {
+        if(!ShopLocked)
+        {
+            Reroll();
+        }
+        else
+        {
+            ShopLocked = false;
+        }
     }
 }

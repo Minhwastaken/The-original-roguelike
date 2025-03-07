@@ -6,7 +6,7 @@ public class Dagger : Unit
     protected override void OnStart()
     {
         float AbilityAnimLength = AbilityAnim.length;
-        Buff AbilityAtkSpeedBuff = new Buff("DaggerAbility", AbilityAnimLength + 2, 0, 2f, Buff.BuffType.AtkSpeed, false);
+        Buff AbilityAtkSpeedBuff = new Buff("DaggerAbilityASBuff", AbilityAnimLength + 2, 0, 2f, Buff.StatType.AtkSpeed, Buff.DurationType.RealTime, false);
         OnAbilityUse.AddListener(() => GainBuff(AbilityAtkSpeedBuff));
     }
 }

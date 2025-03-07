@@ -45,6 +45,10 @@ public class AttackStateScript : StateMachineBehaviour
             else if(stateInfo.IsName("Ability") && animator.GetComponent<Unit>().Stats.Ability)
                 animator.GetComponent<Unit>().SpawnAttack(animator.GetComponent<Unit>().Stats.Ability);
         }
+        else if(GameManager.Instance.State != GameManager.GameState.Battle)
+        {
+            animator.Play("Idle");
+        }
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

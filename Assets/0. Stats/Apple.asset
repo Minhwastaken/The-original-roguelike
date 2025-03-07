@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: Apple
   m_EditorClassIdentifier: 
   Cost: 4
+  Role: 6
+  Traits: 0100000005000000
   Hp: 50
   MaxHp: 50
   Range: 1
+  Mana: 0
   MaxMana: 50
   AtkDamage: 6
-  AbilityPower: 5
-  AtkSpeed: 1
+  AbilityPower: 1
+  AtkSpeed: 0.33
   Armor: 0
   MagicResist: 0
   Movespeed: 100
@@ -35,3 +38,4 @@ MonoBehaviour:
   Ability: {fileID: 0}
   Unit: {fileID: 7348070789959115077, guid: 7756fc98504a38e43b21dfb4cdfac565, type: 3}
   ShopIcon: {fileID: 0}
+  AbilityAffectedByAtkSpeed: 0

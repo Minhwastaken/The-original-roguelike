@@ -520,14 +520,27 @@ MonoBehaviour:
   Hex: {fileID: 0}
   OGHex: {fileID: 0}
   IsMoving: 0
-  Benched: 1
+  Benched: 0
   LerpProgress: 0
   Anim: {fileID: 0}
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
   AttackPoint: {fileID: 3784262262007385400}
+  Sprites: {fileID: 7418736927236695851}
   OnAbilityUse:
+    m_PersistentCalls:
+      m_Calls: []
+  OnKill:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
 --- !u!61 &7505680380406423604

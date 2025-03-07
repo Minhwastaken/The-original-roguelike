@@ -82,10 +82,8 @@ public class Button : MonoBehaviour
             }
             for(int i = 1; i < 3; i++)
             {
-                if(UnitCopies[i])
-                {
-                    Mouse.Instance.RemoveUnit(UnitCopies[i]);
-                }
+                Debug.Log(UnitCopies[i].name);
+                UnitCopies[i].GetComponent<Unit>().RemoveUnit();
             }
 
             if(UpgradedUnitScript.Star < 4)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,6 +12,9 @@ public class GameManager : MonoBehaviour
     public enum GameState {Prep, Battle};
     public GameState State;
     public UnityEvent OnPrepStart, OnPrepEnd, OnBattleStart, OnBattleEnd, OnGoldGain;
+    public List<TraitDefinition> TraitList;
+    public Dictionary<TraitDefinition.Traits, TraitDefinition> TraitDef = new Dictionary<TraitDefinition.Traits, TraitDefinition>();
+    public Dictionary<TraitDefinition.Traits, int> ActiveTraits = new Dictionary<TraitDefinition.Traits, int>();
     // Start is called before the first frame update
     private void Awake() 
     {
@@ -21,9 +25,116 @@ public class GameManager : MonoBehaviour
         State = GameState.Prep;
         OnPrepStart.AddListener(GainGoldWithInterest);
         OnPrepStart.AddListener(() => GainXp(2));
+        foreach(TraitDefinition Trait in TraitList)
+        {
+            TraitDef[Trait.TraitType] = Trait;
+        }
     }
 
-    // Update is called once per frame
+    public void AddTraits(Unit unit)
+    {
+        foreach(TraitDefinition.Traits Trait in unit.Stats.Traits)
+        {
+            if(!ActiveTraits.ContainsKey(Trait))
+            {
+                ActiveTraits[Trait] = 0;
+            }
+            ActiveTraits[Trait]++;
+            UpdateTrait(Trait);
+        }
+        foreach(TraitDefinition.Traits Trait in ActiveTraits.Keys)
+        {
+            Debug.Log(Trait + " : " + ActiveTraits[Trait] + " activate");
+        }
+        UpdateTraitVisuals();
+    }
+    public void RemoveTraits(Unit unit)
+    {
+        foreach(TraitDefinition.Traits Trait in unit.Stats.Traits)
+        {
+            ActiveTraits[Trait]--;
+            if(ActiveTraits[Trait] <= 0)
+            {
+                ActiveTraits.Remove(Trait);
+                DeactivateTrait(Trait);
+            }
+            else
+            {
+                UpdateTrait(Trait);
+            }
+        }
+        foreach(TraitDefinition.Traits Trait in ActiveTraits.Keys)
+        {
+            Debug.Log(Trait + " : " + ActiveTraits[Trait] + " deactivate");
+        }
+        UpdateTraitVisuals();
+    }
+    public void UpdateTrait(TraitDefinition.Traits Trait)
+    {
+        if(ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
+            return;
+        for(int level = 0; level < TraitDef[Trait].Thresholds.Count; level++)
+        {
+            if(ActiveTraits[Trait] == TraitDef[Trait].Thresholds[level])
+            {
+                ActivateTrait(Trait, level);
+                Debug.Log("Level: " + level);
+            }
+        }
+    }
+    public void ActivateTrait(TraitDefinition.Traits Trait, int Level)
+    {
+        foreach(GameObject Unit in GridGen.Instance.Units)
+        {
+            Unit UnitScript = Unit.GetComponent<Unit>();
+            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Stats.Traits)
+            {
+                if(UnitTrait == Trait)
+                {
+                    TraitDef[Trait].ApplyTrait(Unit.GetComponent<Unit>(), Level);
+                    break;
+                }
+            }
+        }
+    }
+    public void DeactivateTrait(TraitDefinition.Traits Trait)
+    {
+        foreach(GameObject Unit in GridGen.Instance.Units)
+        {
+            Unit UnitScript = Unit.GetComponent<Unit>();
+            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Stats.Traits)
+            {
+                if(UnitTrait == Trait)
+                {
+                    TraitDef[Trait].UnapplyTrait(Unit.GetComponent<Unit>());
+                    break;
+                }
+            }
+        }
+    }
+    public void UpdateTraitVisuals()
+    {
+        List<TraitDefinition.Traits> Traits = ActiveTraits.Keys.OrderByDescending(trait => ActiveTraits[trait]).ThenBy(trait => TraitDef[trait].Thresholds[^1]).ToList();
+        foreach(TraitDefinition.Traits Trait in Traits)
+        {
+            Debug.Log("sort: " + Trait + " : " + ActiveTraits[Trait]);
+        }
+        for(int order = 0; order < UI.Instance.TraitHolder.transform.childCount; order++)
+        {
+            if(order >= Traits.Count)
+            {
+                UI.Instance.TraitHolder.transform.GetChild(order).gameObject.SetActive(false);
+                continue;
+            }
+            else
+            {
+                UI.Instance.TraitHolder.transform.GetChild(order).gameObject.SetActive(true);
+            }
+            TraitVisual Visual = UI.Instance.TraitHolder.transform.GetChild(order).GetComponent<TraitVisual>();
+            Visual.Name.text = TraitDef[Traits[order]].Name;
+            Visual.Count.text = ActiveTraits[Traits[order]].ToString();
+        }
+    }
     public void GainGoldWithInterest()
     {
         Gold += 5 + Mathf.Min(Gold/10, MaxInterest);
@@ -78,7 +189,8 @@ public class GameManager : MonoBehaviour
         {
             Xp -= XpCost[Level];
             Level++;
+            UI.Instance.UpdateRollChance();
         }
-        UI.Instance.XpText.text = Xp + "/" + XpCost[Level] + "XP";
+        UI.Instance.XpText.text = Xp + "/" + XpCost[Level] + " XP";
     }
 }
