@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public int Gold, Level = 1, Xp, Stage = 1, MaxInterest = 5;
+    public int Gold, Level = 1, Xp, Stage = 1, MaxInterest = 5, RerollCost = 2;
     public List<int> XpCost = new List<int>{0, 2, 2, 6, 10, 20, 36, 48, 72, 84, 120};
     public enum GameState {Prep, Battle};
     public GameState State;

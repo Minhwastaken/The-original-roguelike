@@ -4,6 +4,13 @@ public class Button : MonoBehaviour
 {
     public GameObject Unit;
     public static int Count = 0;
+    public void OnBuyButton()
+    {
+        if(GameManager.Instance.Gold >= Unit.GetComponent<Unit>().Stats.Cost)
+        {
+            Buy();
+        }
+    }
     public void Buy()
     {
         for(int i = 0; i < 9; i++)

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -182,10 +181,7 @@ public class GridGen : MonoBehaviour
             Unit.transform.position = (Vector2) UnitScript.Hex.transform.position;
             UnitScript.Sprites.transform.rotation = Quaternion.identity;
             Unit.GetComponent<Animator>().Play("Idle");
-            if(Unit.GetComponent<HPBarManager>())
-            {   
-                Unit.GetComponent<HPBarManager>().UpdateHP();
-            }
+            UnitScript.OnGridReset.Invoke();
         }
         if(GameManager.Instance.Stage >= 28)
         {
@@ -206,31 +202,70 @@ public class GridGen : MonoBehaviour
     }
     public void SpawnEnemies(float Credit)
     {
-        int num = 0;
         for(int i = 0; i < Credit; i++)
         {
             if(Enemies.Count >= 28)
                 return;
-
-            GameObject RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2 + 1, GridHeight)];
-            while(RandomHex.GetComponent<Hex>().Taken)
-            {
-                RandomHex = Hexes[Random.Range(0, GridLength), Random.Range(GridHeight/2, GridHeight)];
-                num++;
-                if(num > 100)
-                    return;
-            }
-
             GameObject Enemy = Instantiate(UnitList[Random.Range(0, UnitList.Count)]);
-            Enemy.GetComponent<Unit>().Team = 1;
-            Enemy.GetComponent<Unit>().Hex = RandomHex;
-            RandomHex.GetComponent<Hex>().Taken = Enemy;
-            Enemy.transform.position = (Vector2) Enemy.GetComponent<Unit>().Hex.transform.position;
-            Enemies.Add(Enemy);
+            UnitStats.UnitRole EnemyRole = Enemy.GetComponent<Unit>().Stats.Role;
+            if(EnemyRole == UnitStats.UnitRole.AttackCarry || EnemyRole == UnitStats.UnitRole.MagicCarry)
+            {
+                SpawnEnemy(Enemy, 3, 4);
+            }
+            else if(EnemyRole == UnitStats.UnitRole.AttackCaster || EnemyRole == UnitStats.UnitRole.MagicCaster)
+            {
+                SpawnEnemy(Enemy, 3, 4);
+            }
+            else if(EnemyRole == UnitStats.UnitRole.AttackTank || EnemyRole == UnitStats.UnitRole.MagicTank)
+            {
+                SpawnEnemy(Enemy, 1, 1);
+            }
+            else if(EnemyRole == UnitStats.UnitRole.AttackFighter || EnemyRole == UnitStats.UnitRole.MagicFighter)
+            {
+                SpawnEnemy(Enemy, 1, 3);
+            }
+            else if(EnemyRole == UnitStats.UnitRole.AttackReaper || EnemyRole == UnitStats.UnitRole.MagicReaper)
+            {
+                SpawnEnemy(Enemy, 2, 3);
+            }
         }
     }
-    public void SpawnBacklineEnemy(GameObject Enemy)
+    public void SpawnEnemy(GameObject Enemy, int FrontRow, int BackRow)
     {
-
+        List<GameObject> BacklineHexes = AvailableRows(FrontRow, BackRow);
+        if(BacklineHexes.Count == 0)
+        {
+            if(BackRow < 4)
+                SpawnEnemy(Enemy, FrontRow, BackRow + 1);
+            else if(FrontRow > 1)
+                SpawnEnemy(Enemy, FrontRow - 1, BackRow);
+            return;
+        }
+        GameObject RandomHex = BacklineHexes[Random.Range(0, BacklineHexes.Count)];
+        PlaceEnemy(Enemy, RandomHex);
+    }
+    public List<GameObject> AvailableRows(int FrontRow, int BackRow)
+    {
+        List<GameObject> AvailableTiles = new List<GameObject>();
+        for(int i = 0; i < GridLength; i++)
+        {
+            for(int y = FrontRow + 3; y < BackRow + 4; y++)
+            {
+                Debug.Log(Hexes[i,y]);
+                if(Hexes[i,y].GetComponent<Hex>().Taken == null)
+                {
+                    AvailableTiles.Add(Hexes[i,y]);
+                }
+            }
+        }
+        return AvailableTiles;
+    }
+    public void PlaceEnemy(GameObject Enemy, GameObject Hex)
+    {
+        Enemy.GetComponent<Unit>().Team = 1;
+        Enemy.GetComponent<Unit>().Hex = Hex;
+        Hex.GetComponent<Hex>().Taken = Enemy;
+        Enemy.transform.position = (Vector2) Enemy.GetComponent<Unit>().Hex.transform.position;
+        Enemies.Add(Enemy);
     }
 }

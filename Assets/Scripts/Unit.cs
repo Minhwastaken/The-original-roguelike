@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 public class Unit : MonoBehaviour
 {
     public int Team;
@@ -29,7 +28,7 @@ public class Unit : MonoBehaviour
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
-    public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent();
+    public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(), OnGridReset = new UnityEvent();
     private void Start() 
     {
         Anim = GetComponent<Animator>();
@@ -50,10 +49,8 @@ public class Unit : MonoBehaviour
             {
                 if(!AttackableTarget())
                 {   
-                    //Debug.Log("No target");
                     if(GetTargetInRange())
                     {
-                        //Debug.Log("Target in range available");
                         Target = GetTargetInRange();
                     }
                     else if(GetTarget() && Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
@@ -65,7 +62,6 @@ public class Unit : MonoBehaviour
                             Path = (Hex, TargetHex);
                             TargetHex.GetComponent<Hex>().Taken = gameObject;
                         }   
-                        //Debug.Log("Moving to next target");
                         else
                             Move();
                     }
@@ -76,7 +72,6 @@ public class Unit : MonoBehaviour
                     {
                         UseAbility();
                     }
-                    //Debug.Log("Target attackable");
                     else
                         Attack();
                 }
@@ -379,12 +374,18 @@ public class Unit : MonoBehaviour
     public void TakeDamage(float damage, DamageType type, Unit Attacker)
     {
         Hp -= damage;
-        OnTakeDamage.Invoke();
-        if(Hp <= 0 && gameObject.activeSelf)
+        if(Hp <= 0)
         {
-            Attacker.OnKill.Invoke();
-            OnDeath.Invoke();
-            Die(Attacker);
+            //float OverkillDamage = -Hp;
+            Hp = 0;
+        }
+        OnTakeDamage.Invoke();
+        if(Hp == 0)
+        {
+            if(gameObject.activeSelf)
+            {
+                Die(Attacker);
+            }
         }
     }
     public void Die(Unit Attacker)

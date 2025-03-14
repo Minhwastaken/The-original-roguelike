@@ -10,10 +10,12 @@ public class HPBarManager : MonoBehaviour
     public Text HPText;
     [SerializeField] private Image HPBarImage, CUHPBarImage;
     public float CUHPDelayTimer, CUTimer;
+    private Coroutine CatchUpCoroutine;
     private void Start()
     {
         Unit = gameObject.transform.parent.GetComponent<Unit>();
         Unit.OnTakeDamage.AddListener(UpdateHP);
+        Unit.OnGridReset.AddListener(UpdateHP);
         HPBar.maxValue = Unit.MaxHp;
         HPBar.value = Unit.Hp;
         CUHPBar.maxValue = Unit.MaxHp;
@@ -25,7 +27,11 @@ public class HPBarManager : MonoBehaviour
         CUHPBar.maxValue = Unit.MaxHp;
         HPBar.value = Unit.Hp;
         //HPText.text = Mathf.Round(Hp).ToString() + " / " + Mathf.Round(MaxHp).ToString();
-        StartCoroutine(HpBarCatchUp());
+        if(CatchUpCoroutine != null) 
+        {
+            StopCoroutine(CatchUpCoroutine);
+        }
+        CatchUpCoroutine = StartCoroutine(HpBarCatchUp());
     }
     private IEnumerator HpBarCatchUp()
     {
@@ -44,7 +50,6 @@ public class HPBarManager : MonoBehaviour
                 ChipProgression = CUTimer * CUHPBarSpeed;
                 ChipProgression *= ChipProgression;
                 CUHPBar.value = Mathf.Lerp(CUHPBar.value, HPBar.value, ChipProgression);
-                Debug.Log("what" + Mathf.Lerp(CUHPBar.value, HPBar.value, ChipProgression) + " " + ChipProgression);
                 yield return null;
             }
             if(CurrentHp == Unit.Hp)

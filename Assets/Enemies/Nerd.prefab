@@ -160,6 +160,7 @@ MonoBehaviour:
   TargetHex: {fileID: 0}
   Star: 1
   AttackPoint: {fileID: 0}
+  Sprites: {fileID: 3686484025733909145}
   OnAbilityUse:
     m_PersistentCalls:
       m_Calls: []
@@ -170,6 +171,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
 --- !u!61 &7458768832038800678

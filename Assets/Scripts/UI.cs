@@ -33,6 +33,14 @@ public class UI : MonoBehaviour
         Reroll();
         GameManager.Instance.OnPrepStart.AddListener(RollIfUnlocked);
     }
+    public void OnRerollButton()
+    {
+        if(GameManager.Instance.Gold >= GameManager.Instance.RerollCost)
+        {
+            Reroll();
+            GameManager.Instance.LoseGold(GameManager.Instance.RerollCost);
+        }
+    }
     public void Reroll()
     {
         foreach(GameObject Button in BuyButtons)
