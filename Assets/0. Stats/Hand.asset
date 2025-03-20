@@ -15,8 +15,8 @@ MonoBehaviour:
   Cost: 3
   Role: 8
   Traits: 0200000006000000
-  Hp: 5
-  MaxHp: 5
+  Hp: 20
+  MaxHp: 20
   Range: 1
   Mana: 0
   MaxMana: 50

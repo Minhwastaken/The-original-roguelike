@@ -7,7 +7,7 @@ public class StatTrait : TraitDefinition
 {
     public List<Buff.StatType> StatTypes;
     public List<NestedList<int>> StatMagnitudes;
-    Buff TraitBuff = new Buff("BruteBuff", 0, 0, 10, Buff.StatType.AD, Buff.DurationType.Permanent, false);
+    Buff TraitBuff = new Buff("BruteBuff", 0, 0, 7, Buff.StatType.AD, Buff.DurationType.Permanent, false);
     public override void ApplyTrait(Unit unit, int level)
     {
         unit.GainBuff(TraitBuff);

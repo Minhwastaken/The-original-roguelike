@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Bow
   m_EditorClassIdentifier: 
   Cost: 2
+  Role: 0
   Traits: 0000000006000000
-  Hp: 5
-  MaxHp: 5
+  Hp: 10
+  MaxHp: 10
   Range: 3
   Mana: 0
   MaxMana: 100

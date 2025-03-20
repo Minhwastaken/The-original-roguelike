@@ -52,7 +52,7 @@ public abstract class Attack : MonoBehaviour
     }
     public void TriggerAttack(Unit Target)
     {
-        if(Target)
+        if(Target && Target.gameObject.activeSelf)
         {
             AttackLogic();
             OnAttack.Invoke();
