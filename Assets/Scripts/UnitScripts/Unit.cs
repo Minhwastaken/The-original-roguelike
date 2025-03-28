@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, IDamageable
 {
     public int Team;
     public UnitStats Stats;
@@ -29,6 +29,15 @@ public class Unit : MonoBehaviour
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
     public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(), OnGridReset = new UnityEvent();
+    [Header("Abilities")]
+    public GameObject AttackPrefab;
+    public GameObject AbilityPrefab;
+    public GameObject AttackOverride;
+    [Header("Visuals")]
+    public Sprite ShopIcon;
+    [Header("Specials")]
+    public bool PassiveAbility = false;
+    public bool AbilityAffectedByAtkSpeed = false;
     private void Start() 
     {
         Anim = GetComponent<Animator>();
@@ -47,13 +56,18 @@ public class Unit : MonoBehaviour
         {
             while(GameManager.Instance.State == GameManager.GameState.Battle)
             {
+                if(!Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    yield return null;
+                    continue;
+                }
                 if(!AttackableTarget())
                 {   
                     if(GetTargetInRange())
                     {
                         Target = GetTargetInRange();
                     }
-                    else if(GetTarget() && Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                    else if(GetTarget())
                     {
                         if(!IsMoving)
                         {
@@ -66,9 +80,9 @@ public class Unit : MonoBehaviour
                             Move();
                     }
                 }
-                else if(Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                else
                 {
-                    if(Stats.Ability && Mana >= MaxMana)
+                    if(AbilityPrefab && !PassiveAbility && Mana >= MaxMana)
                     {
                         UseAbility();
                     }
@@ -106,31 +120,30 @@ public class Unit : MonoBehaviour
         Attack.GetComponent<Attack>().Attacker = this;
         if(Target)
         {
-            Attack.GetComponent<Attack>().Target = Target.GetComponent<Unit>();
-            if(Attack.GetComponent<Projectile>())
-            {
-                SetUpProjectile(Attack, Target);
-            }
-            if(Attack.GetComponent<AOEAttack>())
-            {
-                if(Attack.GetComponent<AOEAttack>().SpawnAtTarget)
-                {
-                    Attack.transform.position = Target.transform.position;
-                }
-            }
+            SetUpAttack(Attack, Target);
         }
         else
         {
-            if(Attack.GetComponent<Projectile>())
+            SetUpAttack(Attack, GetTarget());
+        }
+    }
+    private void SetUpAttack(GameObject Attack, GameObject Target)
+    {
+        if(Target == null)
+        {
+            return;
+        }
+        Attack.GetComponent<Attack>().Target = Target.GetComponent<Unit>();
+        if(Attack.GetComponent<Projectile>())
+        {
+            SetUpProjectile(Attack, Target);
+        }
+
+        if(Attack.GetComponent<AOEAttack>())
+        {
+            if(Attack.GetComponent<AOEAttack>().SpawnAtTarget)
             {
-                SetUpProjectile(Attack, GetTarget());
-            }
-            if(Attack.GetComponent<AOEAttack>())
-            {
-                if(Attack.GetComponent<AOEAttack>().SpawnAtTarget)
-                {
-                    Attack.transform.position = GetTarget().transform.position;
-                }
+                Attack.transform.position = Target.transform.position;
             }
         }
     }
@@ -140,10 +153,17 @@ public class Unit : MonoBehaviour
     }
     private void SetUpProjectile(GameObject Attack, GameObject Target)
     {
-        Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - transform.position)).normalized;
         if(AttackPoint)
+        {
             Attack.transform.position = AttackPoint.position;
-        Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
+            Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - AttackPoint.position)).normalized;
+            Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
+        }
+        else
+        {
+            Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - transform.position)).normalized;
+            Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
+        }
     }
     private void Move()
     {

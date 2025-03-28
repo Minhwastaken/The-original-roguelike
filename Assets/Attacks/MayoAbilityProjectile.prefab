@@ -5052,7 +5052,7 @@ GameObject:
   - component: {fileID: 2972556764487798037}
   - component: {fileID: 7441274680229889695}
   - component: {fileID: 8447699576664672629}
-  - component: {fileID: 5970323750763726955}
+  - component: {fileID: -3720680806203339130}
   m_Layer: 0
   m_Name: MayoAbilityProjectile
   m_TagString: Untagged
@@ -5139,7 +5139,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5970323750763726955
+--- !u!114 &-3720680806203339130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5148,16 +5148,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8984733544962408346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c55193b761921d408ab4beb1e5daa75, type: 3}
+  m_Script: {fileID: 11500000, guid: c2713a5cb11fe1e4c9b4a1ec99a06a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Attacker: {fileID: 0}
   Target: {fileID: 0}
-  DamageType: 0
+  DamageType: 1
   HitEffect: {fileID: 0}
   HitEffectPos: {fileID: 0}
-  ADScale: 1
-  APScale: 0
+  ADScale: 0
+  APScale: 2
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -5180,4 +5180,3 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Speed: 6
-  Direction: {x: 0, y: 0}

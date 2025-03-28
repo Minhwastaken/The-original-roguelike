@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4715832010730135188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7001429314638614668}
+  m_Layer: 3
+  m_Name: AttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7001429314638614668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4715832010730135188}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 7652841507971592675}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5051888552635553045
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,7 +42,7 @@ GameObject:
   - component: {fileID: 1556149507260235535}
   - component: {fileID: 9000856677862840576}
   m_Layer: 3
-  m_Name: Ketchup
+  m_Name: Bottle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,7 +127,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5973223677130886005}
-  - component: {fileID: 1515121745008487158}
+  - component: {fileID: 2367929907367315794}
   - component: {fileID: 7505680380406423604}
   - component: {fileID: 7385987966726955729}
   - component: {fileID: 6547108367831065458}
@@ -124,7 +155,7 @@ Transform:
   - {fileID: 7652841507971592675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1515121745008487158
+--- !u!114 &2367929907367315794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,11 +164,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7348070789959115077}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87053160cb277e74d9c814b310be563e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0100f41720660624fa80d848cfeb33fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Team: 0
-  Stats: {fileID: 11400000, guid: 126427f3575d45940a35956199d18b7a, type: 2}
+  Stats: {fileID: 11400000, guid: b3ae2e03be7e6cd4280cca196b83ae00, type: 2}
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -163,7 +194,7 @@ MonoBehaviour:
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
-  AttackPoint: {fileID: 0}
+  AttackPoint: {fileID: 7001429314638614668}
   Sprites: {fileID: 7418736927236695851}
   OnAbilityUse:
     m_PersistentCalls:
@@ -183,10 +214,15 @@ MonoBehaviour:
   OnGridReset:
     m_PersistentCalls:
       m_Calls: []
-  AbilityHealAPScale:
-  - 1
-  - 2
-  - 3
+  AttackPrefab: {fileID: 8984733544962408346, guid: bf416a2bded734f4385e792a60bafd69, type: 3}
+  AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
+  AttackOverride: {fileID: 0}
+  ShopIcon: {fileID: 0}
+  PassiveAbility: 1
+  AbilityAffectedByAtkSpeed: 1
+  EnhancedAttack: {fileID: 8984733544962408346, guid: 65020873bfeee374094b334c97253c7e, type: 3}
+  AttackCount: 0
+  AttacksPerEnhance: 3
 --- !u!61 &7505680380406423604
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -221,7 +257,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.000000029802322, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -231,7 +267,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.36743838, y: 1}
   m_EdgeRadius: 0
 --- !u!95 &7385987966726955729
 Animator:
@@ -243,7 +279,7 @@ Animator:
   m_GameObject: {fileID: 7348070789959115077}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6a381c727e7e95e47a01626364bb687d, type: 2}
+  m_Controller: {fileID: 9100000, guid: d067e27592b29cd4eb1d766f57c04238, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -312,6 +348,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1556149507260235535}
+  - {fileID: 7001429314638614668}
   m_Father: {fileID: 5973223677130886005}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &381591798995095054
@@ -322,10 +359,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5973223677130886005}
     m_Modifications:
-    - target: {fileID: 2025573995512764887, guid: eefeafc9797f79b4ebc79a138584c810, type: 3}
-      propertyPath: Unit
-      value: 
-      objectReference: {fileID: 1515121745008487158}
     - target: {fileID: 2844463376789717528, guid: eefeafc9797f79b4ebc79a138584c810, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

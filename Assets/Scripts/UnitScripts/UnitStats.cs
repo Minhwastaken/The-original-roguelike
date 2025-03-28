@@ -21,12 +21,4 @@ public class UnitStats : ScriptableObject
     public float CritChance = 25, CritDamage = 1.4f;
     public float ADScale = 1.8f, HpScale = 1.8f;
     public float SizeScale = 1.1f;
-    [Header("Abilities")]
-    public GameObject Attack;
-    public GameObject Ability;
-    [Header("Visuals")]
-    public GameObject Unit;
-    public Sprite ShopIcon;
-    [Header("Specials")]
-    public bool AbilityAffectedByAtkSpeed = false;
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,20 +18,17 @@ public abstract class Attack : MonoBehaviour
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
-    public float Lifespan = 5, Duration;
+    public float Lifespan = 5;
     public UnityEvent OnAttack, OnDamageDealt;
-    // Start is called before the first frame update
     private void Start()
     {
         GetStats();
+        StartCoroutine(DestroyWithLifespan());
     }
-
-    // Update is called once per frame
-    private void Update()
+    private IEnumerator DestroyWithLifespan()
     {
-        Duration += Time.deltaTime;
-        if(Lifespan<=Duration)
-            DestroySelf();
+        yield return new WaitForSeconds(Lifespan);
+        DestroySelf();
     }
     public void GetStats()
     {

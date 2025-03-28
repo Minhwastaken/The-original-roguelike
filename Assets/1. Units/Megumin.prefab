@@ -184,8 +184,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5973223677130886005}
   - component: {fileID: 8427125531202643573}
-  - component: {fileID: 7505680380406423604}
   - component: {fileID: 7385987966726955729}
+  - component: {fileID: 7505680380406423604}
   - component: {fileID: 6547108367831065458}
   m_Layer: 3
   m_Name: Megumin
@@ -247,8 +247,8 @@ MonoBehaviour:
   Benched: 0
   LerpProgress: 0
   Anim: {fileID: 0}
-  Target: {fileID: 0}
-  TargetHex: {fileID: 0}
+  Target: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
+  TargetHex: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
   Star: 1
   AttackPoint: {fileID: 0}
   Sprites: {fileID: 7418736927236695851}
@@ -270,6 +270,32 @@ MonoBehaviour:
   OnGridReset:
     m_PersistentCalls:
       m_Calls: []
+  AttackPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
+  AbilityPrefab: {fileID: 8984733544962408346, guid: 9902105db76f9084ca3158f2b88f6a9a, type: 3}
+  ShopIcon: {fileID: 0}
+  AbilityAffectedByAtkSpeed: 0
+--- !u!95 &7385987966726955729
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7348070789959115077}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 72fe4e864cd7cfc4993ebc1d8e5c45ed, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!61 &7505680380406423604
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -304,7 +330,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.00391227, y: 0.0078246}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -314,30 +340,8 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.41315836, y: 1.1721402}
   m_EdgeRadius: 0
---- !u!95 &7385987966726955729
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7348070789959115077}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 72fe4e864cd7cfc4993ebc1d8e5c45ed, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!50 &6547108367831065458
 Rigidbody2D:
   serializedVersion: 5

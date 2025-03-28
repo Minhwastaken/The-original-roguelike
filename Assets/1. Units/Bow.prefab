@@ -562,6 +562,10 @@ MonoBehaviour:
   OnGridReset:
     m_PersistentCalls:
       m_Calls: []
+  AttackPrefab: {fileID: 8412880745274351775, guid: 61a1222240d25134d9ec0090057a6c33, type: 3}
+  AbilityPrefab: {fileID: 947315176613465897, guid: 81007e41f0d025044be3f255c3069a75, type: 3}
+  ShopIcon: {fileID: 0}
+  AbilityAffectedByAtkSpeed: 1
 --- !u!61 &7505680380406423604
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -606,7 +610,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.9355104, y: 0.50020564}
   m_EdgeRadius: 0
 --- !u!95 &7385987966726955729
 Animator:

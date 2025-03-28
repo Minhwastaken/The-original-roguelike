@@ -7,9 +7,11 @@ public class AttackStateScript : StateMachineBehaviour
     private float AtkTriggerTime;
     private float AtkTimer = 0;
     private bool AtkTriggered = false;
+    private Unit UnitScript;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        UnitScript = animator.GetComponent<Unit>();
         if(AnimLength == -1)
         {
             AnimLength = stateInfo.length * animator.speed;
@@ -17,19 +19,22 @@ public class AttackStateScript : StateMachineBehaviour
         }
         stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         AtkTriggerTime = AtkTriggerFrame / 60;
-        if(stateInfo.IsName("Attack") || animator.GetComponent<Unit>().Stats.AbilityAffectedByAtkSpeed)
+        if(stateInfo.IsName("Attack") || UnitScript.AbilityAffectedByAtkSpeed)
         {
-            animator.speed = animator.GetComponent<Unit>().AtkSpeed * AnimLength;
-            if(animator.gameObject.name == "Bow *")
-                Debug.Log(animator.speed);
+            animator.speed = UnitScript.AtkSpeed * AnimLength;
         }
-        else if(stateInfo.IsName("Ability") && !animator.GetComponent<Unit>().Stats.AbilityAffectedByAtkSpeed)
+        else if(stateInfo.IsName("Ability") && !UnitScript.AbilityAffectedByAtkSpeed)
         {
             animator.speed = 1;
         }
         else
         {
             Debug.Log("What state we in???");
+        }
+        if(animator.speed > AtkTriggerFrame)
+        {
+            AtkTriggered = true;
+            Spawn(stateInfo);
         }
     }
 
@@ -40,10 +45,7 @@ public class AttackStateScript : StateMachineBehaviour
         if (AtkTimer >= AtkTriggerTime && !AtkTriggered && GameManager.Instance.State == GameManager.GameState.Battle)
         {
             AtkTriggered = true;
-            if(stateInfo.IsName("Attack") && animator.GetComponent<Unit>().Stats.Attack)
-                animator.GetComponent<Unit>().SpawnAttack(animator.GetComponent<Unit>().Stats.Attack);
-            else if(stateInfo.IsName("Ability") && animator.GetComponent<Unit>().Stats.Ability)
-                animator.GetComponent<Unit>().SpawnAttack(animator.GetComponent<Unit>().Stats.Ability);
+            Spawn(stateInfo);
         }
         else if(GameManager.Instance.State != GameManager.GameState.Battle)
         {
@@ -57,7 +59,18 @@ public class AttackStateScript : StateMachineBehaviour
         AtkTriggered = false;
         AtkTimer = 0;
     }
-
+    private void Spawn(AnimatorStateInfo stateInfo)
+    {
+        if(stateInfo.IsName("Attack") && UnitScript.AttackPrefab)
+        {
+            if(UnitScript.AttackOverride)
+                UnitScript.SpawnAttack(UnitScript.AttackOverride);
+            else
+                UnitScript.SpawnAttack(UnitScript.AttackPrefab);
+        }
+        else if(stateInfo.IsName("Ability") && UnitScript.AbilityPrefab)
+            UnitScript.SpawnAttack(UnitScript.AbilityPrefab);
+    }
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
