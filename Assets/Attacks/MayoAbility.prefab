@@ -73,4 +73,5 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   SpawnNumber: 0
+  SpreadAngle: 30
   SpawnPrefab: {fileID: 8984733544962408346, guid: 98c8595af25b6f74b8a81bd59248f0c9, type: 3}

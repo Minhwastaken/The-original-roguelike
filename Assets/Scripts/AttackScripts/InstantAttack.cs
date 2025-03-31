@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChillGuyAtk : Attack
+public class InstantAttack : Attack
 {
-    private void Start()
+    protected override void Start()
     {
-        GetStats();
+        base.Start();
         TriggerAttack(Target);
     }
     public override void AttackLogic()
@@ -15,5 +15,6 @@ public class ChillGuyAtk : Attack
     }
     public override void DamageDealtLogic()
     {
+        DestroySelf();
     }
 }

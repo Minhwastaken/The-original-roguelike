@@ -5085,7 +5085,6 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 0
-  Duration: 0
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -5093,4 +5092,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Speed: 15
+  RotationSpeed: 0
+  HitDistance: 1
   Explosion: {fileID: 8984733544962408346, guid: 2a0bad3d68a409545a6156b3ad94d624, type: 3}

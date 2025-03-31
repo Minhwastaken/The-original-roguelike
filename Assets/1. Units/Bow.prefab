@@ -564,7 +564,9 @@ MonoBehaviour:
       m_Calls: []
   AttackPrefab: {fileID: 8412880745274351775, guid: 61a1222240d25134d9ec0090057a6c33, type: 3}
   AbilityPrefab: {fileID: 947315176613465897, guid: 81007e41f0d025044be3f255c3069a75, type: 3}
+  AttackOverride: {fileID: 0}
   ShopIcon: {fileID: 0}
+  PassiveAbility: 0
   AbilityAffectedByAtkSpeed: 1
 --- !u!61 &7505680380406423604
 BoxCollider2D:
@@ -685,7 +687,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7418736927236695851}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_ConstrainProportionsScale: 1

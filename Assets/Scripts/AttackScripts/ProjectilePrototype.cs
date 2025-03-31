@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : Attack
+public class ProjectilePrototype : Attack
 {
     public float Speed;
     public Vector2 Direction;

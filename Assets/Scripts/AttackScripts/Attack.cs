@@ -4,10 +4,10 @@ using UnityEngine.Events;
 
 public abstract class Attack : MonoBehaviour
 {
+    
     public Unit Attacker, Target;
     public Unit.DamageType DamageType;
-    public GameObject HitEffect;
-    public Transform HitEffectPos;
+    public SerializableDictionary<Unit.DamageType, float> StatScale = new SerializableDictionary<Unit.DamageType, float>();
     public float ADScale = 1, APScale;
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
@@ -19,8 +19,10 @@ public abstract class Attack : MonoBehaviour
     public float Omnivamp;
     public float CritChance, CritDamage;
     public float Lifespan = 5;
-    public UnityEvent OnAttack, OnDamageDealt;
-    private void Start()
+    [HideInInspector]public UnityEvent OnAttack, OnDamageDealt;
+    public GameObject HitEffect;
+    public Transform HitEffectPos;
+    protected virtual void Start()
     {
         GetStats();
         StartCoroutine(DestroyWithLifespan());
@@ -54,6 +56,7 @@ public abstract class Attack : MonoBehaviour
         {
             AttackLogic();
             OnAttack.Invoke();
+            //float TotalDamage;
             Target.GetComponent<Unit>().TakeDamage(AtkDamage * ADScale + AbilityPower * APScale, DamageType, Attacker);
             DamageDealtLogic();
             OnDamageDealt.Invoke();
@@ -69,7 +72,7 @@ public abstract class Attack : MonoBehaviour
         {
             Instantiate(HitEffect, transform.position, Quaternion.identity);
         }
-        GridGen.Instance.Attacks.Remove(gameObject);
+        //GridGen.Instance.Attacks.Remove(gameObject);
         Destroy(gameObject);
     }
     public abstract void AttackLogic();

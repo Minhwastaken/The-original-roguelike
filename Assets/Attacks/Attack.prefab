@@ -42,6 +42,7 @@ BoxCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8412880745274351775}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -65,7 +66,8 @@ BoxCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
@@ -76,7 +78,6 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &2613963135864906790
@@ -91,6 +92,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8cb1ef2919892428a05043a0e9d5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Dictionary:
+    entries:
+    - key: 0
+      value: 0
+  Attacker: {fileID: 0}
+  Target: {fileID: 0}
+  DamageType: 0
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  ADScale: 1
+  APScale: 0
+  Hp: 0
+  MaxHp: 0
+  AtkDamage: 0
+  AbilityPower: 0
+  AtkSpeed: 0
+  Range: 0
+  Armor: 0
+  MagicResist: 0
+  Movespeed: 0
+  DamageAmp: 0
+  Durability: 0
+  Omnivamp: 0
+  CritChance: 0
+  CritDamage: 0
+  Lifespan: 5
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamageDealt:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &9045250023221557362
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +173,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

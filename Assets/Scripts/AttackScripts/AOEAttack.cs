@@ -12,7 +12,7 @@ public class AOEAttack : Attack
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.name);
+        //Debug.Log(other.name);
         if(LingerTime < 0 || GameManager.Instance.State == GameManager.GameState.Prep)
             return;
         if(other.gameObject.layer == GridGen.Instance.UnitLayer)

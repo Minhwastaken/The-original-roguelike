@@ -2,10 +2,13 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEditor;
 public class Unit : MonoBehaviour, IDamageable
 {
     public int Team;
     public UnitStats Stats;
+    public enum StatType {AD, AP, MaxHp, Hp, AtkSpeed, Range, Armor, MagicResist, Movespeed, DamageAmp, Durability, Omnivamp, CritChance, CritDamage};
+    public SerializableDictionary<StatType, float> Stat = new SerializableDictionary<StatType, float>();
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
@@ -38,6 +41,19 @@ public class Unit : MonoBehaviour, IDamageable
     [Header("Specials")]
     public bool PassiveAbility = false;
     public bool AbilityAffectedByAtkSpeed = false;
+    [ContextMenu("Set Stat Dictionary")]
+    private void SetStats() 
+    {
+        Dictionary<StatType, float> tempDict = new Dictionary<StatType, float> 
+        {
+            { StatType.Hp, 1 }, { StatType.MaxHp, 1 }, { StatType.AD, 1 }, { StatType.AP, 1 }, { StatType.AtkSpeed, 1 },
+            { StatType.Range, 1 }, { StatType.Armor, 1 }, { StatType.MagicResist, 1 },
+            { StatType.Omnivamp, 1 }, { StatType.CritChance, 1 }, { StatType.CritDamage, 1 },
+            { StatType.DamageAmp, 1 }, { StatType.Durability, 1 }, { StatType.Movespeed, 1 }
+        };
+
+        Stat.FromDictionary(tempDict); // Convert dictionary to serializable list
+    }
     private void Start() 
     {
         Anim = GetComponent<Animator>();
@@ -114,10 +130,14 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void SpawnAttack(GameObject AttackGO)
     {
-        GameObject Attack = Instantiate(AttackGO, transform.position, transform.rotation);
+        GameObject Attack = Instantiate(AttackGO, Sprites.transform.position, Sprites.transform.rotation);
         GridGen.Instance.Attacks.Add(Attack);
         Attack.transform.localScale = new Vector3(Attack.transform.localScale.x * Mathf.Pow(Stats.SizeScale, Star - 1), Attack.transform.localScale.y * Mathf.Pow(Stats.SizeScale, Star - 1), 1);
         Attack.GetComponent<Attack>().Attacker = this;
+        if(AttackPoint)
+        {
+            Attack.transform.position = AttackPoint.position;
+        }
         if(Target)
         {
             SetUpAttack(Attack, Target);
@@ -153,17 +173,8 @@ public class Unit : MonoBehaviour, IDamageable
     }
     private void SetUpProjectile(GameObject Attack, GameObject Target)
     {
-        if(AttackPoint)
-        {
-            Attack.transform.position = AttackPoint.position;
-            Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - AttackPoint.position)).normalized;
-            Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
-        }
-        else
-        {
-            Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - transform.position)).normalized;
-            Attack.transform.rotation = Quaternion.Euler(0,0,Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
-        }
+        Attack.GetComponent<Projectile>().Direction =((Vector2) (Target.transform.position - Attack.transform.position)).normalized;
+        Attack.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, Attack.GetComponent<Projectile>().Direction));
     }
     private void Move()
     {
@@ -688,6 +699,30 @@ public class Unit : MonoBehaviour, IDamageable
             }
         }
     }
+    
+[CustomPropertyDrawer(typeof(KeyValuePair<StatType, float>))]
+public class KeyValuePairDrawer : PropertyDrawer {
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+        EditorGUI.BeginProperty(position, label, property);
+
+        // Find the properties
+        SerializedProperty keyProp = property.FindPropertyRelative("StatType");
+        SerializedProperty valueProp = property.FindPropertyRelative("Scale");
+
+        // Set the label to the key name (instead of "Element 0", "Element 1", etc.)
+        string keyLabel = keyProp.enumDisplayNames[keyProp.enumValueIndex]; // Get StatType name
+        GUIContent customLabel = new GUIContent(keyLabel);
+
+        // Draw key-value pair
+        Rect keyRect = new Rect(position.x, position.y, position.width * 0.5f - 5, position.height);
+        Rect valueRect = new Rect(position.x + position.width * 0.5f, position.y, position.width * 0.5f - 5, position.height);
+
+        EditorGUI.LabelField(keyRect, customLabel); // Show the key as a label
+        EditorGUI.PropertyField(valueRect, valueProp, GUIContent.none);
+
+        EditorGUI.EndProperty();
+    }
+}
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;

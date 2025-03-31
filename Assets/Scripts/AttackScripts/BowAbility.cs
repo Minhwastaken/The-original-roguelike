@@ -5,7 +5,7 @@ using UnityEngine;
 public class BowAbility : Projectile
 {
     public List<Attack> Attacks = new List<Attack>();
-    public void Start()
+    protected override void Start()
     {
         //GetStats();
         foreach (Attack Attack in Attacks)

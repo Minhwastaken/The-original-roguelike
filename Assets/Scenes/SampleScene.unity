@@ -6485,6 +6485,9 @@ MonoBehaviour:
   - {fileID: 7348070789959115077, guid: a77869bbcbf6f9f42bdd9f4a6c5afc37, type: 3}
   - {fileID: 7348070789959115077, guid: e403c090e2813ff4da4501f2c926d1ef, type: 3}
   - {fileID: 7348070789959115077, guid: e3591c35148c35c4780fe5513d94283f, type: 3}
+  - {fileID: 7348070789959115077, guid: 023e428e59c43fe4a98d1dcf68326dec, type: 3}
+  - {fileID: 7348070789959115077, guid: e97d9f813a5d6af43a8145456c7c360a, type: 3}
+  - {fileID: 7348070789959115077, guid: 66b9059f859474c4c82bb51cd4acd1b6, type: 3}
   EnemyList:
   - {fileID: 7431400569424583945, guid: e17c823851587104fb660b64be651eff, type: 3}
   OneCosts:

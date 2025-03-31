@@ -65,7 +65,7 @@ MonoBehaviour:
   Omnivamp: 0
   CritChance: 0
   CritDamage: 0
-  Lifespan: 5
+  Lifespan: 0.1
   OnAttack:
     m_PersistentCalls:
       m_Calls: []

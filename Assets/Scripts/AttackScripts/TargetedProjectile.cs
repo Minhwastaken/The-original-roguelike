@@ -1,22 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TargetedProjectile : Attack
 {
-    public float Speed;
+    public float Speed, RotationSpeed, HitDistance = 1f, RotationSpeedIncreaseRate = 1f;
+    protected override void Start()
+    {
+        base.Start();
+        //transform.up = (Vector2)(Target.transform.position - transform.position);
+    }
     private void Update()
     {
-        if(Target)
+        if(Target && Target.gameObject.activeSelf)
         {
-            Vector2 Direction = ((Vector2)(Target.transform.position - transform.position)).normalized;
+            RotationSpeed += RotationSpeedIncreaseRate * Time.deltaTime;
+            Vector2 TrueDirection = ((Vector2)(Target.transform.position - transform.position)).normalized; 
+            Vector2 Direction = (Vector2) Vector3.RotateTowards((Vector2)transform.up, TrueDirection, RotationSpeed * Time.deltaTime, 0.0f);
             transform.position += (Vector3)Direction * Speed * Time.deltaTime;
             transform.up = Direction;
-            if(Vector2.Distance(transform.position, Target.transform.position) < 0.1f)
-            {
-                transform.position = Target.transform.position;
-                TriggerAttack(Target);
-            }
         }
         else if (Attacker.GetComponent<Unit>().GetTarget())
         {
@@ -27,22 +27,18 @@ public class TargetedProjectile : Attack
             DestroySelf();
         }
     }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject == Target.gameObject)
+        {
+            TriggerAttack(other.gameObject.GetComponent<Unit>());
+        }
+    }
     public override void AttackLogic()
     {
     }
     public override void DamageDealtLogic()
     {
         DestroySelf();
-    }
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.layer == GridGen.Instance.UnitLayer)
-        {
-            if(other.gameObject.GetComponent<Unit>().Team != Attacker.Team)
-            {
-                transform.position = other.transform.position;
-                TriggerAttack(other.gameObject.GetComponent<Unit>());
-            }
-        }
     }
 }
