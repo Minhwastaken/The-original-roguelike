@@ -34,11 +34,8 @@ public class TargetedProjectile : Attack
             TriggerAttack(other.gameObject.GetComponent<Unit>());
         }
     }
-    public override void AttackLogic()
+    protected override void DamageDealtLogic()
     {
-    }
-    public override void DamageDealtLogic()
-    {
-        DestroySelf();
+        OnDamageDealt.AddListener(DestroySelf);
     }
 }

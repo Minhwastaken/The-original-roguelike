@@ -25,10 +25,7 @@ public class ProjectilePrototype : Attack
             }
         }
     }
-    public override void AttackLogic()
-    {
-    }
-    public override void DamageDealtLogic()
+    protected override void DamageDealtLogic()
     {
         OnDamageDealt.AddListener(DestroySelf);
     }

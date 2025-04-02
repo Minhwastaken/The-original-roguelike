@@ -31,11 +31,6 @@ public class AttackStateScript : StateMachineBehaviour
         {
             Debug.Log("What state we in???");
         }
-        if(animator.speed > AtkTriggerFrame)
-        {
-            AtkTriggered = true;
-            Spawn(stateInfo);
-        }
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -52,10 +47,15 @@ public class AttackStateScript : StateMachineBehaviour
             animator.Play("Idle");
         }
     }
+    
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if(AtkTriggered == false)
+        {
+            Spawn(stateInfo);
+        }
         AtkTriggered = false;
         AtkTimer = 0;
     }

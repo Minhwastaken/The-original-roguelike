@@ -8,7 +8,6 @@ public class Unit : MonoBehaviour, IDamageable
     public int Team;
     public UnitStats Stats;
     public enum StatType {AD, AP, MaxHp, Hp, AtkSpeed, Range, Armor, MagicResist, Movespeed, DamageAmp, Durability, Omnivamp, CritChance, CritDamage};
-    public SerializableDictionary<StatType, float> Stat = new SerializableDictionary<StatType, float>();
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
@@ -41,19 +40,6 @@ public class Unit : MonoBehaviour, IDamageable
     [Header("Specials")]
     public bool PassiveAbility = false;
     public bool AbilityAffectedByAtkSpeed = false;
-    [ContextMenu("Set Stat Dictionary")]
-    private void SetStats() 
-    {
-        Dictionary<StatType, float> tempDict = new Dictionary<StatType, float> 
-        {
-            { StatType.Hp, 1 }, { StatType.MaxHp, 1 }, { StatType.AD, 1 }, { StatType.AP, 1 }, { StatType.AtkSpeed, 1 },
-            { StatType.Range, 1 }, { StatType.Armor, 1 }, { StatType.MagicResist, 1 },
-            { StatType.Omnivamp, 1 }, { StatType.CritChance, 1 }, { StatType.CritDamage, 1 },
-            { StatType.DamageAmp, 1 }, { StatType.Durability, 1 }, { StatType.Movespeed, 1 }
-        };
-
-        Stat.FromDictionary(tempDict); // Convert dictionary to serializable list
-    }
     private void Start() 
     {
         Anim = GetComponent<Animator>();
@@ -131,9 +117,10 @@ public class Unit : MonoBehaviour, IDamageable
     public void SpawnAttack(GameObject AttackGO)
     {
         GameObject Attack = Instantiate(AttackGO, Sprites.transform.position, Sprites.transform.rotation);
+        Attack.GetComponent<Attack>().Attacker = this;
         GridGen.Instance.Attacks.Add(Attack);
         Attack.transform.localScale = new Vector3(Attack.transform.localScale.x * Mathf.Pow(Stats.SizeScale, Star - 1), Attack.transform.localScale.y * Mathf.Pow(Stats.SizeScale, Star - 1), 1);
-        Attack.GetComponent<Attack>().Attacker = this;
+
         if(AttackPoint)
         {
             Attack.transform.position = AttackPoint.position;
@@ -315,7 +302,7 @@ public class Unit : MonoBehaviour, IDamageable
         }
         return ClosestEnemy;
     }
-    private GameObject GetTargetInRange()
+    public GameObject GetTargetInRange()
     {
         float MinDist = 99;
         GameObject ClosestEnemy = null;
@@ -474,7 +461,6 @@ public class Unit : MonoBehaviour, IDamageable
         if(Target.Hp + amount > Target.MaxHp)
         {
             amount = Target.MaxHp - Target.Hp;
-            Debug.Log("capped");
         }
         Target.Hp += amount;
         Target.HealAmount = amount;
@@ -501,7 +487,7 @@ public class Unit : MonoBehaviour, IDamageable
         float Scale = Mathf.Pow(Stats.SizeScale, Star - 1) * OGScale;
         transform.localScale = new Vector3(Scale, Scale, 1);
     }
-    public void UpdateTrueStats(Buff.StatType Type)
+    public void UpdateTrueStats(StatType Type)
     {
         float FlatAmount = 0, PercentAmount = 0;
         ref float Stat = ref StatTypeToStat(Type);
@@ -549,13 +535,13 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void RemoveBuff(Buff buff)
     {
-        Buff.StatType BuffType = buff.Type;
+        StatType BuffType = buff.Type;
         Buffs.Remove(buff);
         UpdateTrueStats(BuffType);
     }
     public void ClearBuffs()
     {
-        HashSet<Buff.StatType> CurrentlyBuffedStats = new HashSet<Buff.StatType>();
+        HashSet<StatType> CurrentlyBuffedStats = new HashSet<StatType>();
         foreach(Buff buff in Buffs)
         {
             CurrentlyBuffedStats.Add(buff.Type);
@@ -565,58 +551,58 @@ public class Unit : MonoBehaviour, IDamageable
             if(Buffs[i].DurType == Buff.DurationType.RealTime)
                 Buffs.RemoveAt(i);
         }
-        foreach(Buff.StatType Type in CurrentlyBuffedStats)
+        foreach(StatType Type in CurrentlyBuffedStats)
         {
             UpdateTrueStats(Type);
         }
     }
-    private ref float StatTypeToStat(Buff.StatType Type)
+    private ref float StatTypeToStat(StatType Type)
     {
-        if(Type == Buff.StatType.Hp)
+        if(Type == StatType.Hp)
         {
             return ref Hp;
         }
-        else if(Type == Buff.StatType.AD)
+        else if(Type == StatType.AD)
         {
             return ref AtkDamage;
         }
-        else if(Type == Buff.StatType.AP)
+        else if(Type == StatType.AP)
         {
             return ref AbilityPower;
         }
-        else if(Type == Buff.StatType.AtkSpeed)
+        else if(Type == StatType.AtkSpeed)
         {
             return ref AtkSpeed;
         }
-        else if(Type == Buff.StatType.Armor)
+        else if(Type == StatType.Armor)
         {
             return ref Armor;
         }
-        else if(Type == Buff.StatType.MagicResist)
+        else if(Type == StatType.MagicResist)
         {
             return ref MagicResist;
         }
-        else if(Type == Buff.StatType.Movespeed)
+        else if(Type == StatType.Movespeed)
         {
             return ref Movespeed;
         }
-        else if(Type == Buff.StatType.DamageAmp)
+        else if(Type == StatType.DamageAmp)
         {
             return ref DamageAmp;
         }
-        else if(Type == Buff.StatType.Durability)
+        else if(Type == StatType.Durability)
         {
             return ref Durability;
         }
-        else if(Type == Buff.StatType.Omnivamp)
+        else if(Type == StatType.Omnivamp)
         {
             return ref Omnivamp;
         }
-        else if(Type == Buff.StatType.CritChance)
+        else if(Type == StatType.CritChance)
         {
             return ref CritChance;
         }
-        else if(Type == Buff.StatType.CritDamage)
+        else if(Type == StatType.CritDamage)
         {
             return ref CritDamage;
         }
@@ -626,53 +612,53 @@ public class Unit : MonoBehaviour, IDamageable
             return ref AtkDamage;
         }
     }
-    private float StatTypeToBaseStat(Buff.StatType Type)
+    private float StatTypeToBaseStat(StatType Type)
     {
-        if(Type == Buff.StatType.Hp)
+        if(Type == StatType.Hp)
         {
             return Stats.MaxHp * Mathf.Pow(Stats.HpScale, Star - 1);
         }
-        else if(Type == Buff.StatType.AD)
+        else if(Type == StatType.AD)
         {
             return Stats.AtkDamage * Mathf.Pow(Stats.ADScale, Star - 1);
         }
-        else if(Type == Buff.StatType.AP)
+        else if(Type == StatType.AP)
         {
             return Stats.AbilityPower;
         }
-        else if(Type == Buff.StatType.AtkSpeed)
+        else if(Type == StatType.AtkSpeed)
         {
             return Stats.AtkSpeed;
         }
-        else if(Type == Buff.StatType.Armor)
+        else if(Type == StatType.Armor)
         {
             return Stats.Armor;
         }
-        else if(Type == Buff.StatType.MagicResist)
+        else if(Type == StatType.MagicResist)
         {
             return Stats.MagicResist;
         }
-        else if(Type == Buff.StatType.Movespeed)
+        else if(Type == StatType.Movespeed)
         {
             return Stats.Movespeed;
         }
-        else if(Type == Buff.StatType.DamageAmp)
+        else if(Type == StatType.DamageAmp)
         {
             return Stats.DamageAmp;
         }
-        else if(Type == Buff.StatType.Durability)
+        else if(Type == StatType.Durability)
         {
             return Stats.Durability;
         }
-        else if(Type == Buff.StatType.Omnivamp)
+        else if(Type == StatType.Omnivamp)
         {
             return Stats.Omnivamp;
         }
-        else if(Type == Buff.StatType.CritChance)
+        else if(Type == StatType.CritChance)
         {
             return Stats.CritChance;
         }
-        else if(Type == Buff.StatType.CritDamage)
+        else if(Type == StatType.CritDamage)
         {
             return Stats.CritDamage;
         }
@@ -699,30 +685,6 @@ public class Unit : MonoBehaviour, IDamageable
             }
         }
     }
-    
-[CustomPropertyDrawer(typeof(KeyValuePair<StatType, float>))]
-public class KeyValuePairDrawer : PropertyDrawer {
-    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-        EditorGUI.BeginProperty(position, label, property);
-
-        // Find the properties
-        SerializedProperty keyProp = property.FindPropertyRelative("StatType");
-        SerializedProperty valueProp = property.FindPropertyRelative("Scale");
-
-        // Set the label to the key name (instead of "Element 0", "Element 1", etc.)
-        string keyLabel = keyProp.enumDisplayNames[keyProp.enumValueIndex]; // Get StatType name
-        GUIContent customLabel = new GUIContent(keyLabel);
-
-        // Draw key-value pair
-        Rect keyRect = new Rect(position.x, position.y, position.width * 0.5f - 5, position.height);
-        Rect valueRect = new Rect(position.x + position.width * 0.5f, position.y, position.width * 0.5f - 5, position.height);
-
-        EditorGUI.LabelField(keyRect, customLabel); // Show the key as a label
-        EditorGUI.PropertyField(valueRect, valueProp, GUIContent.none);
-
-        EditorGUI.EndProperty();
-    }
-}
     private void OnDrawGizmos() 
     {
         Gizmos.color = Color.red;

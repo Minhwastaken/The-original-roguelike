@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,7 +8,8 @@ public abstract class Attack : MonoBehaviour
     
     public Unit Attacker, Target;
     public Unit.DamageType DamageType;
-    public SerializableDictionary<Unit.DamageType, float> StatScale = new SerializableDictionary<Unit.DamageType, float>();
+    public List<Unit.StatType> StatScales = new List<Unit.StatType> {Unit.StatType.AD, Unit.StatType.AP};
+    public List<float> ScaleValues = new List<float> {1, 0};
     public float ADScale = 1, APScale;
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
@@ -22,19 +24,26 @@ public abstract class Attack : MonoBehaviour
     [HideInInspector]public UnityEvent OnAttack, OnDamageDealt;
     public GameObject HitEffect;
     public Transform HitEffectPos;
+    [Header("Override Attack")]
+    public bool SingleOverrideAttack = false;
     protected virtual void Start()
     {
         GetStats();
-        StartCoroutine(DestroyWithLifespan());
+        if(Lifespan > 0)
+            StartCoroutine(DestroyWithLifespan());
+        if(SingleOverrideAttack && Attacker)
+        {
+            Attacker.AttackOverride = null;
+        }
     }
-    private IEnumerator DestroyWithLifespan()
+    protected IEnumerator DestroyWithLifespan()
     {
         yield return new WaitForSeconds(Lifespan);
         DestroySelf();
     }
     public void GetStats()
     {
-        Unit Stats = Attacker.GetComponent<Unit>();
+        Unit Stats = Attacker;
         Hp = Stats.Hp;
         MaxHp = Stats.MaxHp;
         AtkDamage = Stats.AtkDamage;
@@ -57,7 +66,8 @@ public abstract class Attack : MonoBehaviour
             AttackLogic();
             OnAttack.Invoke();
             //float TotalDamage;
-            Target.GetComponent<Unit>().TakeDamage(AtkDamage * ADScale + AbilityPower * APScale, DamageType, Attacker);
+            if(!Target.Benched)
+                Target.TakeDamage(AtkDamage * ADScale + AbilityPower * APScale, DamageType, Attacker);
             DamageDealtLogic();
             OnDamageDealt.Invoke();
         }
@@ -72,9 +82,15 @@ public abstract class Attack : MonoBehaviour
         {
             Instantiate(HitEffect, transform.position, Quaternion.identity);
         }
-        //GridGen.Instance.Attacks.Remove(gameObject);
+        GridGen.Instance.Attacks.Remove(gameObject);
         Destroy(gameObject);
     }
-    public abstract void AttackLogic();
-    public abstract void DamageDealtLogic();
+    protected virtual void AttackLogic()
+    {
+
+    }
+    protected virtual void DamageDealtLogic()
+    {
+        
+    }
 }

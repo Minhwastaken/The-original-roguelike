@@ -6,7 +6,7 @@ using UnityEngine;
 public class ExplodingProjectile : TargetedProjectile
 {
     public GameObject Explosion;
-    public override void DamageDealtLogic()
+    protected override void DamageDealtLogic()
     {
         Attacker.SpawnAttack(Explosion);
         DestroySelf();

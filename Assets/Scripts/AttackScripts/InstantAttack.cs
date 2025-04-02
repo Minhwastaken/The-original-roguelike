@@ -9,11 +9,7 @@ public class InstantAttack : Attack
         base.Start();
         TriggerAttack(Target);
     }
-    public override void AttackLogic()
-    {
-        //Attacker.AtkSpeed += 0.05f;
-    }
-    public override void DamageDealtLogic()
+    protected override void DamageDealtLogic()
     {
         DestroySelf();
     }

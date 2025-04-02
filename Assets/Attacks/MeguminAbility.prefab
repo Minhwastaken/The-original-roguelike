@@ -226,7 +226,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -4964,7 +4964,7 @@ GameObject:
   - component: {fileID: 2972556764487798037}
   - component: {fileID: 7441274680229889695}
   - component: {fileID: 8447699576664672629}
-  - component: {fileID: 3764451173788329092}
+  - component: {fileID: 4585925373521982237}
   m_Layer: 0
   m_Name: MeguminAbility
   m_TagString: Untagged
@@ -5051,7 +5051,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3764451173788329092
+--- !u!114 &4585925373521982237
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5060,14 +5060,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8984733544962408346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecd8a72a3f3229245ab1674934173361, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a3b1f9b91d869f4ab09fc0ec8c5161c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
   ADScale: 0
   APScale: 0
   Hp: 0
@@ -5084,14 +5082,22 @@ MonoBehaviour:
   Omnivamp: 0
   CritChance: 0
   CritDamage: 0
-  Lifespan: 0
+  Lifespan: 5
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  SingleOverrideAttack: 0
   Speed: 15
-  RotationSpeed: 0
+  Direction: {x: 0, y: 0}
+  DestroyOnHit: 1
+  Targeted: 1
+  RotationSpeed: 10
   HitDistance: 1
-  Explosion: {fileID: 8984733544962408346, guid: 2a0bad3d68a409545a6156b3ad94d624, type: 3}
+  RotationSpeedIncreaseRate: 1
+  SpawnOnHit: 1
+  SpawnOnHitPrefab: {fileID: 8984733544962408346, guid: 2a0bad3d68a409545a6156b3ad94d624, type: 3}

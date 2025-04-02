@@ -235,7 +235,7 @@ Transform:
   m_GameObject: {fileID: 7532163290274100474}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.26, z: -0.1}
+  m_LocalPosition: {x: 0, y: 0.26, z: -0.10000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -314,7 +314,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -324,7 +324,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -377,8 +377,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
-      minScalar: 0.5
+      scalar: 1.5
+      minScalar: 0.75
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -495,8 +495,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.15
-      minScalar: 0.1
+      scalar: 0.275
+      minScalar: 0.15
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -959,7 +959,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.1
+      value: 0.15
       mode: 0
       spread: 0
       speed:
@@ -5050,7 +5050,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2972556764487798037}
-  - component: {fileID: -1815561627344476020}
+  - component: {fileID: 1283455883506259419}
   - component: {fileID: 7441274680229889695}
   - component: {fileID: 8447699576664672629}
   m_Layer: 0
@@ -5076,7 +5076,7 @@ Transform:
   - {fileID: 8885025376088677647}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-1815561627344476020
+--- !u!114 &1283455883506259419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5085,15 +5085,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8984733544962408346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a20d29e2f9f9304bb0af328c5e854b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a3b1f9b91d869f4ab09fc0ec8c5161c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
-  ADScale: 0
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 1
+  - 0
+  ADScale: 1
   APScale: 0
   Hp: 0
   MaxHp: 0
@@ -5116,9 +5118,18 @@ MonoBehaviour:
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  SingleOverrideAttack: 1
   Speed: 6
   Direction: {x: 0, y: 0}
-  Explosion: {fileID: 8984733544962408346, guid: 3f3c849feb396594398ddf9fd852f004, type: 3}
+  DestroyOnHit: 1
+  Targeted: 0
+  RotationSpeed: 0
+  HitDistance: 1
+  RotationSpeedIncreaseRate: 1
+  SpawnOnHit: 1
+  SpawnOnHitPrefab: {fileID: 8984733544962408346, guid: 3f3c849feb396594398ddf9fd852f004, type: 3}
 --- !u!58 &7441274680229889695
 CircleCollider2D:
   m_ObjectHideFlags: 0

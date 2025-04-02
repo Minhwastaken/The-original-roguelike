@@ -47,8 +47,6 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
   ADScale: 0
   APScale: 0
   Hp: 0
@@ -72,6 +70,10 @@ MonoBehaviour:
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  SingleOverrideAttack: 0
   SpawnNumber: 0
-  SpreadAngle: 30
+  SpreadAngle: 120
+  SpawnRadius: 0.1
   SpawnPrefab: {fileID: 8984733544962408346, guid: 98c8595af25b6f74b8a81bd59248f0c9, type: 3}

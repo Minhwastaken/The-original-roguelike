@@ -193,7 +193,7 @@ public class GridGen : MonoBehaviour
 
     public IEnumerator ClearAttacks()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(1f);
         foreach(GameObject Attack in Attacks)
         {
             Destroy(Attack);

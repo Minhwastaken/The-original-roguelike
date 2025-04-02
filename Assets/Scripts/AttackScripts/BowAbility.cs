@@ -8,6 +8,7 @@ public class BowAbility : Projectile
     protected override void Start()
     {
         //GetStats();
+        StartCoroutine(DestroyWithLifespan());
         foreach (Attack Attack in Attacks)
         {
             Attack.Attacker = Attacker;
@@ -16,12 +17,7 @@ public class BowAbility : Projectile
             {
                 Attack.GetComponent<Projectile>().Direction = Attack.transform.up;
             }
+            Attack.enabled = true;
         }
-    }
-    public override void AttackLogic()
-    {
-    }
-    public override void DamageDealtLogic()
-    {
     }
 }

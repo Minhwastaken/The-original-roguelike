@@ -197,10 +197,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4762095295031391478}
-  - component: {fileID: 4268696863591175344}
-  - component: {fileID: -8198494111385606653}
-  - component: {fileID: -546639832189878118}
   - component: {fileID: -7579634415526624397}
+  - component: {fileID: 4268696863591175344}
+  - component: {fileID: -546639832189878118}
   m_Layer: 0
   m_Name: BowAttack
   m_TagString: Untagged
@@ -226,6 +225,52 @@ Transform:
   - {fileID: 7921992886282346118}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-7579634415526624397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8412880745274351775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3b1f9b91d869f4ab09fc0ec8c5161c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attacker: {fileID: 0}
+  Target: {fileID: 0}
+  DamageType: 0
+  ADScale: 1
+  APScale: 0
+  Hp: 0
+  MaxHp: 0
+  AtkDamage: 0
+  AbilityPower: 0
+  AtkSpeed: 0
+  Range: 0
+  Armor: 0
+  MagicResist: 0
+  Movespeed: 0
+  DamageAmp: 0
+  Durability: 0
+  Omnivamp: 0
+  CritChance: 0
+  CritDamage: 0
+  Lifespan: 5
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamageDealt:
+    m_PersistentCalls:
+      m_Calls: []
+  HitEffect: {fileID: 687861059256311685, guid: 15301dec2d8683540ba116f4efdb089f, type: 3}
+  HitEffectPos: {fileID: 6790253917917607335}
+  Speed: 10
+  Direction: {x: 0, y: 0}
+  Targeted: 0
+  DestroyOnHit: 1
+  SpawnOnHit: 0
+  SpawnOnHitPrefab: {fileID: 0}
 --- !u!61 &4268696863591175344
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -272,48 +317,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.25, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-8198494111385606653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8412880745274351775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c55193b761921d408ab4beb1e5daa75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Attacker: {fileID: 0}
-  Target: {fileID: 0}
-  DamageType: 0
-  HitEffect: {fileID: 687861059256311685, guid: 15301dec2d8683540ba116f4efdb089f, type: 3}
-  HitEffectPos: {fileID: 6790253917917607335}
-  ADScale: 1
-  APScale: 0
-  Hp: 0
-  MaxHp: 0
-  AtkDamage: 0
-  AbilityPower: 0
-  AtkSpeed: 0
-  Range: 0
-  Armor: 0
-  MagicResist: 0
-  Movespeed: 0
-  DamageAmp: 0
-  Durability: 0
-  Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
-  Lifespan: 10
-  OnAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageDealt:
-    m_PersistentCalls:
-      m_Calls: []
-  Speed: 10
-  Direction: {x: 0, y: 0}
 --- !u!50 &-546639832189878118
 Rigidbody2D:
   serializedVersion: 5
@@ -341,52 +344,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-7579634415526624397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8412880745274351775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a3b1f9b91d869f4ab09fc0ec8c5161c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Attacker: {fileID: 0}
-  Target: {fileID: 0}
-  DamageType: 0
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
-  ADScale: 1
-  APScale: 0
-  Hp: 0
-  MaxHp: 0
-  AtkDamage: 0
-  AbilityPower: 0
-  AtkSpeed: 0
-  Range: 0
-  Armor: 0
-  MagicResist: 0
-  Movespeed: 0
-  DamageAmp: 0
-  Durability: 0
-  Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
-  Lifespan: 5
-  OnAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageDealt:
-    m_PersistentCalls:
-      m_Calls: []
-  Speed: 0
-  Direction: {x: 0, y: 0}
-  Targeted: 0
-  DestroyOnHit: 1
-  SpawnOnHit: 0
-  SpawnOnHitPrefab: {fileID: 0}
 --- !u!1 &9045250023221557362
 GameObject:
   m_ObjectHideFlags: 0

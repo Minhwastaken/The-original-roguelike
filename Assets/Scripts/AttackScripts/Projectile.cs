@@ -6,8 +6,10 @@ public class Projectile : Attack
     [Header("Projectile")]
     public float Speed;
     public Vector2 Direction;
-    public bool Targeted = false;
     public bool DestroyOnHit = true;
+    [Header("Targeted")]
+    public bool Targeted = false;
+    public float RotationSpeed, HitDistance = 1f, RotationSpeedIncreaseRate = 1f;
     [Header("Spawn On Hit")]
     public bool SpawnOnHit = false;
     public GameObject SpawnOnHitPrefab;
@@ -37,8 +39,15 @@ public class Projectile : Attack
         {
             if(Target != null && Target.gameObject.activeSelf)
             {
-                Direction = (Target.transform.position - transform.position).normalized;
+                RotationSpeed += RotationSpeedIncreaseRate * Time.deltaTime;
+                Vector2 TrueDirection = ((Vector2)(Target.transform.position - transform.position)).normalized; 
+                Vector2 Direction = (Vector2) Vector3.RotateTowards((Vector2)transform.up, TrueDirection, RotationSpeed * Time.deltaTime, 0.0f);
                 transform.position += (Vector3)Direction * Speed * Time.deltaTime;
+                transform.up = Direction;
+            }
+            else if (Attacker.GetComponent<Unit>().GetTargetInRange())
+            {
+                Target = Attacker.GetComponent<Unit>().GetTargetInRange().GetComponent<Unit>();
             }
             else if (Attacker.GetComponent<Unit>().GetTarget())
             {
@@ -63,18 +72,16 @@ public class Projectile : Attack
             }
         }
     }
-    public override void AttackLogic()
+    protected override void DamageDealtLogic()
     {
-    }
-    public override void DamageDealtLogic()
-    {
-        if(DestroyOnHit)
-        {
-            OnDamageDealt.AddListener(DestroySelf);
-        }
+        base.DamageDealtLogic();
         if(SpawnOnHit && SpawnOnHitPrefab != null)
         {
             Attacker.SpawnAttack(SpawnOnHitPrefab);
+        }
+        if(DestroyOnHit)
+        {
+            OnDamageDealt.AddListener(DestroySelf);
         }
     }
     /*

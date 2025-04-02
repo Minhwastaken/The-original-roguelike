@@ -6,5 +6,6 @@ public class Mayo : Unit
     protected override void OnStart()
     {
         OnAbilityUse.AddListener(() => {AbilityCount++;});
+        GameManager.Instance.OnPrepStart.AddListener(() => {AbilityCount = 0;});
     }
 }

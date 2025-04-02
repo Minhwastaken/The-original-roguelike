@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 4715832010730135188}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0.1}
+  m_LocalPosition: {x: 0, y: 1.25, z: 0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -214,8 +214,8 @@ MonoBehaviour:
   OnGridReset:
     m_PersistentCalls:
       m_Calls: []
-  AttackPrefab: {fileID: 8412880745274351775, guid: 61a1222240d25134d9ec0090057a6c33, type: 3}
-  AbilityPrefab: {fileID: 947315176613465897, guid: 81007e41f0d025044be3f255c3069a75, type: 3}
+  AttackPrefab: {fileID: 8984733544962408346, guid: df1b932be54823b42b81714e70d161a9, type: 3}
+  AbilityPrefab: {fileID: 8984733544962408346, guid: 953c6492ccde6d446835392f8128c2e6, type: 3}
   AttackOverride: {fileID: 0}
   ShopIcon: {fileID: 0}
   PassiveAbility: 0

@@ -314,7 +314,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -324,7 +324,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.2
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -430,8 +430,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.9960785, g: 0, b: 0, a: 1}
-      maxColor: {r: 0.9960785, g: 0, b: 0, a: 1}
+      minColor: {r: 0.9411765, g: 0.9411765, b: 0, a: 1}
+      maxColor: {r: 1, g: 1, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5050,9 +5050,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2972556764487798037}
+  - component: {fileID: 2169770770755557707}
   - component: {fileID: 7441274680229889695}
   - component: {fileID: 8447699576664672629}
-  - component: {fileID: 2169770770755557707}
   m_Layer: 0
   m_Name: MustardAttack
   m_TagString: Untagged
@@ -5076,6 +5076,60 @@ Transform:
   - {fileID: 8885025376088677647}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2169770770755557707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8984733544962408346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a3b1f9b91d869f4ab09fc0ec8c5161c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attacker: {fileID: 0}
+  Target: {fileID: 0}
+  DamageType: 0
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 1
+  - 0
+  ADScale: 1
+  APScale: 0
+  Hp: 0
+  MaxHp: 0
+  AtkDamage: 0
+  AbilityPower: 0
+  AtkSpeed: 0
+  Range: 0
+  Armor: 0
+  MagicResist: 0
+  Movespeed: 0
+  DamageAmp: 0
+  Durability: 0
+  Omnivamp: 0
+  CritChance: 0
+  CritDamage: 0
+  Lifespan: 5
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamageDealt:
+    m_PersistentCalls:
+      m_Calls: []
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  SingleOverrideAttack: 0
+  Speed: 6
+  Direction: {x: 0, y: 0}
+  DestroyOnHit: 1
+  Targeted: 0
+  RotationSpeed: 0
+  HitDistance: 1
+  RotationSpeedIncreaseRate: 1
+  SpawnOnHit: 0
+  SpawnOnHitPrefab: {fileID: 0}
 --- !u!58 &7441274680229889695
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -5111,7 +5165,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.1}
-  m_Radius: 0.1
+  m_Radius: 0.15
 --- !u!50 &8447699576664672629
 Rigidbody2D:
   serializedVersion: 5
@@ -5139,51 +5193,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2169770770755557707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8984733544962408346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a3b1f9b91d869f4ab09fc0ec8c5161c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Attacker: {fileID: 0}
-  Target: {fileID: 0}
-  DamageType: 0
-  StatScale:
-    entries: []
-  ADScale: 1
-  APScale: 0
-  Hp: 0
-  MaxHp: 0
-  AtkDamage: 0
-  AbilityPower: 0
-  AtkSpeed: 0
-  Range: 0
-  Armor: 0
-  MagicResist: 0
-  Movespeed: 0
-  DamageAmp: 0
-  Durability: 0
-  Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
-  Lifespan: 5
-  OnAttack:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageDealt:
-    m_PersistentCalls:
-      m_Calls: []
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
-  Speed: 0
-  Direction: {x: 0, y: 0}
-  Targeted: 0
-  DestroyOnHit: 1
-  SpawnOnHit: 0
-  SpawnOnHitPrefab: {fileID: 0}
