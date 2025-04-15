@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public abstract class Attack : MonoBehaviour
 {
-    
     public Unit Attacker, Target;
     public Unit.DamageType DamageType;
     public List<Unit.StatType> StatScales = new List<Unit.StatType> {Unit.StatType.AD, Unit.StatType.AP};
@@ -21,6 +20,7 @@ public abstract class Attack : MonoBehaviour
     public float Omnivamp;
     public float CritChance, CritDamage;
     public float Lifespan = 5;
+    public List<GameObject> LingeringParticles;
     [HideInInspector]public UnityEvent OnAttack, OnDamageDealt;
     public GameObject HitEffect;
     public Transform HitEffectPos;
@@ -83,6 +83,11 @@ public abstract class Attack : MonoBehaviour
             Instantiate(HitEffect, transform.position, Quaternion.identity);
         }
         GridGen.Instance.Attacks.Remove(gameObject);
+        foreach(GameObject LingeringParticle in LingeringParticles)
+        {
+            LingeringParticle.transform.parent = null;
+            LingeringParticle.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+        }
         Destroy(gameObject);
     }
     protected virtual void AttackLogic()

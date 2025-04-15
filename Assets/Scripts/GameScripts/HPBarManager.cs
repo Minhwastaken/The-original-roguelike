@@ -27,7 +27,7 @@ public class HPBarManager : MonoBehaviour
             HPFill.color = Color.red;
         }
         Unit.OnTakeDamage.AddListener(UpdateHp);
-        Unit.OnGridReset.AddListener(UpdateHp);
+        Unit.OnReset.AddListener(UpdateHp);
         UpdateHp();
         HPBar.maxValue = Unit.MaxHp;
         HPBar.value = Unit.Hp;

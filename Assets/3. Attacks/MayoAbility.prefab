@@ -47,6 +47,10 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 1
+  - 0
   ADScale: 0
   APScale: 0
   Hp: 0
@@ -64,6 +68,7 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 5
+  LingeringParticles: []
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
@@ -73,6 +78,9 @@ MonoBehaviour:
   HitEffect: {fileID: 0}
   HitEffectPos: {fileID: 0}
   SingleOverrideAttack: 0
+  InitialSpawnNumber: 1
+  Scale: 1
+  TargetRandomly: 0
   SpawnNumber: 0
   SpreadAngle: 120
   SpawnRadius: 0.1

@@ -191,6 +191,7 @@ MonoBehaviour:
   Benched: 0
   LerpProgress: 0
   Anim: {fileID: 0}
+  AbilityCount: 0
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
@@ -211,13 +212,15 @@ MonoBehaviour:
   OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
-  OnGridReset:
+  OnReset:
     m_PersistentCalls:
       m_Calls: []
   AttackPrefab: {fileID: 8984733544962408346, guid: bf416a2bded734f4385e792a60bafd69, type: 3}
-  AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
+  AbilityPrefab: {fileID: 0}
   AttackOverride: {fileID: 0}
   ShopIcon: {fileID: 0}
+  TurnOnMove: 1
+  TurnOnAttack: 1
   PassiveAbility: 1
   AbilityAffectedByAtkSpeed: 1
   EnhancedAttack: {fileID: 8984733544962408346, guid: 65020873bfeee374094b334c97253c7e, type: 3}

@@ -138,7 +138,7 @@ public class Mouse : MonoBehaviour
         if(Nearest)
         {
             Debug.Log("Nearest Hex: " + Nearest.name);
-            ResetOGHex(UnitScript);
+            ResetHex(UnitScript);
             ChosenObject.transform.position = (Vector2) Nearest.transform.position;
             OriHex = (Vector2) Nearest.transform.position;
             UnitScript.Hex = Nearest;
@@ -168,7 +168,7 @@ public class Mouse : MonoBehaviour
             }
             if(Nearest)
             {
-                ResetOGHex(UnitScript);
+                ResetHex(UnitScript);
                 ChosenObject.transform.position = (Vector2) Nearest.transform.position;
                 UnitScript.Hex = Nearest;
                 UnitScript.OGHex = Nearest;
@@ -226,18 +226,16 @@ public class Mouse : MonoBehaviour
         Drop();
     }
 
-    public void ResetOGHex(Unit UnitScript)
+    public void ResetHex(Unit UnitScript)
     {
         if(UnitScript.Hex)
         {
             if(UnitScript.Hex.GetComponent<Hex>())
             {
-                Debug.Log("Resetting Hex");
                 UnitScript.Hex.GetComponent<Hex>().Taken = null;
             }
             else if(UnitScript.Hex.GetComponent<BenchSlot>())
             {
-                Debug.Log("Resetting BenchSlot");
                 UnitScript.Hex.GetComponent<BenchSlot>().Taken = null;
             }
         }

@@ -25,6 +25,7 @@ public class Button : MonoBehaviour
                 SpawnedUnit.transform.position = (Vector2) BenchSlot.transform.position;
                 SpawnedUnit.GetComponent<Unit>().Benched = true;
                 SpawnedUnit.GetComponent<Unit>().Hex = BenchSlot;
+                SpawnedUnit.GetComponent<Unit>().OGHex = BenchSlot;
 
                 BenchSlot.GetComponent<BenchSlot>().Taken = SpawnedUnit;
                 gameObject.SetActive(false);
@@ -78,18 +79,10 @@ public class Button : MonoBehaviour
             Unit UpgradedUnitScript = UnitCopies[0].GetComponent<Unit>();
             UpgradedUnitScript.Star++;
             UnitCopies[0].name += "*";
-            UpgradedUnitScript.UpdateBaseStats();
+            GridGen.Instance.ResetUnit(UnitCopies[0]);
             Debug.Log("Star Up! " + UpgradedUnitScript.Star + " Star ");
-            for(int i = 0; i < 3; i++)
-            {
-                if(UnitCopies[i])
-                {
-                    //Debug.Log("Removing " + UnitCopies[i].name);
-                }
-            }
             for(int i = 1; i < 3; i++)
             {
-                Debug.Log(UnitCopies[i].name);
                 UnitCopies[i].GetComponent<Unit>().RemoveUnit();
             }
 

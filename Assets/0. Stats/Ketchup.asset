@@ -19,7 +19,7 @@ MonoBehaviour:
   MaxHp: 10
   Range: 4
   Mana: 0
-  MaxMana: 100
+  MaxMana: 0
   AtkDamage: 2
   AbilityPower: 1
   AtkSpeed: 1.5

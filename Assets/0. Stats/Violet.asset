@@ -15,12 +15,12 @@ MonoBehaviour:
   Cost: 5
   Role: 0
   Traits: 0000000006000000
-  Hp: 1000
-  MaxHp: 1000
+  Hp: 20
+  MaxHp: 20
   Range: 4
   Mana: 0
   MaxMana: 20
-  AtkDamage: 1
+  AtkDamage: 2
   AbilityPower: 1
   AtkSpeed: 1.5
   Armor: 0

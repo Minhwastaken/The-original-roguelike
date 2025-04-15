@@ -7,7 +7,8 @@ public class UI : MonoBehaviour
     public static UI Instance;
     public GameObject Shop, RollChanceText, RerollButton, ShopButton, TraitHolder;
     public bool ShopLocked = false;
-    public int[,] RollChance = new int[11, 5] {
+    public int[,] RollChance = new int[11, 5] 
+    {
         {100, 0, 0, 0, 0}, 
         {100, 0, 0, 0, 0}, 
         {75, 25, 0, 0, 0}, 
@@ -46,7 +47,7 @@ public class UI : MonoBehaviour
         {
             Button.SetActive(true);
             int UnitCost = RollForCost();
-            Debug.Log("Rolling for cost " + (UnitCost + 1));
+            //Debug.Log("Rolling for cost " + (UnitCost + 1));
             GameObject RandomUnit = RandomUnitFromPool(UnitCost);
             Button.GetComponent<Button>().Unit = RandomUnit;
             Button.transform.GetChild(0).GetComponent<Text>().text = RandomUnit.GetComponent<Unit>().Stats.Cost.ToString();

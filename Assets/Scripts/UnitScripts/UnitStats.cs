@@ -11,7 +11,7 @@ public class UnitStats : ScriptableObject
     public float Hp;
     public float MaxHp;
     public float Range;
-    public float Mana, MaxMana;
+    public float Mana, MaxMana = 50;
     public float AtkDamage, AbilityPower = 1;
     public float AtkSpeed;
     public float Armor, MagicResist; 

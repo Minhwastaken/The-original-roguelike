@@ -12,14 +12,24 @@ public class Ketchup : Unit
     {
         if(Target)
         {
-            Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
+            if(TurnOnAttack)
+            {
+                Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
+            }
             AttackCount++;
             if(AttackCount >= AttacksPerEnhance)
             {
                 AttackCount = 0;
                 AttackOverride = EnhancedAttack;
             }
-            Anim.Play("Attack");
+            if(AttackOverride &&  Anim.HasState(0, Animator.StringToHash("AttackOverride")))
+            {
+                Anim.Play("AttackOverride");
+            }
+            else
+            {
+                Anim.Play("Attack");
+            }
         }
         AtkSpeed += Stats.AtkSpeed * 0.05f;
     }

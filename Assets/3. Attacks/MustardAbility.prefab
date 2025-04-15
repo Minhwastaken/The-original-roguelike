@@ -5112,6 +5112,8 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 5
+  LingeringParticles:
+  - {fileID: 7532163290274100474}
   OnAttack:
     m_PersistentCalls:
       m_Calls: []

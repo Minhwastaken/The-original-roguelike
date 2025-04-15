@@ -23,6 +23,7 @@ public class Unit : MonoBehaviour, IDamageable
     public bool IsMoving = false, Benched;
     public float LerpProgress = 0;
     [HideInInspector]public Animator Anim;
+    [HideInInspector]public int AbilityCount = 0;
     public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
@@ -30,21 +31,23 @@ public class Unit : MonoBehaviour, IDamageable
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
-    public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(), OnGridReset = new UnityEvent();
+    public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(), OnReset = new UnityEvent();
     [Header("Abilities")]
     public GameObject AttackPrefab;
     public GameObject AbilityPrefab;
     public GameObject AttackOverride;
     [Header("Visuals")]
     public Sprite ShopIcon;
+    public bool TurnOnMove = true, TurnOnAttack = true;
     [Header("Specials")]
     public bool PassiveAbility = false;
     public bool AbilityAffectedByAtkSpeed = false;
-    private void Start() 
+    public virtual void Start() 
     {
         Anim = GetComponent<Animator>();
         OGScale = transform.localScale.x;
         GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
+        Sprites = transform.Find("Sprite").gameObject;
         GetStats();
         OnStart();
     }
@@ -84,7 +87,7 @@ public class Unit : MonoBehaviour, IDamageable
                 }
                 else
                 {
-                    if(AbilityPrefab && !PassiveAbility && Mana >= MaxMana)
+                    if(AbilityPrefab && Mana >= MaxMana)
                     {
                         UseAbility();
                     }
@@ -99,19 +102,32 @@ public class Unit : MonoBehaviour, IDamageable
     {
         if(Target)
         {
-            Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
+            if(TurnOnAttack)
+            {
+                Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
+            }
             GainMana(10);
-            Anim.Play("Attack");
+            if(AttackOverride &&  Anim.HasState(0, Animator.StringToHash("AttackOverride")))
+            {
+                Anim.Play("AttackOverride");
+            }
+            else
+            {
+                Anim.Play("Attack");
+            }
         }
     }
     protected virtual void UseAbility()
     {
         if(Target)
         {
-            Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
+            AbilityCount++;
+            if(TurnOnAttack)
+                Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
             Mana -= MaxMana;
             OnAbilityUse.Invoke();
-            Anim.Play("Ability");
+            if(!PassiveAbility)
+                Anim.Play("Ability");
         }
     }
     public void SpawnAttack(GameObject AttackGO)
@@ -166,7 +182,10 @@ public class Unit : MonoBehaviour, IDamageable
     private void Move()
     {
        // Debug.Log(Hex + " " + EndHex);
-        Sprites.transform.up = (Vector2) (Path.To.transform.position - Path.From.transform.position);
+        if(TurnOnMove)
+        {
+            Sprites.transform.up = (Vector2) (Path.To.transform.position - Path.From.transform.position);
+        }
         LerpProgress += Time.deltaTime * Movespeed / 100f;
         transform.position = Vector2.Lerp(Path.From.transform.position, Path.To.transform.position, LerpProgress);
         if(LerpProgress >= 0.1f && Hex.GetComponent<Hex>().Taken == gameObject)
@@ -204,7 +223,7 @@ public class Unit : MonoBehaviour, IDamageable
         CritChance = Stats.CritChance;
         CritDamage = Stats.CritDamage;
     }
-    private List<GameObject> Pathfind(GameObject StartHex, GameObject EndHex)
+    public List<GameObject> Pathfind(GameObject StartHex, GameObject EndHex)
     {
         if(HexDist(StartHex, EndHex) <= Range)
             return new List<GameObject>();
@@ -338,10 +357,11 @@ public class Unit : MonoBehaviour, IDamageable
             {
                 if(Target == null || Target.GetComponent<Unit>().Hex == null)
                     continue;
-                if(HexDist(Hex, Target.GetComponent<Unit>().Hex) <= Range && HexDist(Hex, Target.GetComponent<Unit>().Hex) < MinHexDist)
+                int HexDistToTarget = HexDist(Hex, Target.GetComponent<Unit>().Hex);
+                if(HexDistToTarget < MinHexDist && HexDistToTarget <= Range)
                 {
                     ClosestEnemy = Target;
-                    MinHexDist = HexDist(Hex, Target.GetComponent<Unit>().Hex);
+                    MinHexDist = HexDistToTarget;
                 }
             }
         }
@@ -350,14 +370,24 @@ public class Unit : MonoBehaviour, IDamageable
     private bool AttackableTarget()
     {
         if(ValidTarget(Target))
-            if(Vector2.Distance(transform.position, Target.transform.position) < Range || HexDist(Hex, Target.GetComponent<Unit>().Hex) <= Range)
+        {
+            int HexDistToTarget = 99;
+            if (Target.GetComponent<Unit>().Hex)
             {
-                return true;
+                HexDistToTarget = HexDist(Hex, Target.GetComponent<Unit>().Hex);
             }
+            if(Vector2.Distance(transform.position, Target.transform.position) < Range || HexDistToTarget <= Range)
+            {
+                if(Target.GetComponent<Unit>().Hp > 0)
+                {
+                    return true;
+                }
+            }
+        }
         return false;
     }
-    
-    private int HexDist(GameObject Hex, GameObject TargetHex)
+    //Check how far the target is from the unit in hexes. The lower the number, the farther it is. Must be >0 to be within range.
+    /*public int HexDist(GameObject Hex, GameObject TargetHex)
     {
         int X1 = Hex.GetComponent<Hex>().X, Y1 = Hex.GetComponent<Hex>().Y, X2 = TargetHex.GetComponent<Hex>().X, Y2 = TargetHex.GetComponent<Hex>().Y;
         int left = 0, right = 0;
@@ -387,8 +417,19 @@ public class Unit : MonoBehaviour, IDamageable
         {
             return 99;
         }
+        return Mathf.Min(Mathf.Abs(X1 + MinX - X2), X1 + MaxX - X2);
+    }*/
+    public int HexDist(GameObject Hex, GameObject TargetHex)
+    {
+        int X1 = Hex.GetComponent<Hex>().X, Y1 = Hex.GetComponent<Hex>().Y, X2 = TargetHex.GetComponent<Hex>().X, Y2 = TargetHex.GetComponent<Hex>().Y;
+        int offset = 0;
+        int YOffset = Mathf.Abs(Y1 - Y2);
+        if(Mathf.Abs(X1 - X2) > YOffset/2)
+        {
+            offset += Mathf.Abs(X1 - X2) - YOffset/2;
+        }
+        return offset + YOffset;
     }
-    
     public void TakeDamage(float damage, DamageType type, Unit Attacker)
     {
         Hp -= damage;

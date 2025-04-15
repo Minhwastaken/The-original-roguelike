@@ -3760,8 +3760,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cb2ec1fcb9783f41826658138f684c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gold: 100
-  Level: 9
+  Gold: 3
+  Level: 1
   Xp: 0
   Stage: 0
   MaxInterest: 5
@@ -6490,6 +6490,7 @@ MonoBehaviour:
   - {fileID: 7348070789959115077, guid: e97d9f813a5d6af43a8145456c7c360a, type: 3}
   - {fileID: 7348070789959115077, guid: 66b9059f859474c4c82bb51cd4acd1b6, type: 3}
   - {fileID: 7348070789959115077, guid: 46a365adea2e91a48b456337dfd3c99e, type: 3}
+  - {fileID: 7348070789959115077, guid: e32342b3a9313384c98cb5703738efcb, type: 3}
   EnemyList:
   - {fileID: 7431400569424583945, guid: e17c823851587104fb660b64be651eff, type: 3}
   OneCosts:

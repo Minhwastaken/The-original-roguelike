@@ -10,7 +10,6 @@ public class AOEAttack : Attack
     public int TickCount = 0;
     private float TickTimer = 0f;
     public List<Unit> HitEnemies = new List<Unit>();
-    public List<GameObject> ParticleSystems = new List<GameObject>();
     private void Update()
     {
         TickTimer += Time.deltaTime;
@@ -27,14 +26,7 @@ public class AOEAttack : Attack
             TickCount++;
             if(TickCount >= TickNumber || GameManager.Instance.State == GameManager.GameState.Prep)
             {
-                if(ParticleSystems.Count > 0)
-                {
-                    foreach(GameObject ps in ParticleSystems)
-                    {
-                        ps.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                    }
-                }
-                HitEnemies.Clear();
+                DestroySelf();
             }
         }
     }
