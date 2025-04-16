@@ -80,6 +80,7 @@ public class Button : MonoBehaviour
             UpgradedUnitScript.Star++;
             UnitCopies[0].name += "*";
             GridGen.Instance.ResetUnit(UnitCopies[0]);
+            Mouse.Instance.HexLockIn(UnitCopies[0]);
             Debug.Log("Star Up! " + UpgradedUnitScript.Star + " Star ");
             for(int i = 1; i < 3; i++)
             {

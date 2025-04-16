@@ -15,27 +15,22 @@ MonoBehaviour:
   Cost: 2
   Role: 0
   Traits: 0000000006000000
-  Hp: 10
-  MaxHp: 10
-  Range: 3
+  Hp: 600
+  MaxHp: 600
+  Range: 4
   Mana: 0
-  MaxMana: 100
-  AtkDamage: 2
-  AbilityPower: 1
-  AtkSpeed: 1
-  Armor: 0
-  MagicResist: 0
+  MaxMana: 60
+  AtkDamage: 100
+  AbilityPower: 100
+  AtkSpeed: 0.5
+  Armor: 20
+  MagicResist: 20
   Movespeed: 100
   DamageAmp: 0
   Durability: 0
   Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
+  CritChance: 25
+  CritDamage: 140
   ADScale: 1.8
   HpScale: 1.8
   SizeScale: 1.1
-  Attack: {fileID: 8412880745274351775, guid: 61a1222240d25134d9ec0090057a6c33, type: 3}
-  Ability: {fileID: 947315176613465897, guid: 81007e41f0d025044be3f255c3069a75, type: 3}
-  Unit: {fileID: 7348070789959115077, guid: 82e8b33643974674db2b93921412743d, type: 3}
-  ShopIcon: {fileID: 0}
-  AbilityAffectedByAtkSpeed: 1

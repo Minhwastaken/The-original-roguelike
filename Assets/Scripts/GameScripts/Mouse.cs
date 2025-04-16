@@ -109,14 +109,14 @@ public class Mouse : MonoBehaviour
         }
     }
 
-    private void HexLockIn()
+    public void HexLockIn(GameObject ChosenUnit)
     {
         float MinDist = 1;
         GameObject Nearest = null;
-        Unit UnitScript = ChosenObject.GetComponent<Unit>();
+        Unit UnitScript = ChosenUnit.GetComponent<Unit>();
 
         //if unit cap is not yet reached, or unit is alr on field, then check the grid
-        if(GridGen.Instance.Units.Count < GameManager.Instance.Level || ChosenObject.GetComponent<Unit>().Hex.GetComponent<Hex>() || ChosenObject.GetComponent<Unit>().Team != 0)
+        if(GridGen.Instance.Units.Count < GameManager.Instance.Level || ChosenUnit.GetComponent<Unit>().Hex.GetComponent<Hex>() || ChosenUnit.GetComponent<Unit>().Team != 0)
         {
             for(int i = 0; i < GridGen.Instance.GridLength; i++)
             {
@@ -124,7 +124,7 @@ public class Mouse : MonoBehaviour
                 {
                     if(!GridGen.Instance.Hexes[i,j].GetComponent<Hex>().Taken)
                     {
-                        float Dist = Vector2.Distance(ChosenObject.transform.position, GridGen.Instance.Hexes[i,j].transform.position);
+                        float Dist = Vector2.Distance(ChosenUnit.transform.position, GridGen.Instance.Hexes[i,j].transform.position);
                         if(Dist < SnapDist && Dist < MinDist)
                         {
                             MinDist = Dist;
@@ -139,16 +139,16 @@ public class Mouse : MonoBehaviour
         {
             Debug.Log("Nearest Hex: " + Nearest.name);
             ResetHex(UnitScript);
-            ChosenObject.transform.position = (Vector2) Nearest.transform.position;
+            ChosenUnit.transform.position = (Vector2) Nearest.transform.position;
             OriHex = (Vector2) Nearest.transform.position;
             UnitScript.Hex = Nearest;
             UnitScript.OGHex = Nearest;
-            Nearest.GetComponent<Hex>().Taken = ChosenObject;
+            Nearest.GetComponent<Hex>().Taken = ChosenUnit;
             if(UnitScript.Benched)
             {
                 UnitScript.Benched = false;
-                GridGen.Instance.BenchedUnits.Remove(ChosenObject);
-                GridGen.Instance.Units.Add(ChosenObject);
+                GridGen.Instance.BenchedUnits.Remove(ChosenUnit);
+                GridGen.Instance.Units.Add(ChosenUnit);
                 OnField();
             }
         }
@@ -158,7 +158,7 @@ public class Mouse : MonoBehaviour
             {
                 if(!BenchSlot.GetComponent<BenchSlot>().Taken)
                 {
-                    float Dist = Vector2.Distance(ChosenObject.transform.position, BenchSlot.transform.position);
+                    float Dist = Vector2.Distance(ChosenUnit.transform.position, BenchSlot.transform.position);
                     if(Dist < SnapDist && Dist < MinDist)
                     {
                         MinDist = Dist;
@@ -169,21 +169,21 @@ public class Mouse : MonoBehaviour
             if(Nearest)
             {
                 ResetHex(UnitScript);
-                ChosenObject.transform.position = (Vector2) Nearest.transform.position;
+                ChosenUnit.transform.position = (Vector2) Nearest.transform.position;
                 UnitScript.Hex = Nearest;
                 UnitScript.OGHex = Nearest;
-                Nearest.GetComponent<BenchSlot>().Taken = ChosenObject;
+                Nearest.GetComponent<BenchSlot>().Taken = ChosenUnit;
                 if(UnitScript.Benched == false)
                 {
                     UnitScript.Benched = true;
-                    GridGen.Instance.BenchedUnits.Add(ChosenObject);
-                    GridGen.Instance.Units.Remove(ChosenObject);
+                    GridGen.Instance.BenchedUnits.Add(ChosenUnit);
+                    GridGen.Instance.Units.Remove(ChosenUnit);
                     OnBench();
                 }
             }
             else if(OriHex != new Vector2(-1,-1))
             {
-                ChosenObject.transform.position = OriHex;
+                ChosenUnit.transform.position = OriHex;
             }
         }
     }
@@ -221,7 +221,7 @@ public class Mouse : MonoBehaviour
     {
         if(ChosenObject.layer == UnitLayer)
         {
-            HexLockIn();
+            HexLockIn(ChosenObject);
         }
         Drop();
     }

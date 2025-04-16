@@ -215,24 +215,24 @@ public class GridGen : MonoBehaviour
             if(Enemies.Count >= 28)
                 return;
             GameObject Enemy = Instantiate(UnitList[Random.Range(0, UnitList.Count)]);
-            UnitStats.UnitRole EnemyRole = Enemy.GetComponent<Unit>().Stats.Role;
-            if(EnemyRole == UnitStats.UnitRole.AttackCarry || EnemyRole == UnitStats.UnitRole.MagicCarry)
+            Unit.UnitRole EnemyRole = Enemy.GetComponent<Unit>().Role;
+            if(EnemyRole == Unit.UnitRole.AttackCarry || EnemyRole == Unit.UnitRole.MagicCarry)
             {
                 SpawnEnemy(Enemy, 3, 4);
             }
-            else if(EnemyRole == UnitStats.UnitRole.AttackCaster || EnemyRole == UnitStats.UnitRole.MagicCaster)
+            else if(EnemyRole == Unit.UnitRole.AttackCaster || EnemyRole == Unit.UnitRole.MagicCaster)
             {
                 SpawnEnemy(Enemy, 3, 4);
             }
-            else if(EnemyRole == UnitStats.UnitRole.AttackTank || EnemyRole == UnitStats.UnitRole.MagicTank)
+            else if(EnemyRole == Unit.UnitRole.AttackTank || EnemyRole == Unit.UnitRole.MagicTank)
             {
                 SpawnEnemy(Enemy, 1, 1);
             }
-            else if(EnemyRole == UnitStats.UnitRole.AttackFighter || EnemyRole == UnitStats.UnitRole.MagicFighter)
+            else if(EnemyRole == Unit.UnitRole.AttackFighter || EnemyRole == Unit.UnitRole.MagicFighter)
             {
                 SpawnEnemy(Enemy, 1, 3);
             }
-            else if(EnemyRole == UnitStats.UnitRole.AttackReaper || EnemyRole == UnitStats.UnitRole.MagicReaper)
+            else if(EnemyRole == Unit.UnitRole.AttackReaper || EnemyRole == Unit.UnitRole.MagicReaper)
             {
                 SpawnEnemy(Enemy, 2, 3);
             }

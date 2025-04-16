@@ -5,9 +5,6 @@ public class UnitStats : ScriptableObject
 {
     [Header("Basics")]
     public int Cost = 1;
-    public enum UnitRole {AttackCarry, MagicCarry, AttackCaster, MagicCaster, AttackTank, MagicTank, AttackFighter, MagicFighter, AttackReaper, MagicReaper};
-    public UnitRole Role; 
-    public List<TraitDefinition.Traits> Traits = new List<TraitDefinition.Traits>();
     public float Hp;
     public float MaxHp;
     public float Range;

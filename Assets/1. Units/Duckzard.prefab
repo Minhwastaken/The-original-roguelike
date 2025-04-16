@@ -312,6 +312,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   Stats: {fileID: 11400000, guid: 9ba6bf3be02360e4e8fdf9224a3e4375, type: 2}
+  Role: 1
+  Traits: 0500000007000000
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -355,7 +357,7 @@ MonoBehaviour:
   OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
-  OnGridReset:
+  OnReset:
     m_PersistentCalls:
       m_Calls: []
   AttackPrefab: {fileID: 2544272074793032938, guid: e77c03e6d8626b44d81967b5d3dcb136, type: 3}

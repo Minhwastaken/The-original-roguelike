@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [CreateAssetMenu(menuName = "Trait")]
 public abstract class TraitDefinition : ScriptableObject
 {
-    public enum Traits {Weapon, Fruit, Clothes, Staff, Condiment, Brute, Manamaniac, Rapidstriker, Nuker, Shredder, Paladdin,
-                        Thicc}
+    public enum Traits {Weapon, Fruit, Clothes, Staff, Condiment, Duck, Brute, Manamaniac, Rapidstriker, Nuker, Piercer, Paladdin,
+                        Thicc, Executioner, Multiversal}
     public Traits TraitType;
     public string Name;
     public List<int> Thresholds;

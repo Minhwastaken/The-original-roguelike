@@ -169,6 +169,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   Stats: {fileID: 11400000, guid: b3ae2e03be7e6cd4280cca196b83ae00, type: 2}
+  Role: 0
+  Traits: 0400000008000000
   Hp: 0
   MaxHp: 0
   AtkDamage: 0

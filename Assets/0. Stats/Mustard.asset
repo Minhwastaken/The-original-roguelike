@@ -15,22 +15,22 @@ MonoBehaviour:
   Cost: 4
   Role: 0
   Traits: 0400000006000000
-  Hp: 15
-  MaxHp: 15
+  Hp: 800
+  MaxHp: 800
   Range: 4
   Mana: 0
-  MaxMana: 20
-  AtkDamage: 1
-  AbilityPower: 1
-  AtkSpeed: 1.5
-  Armor: 0
-  MagicResist: 0
+  MaxMana: 30
+  AtkDamage: 40
+  AbilityPower: 100
+  AtkSpeed: 1
+  Armor: 30
+  MagicResist: 30
   Movespeed: 100
   DamageAmp: 0
   Durability: 0
   Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
+  CritChance: 25
+  CritDamage: 140
   ADScale: 1.8
   HpScale: 1.8
   SizeScale: 1.1

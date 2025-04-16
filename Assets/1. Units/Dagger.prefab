@@ -345,6 +345,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Team: 0
   Stats: {fileID: 11400000, guid: 219abaab9d59a92419d4f9f17167edac, type: 2}
+  Role: 6
+  Traits: 000000000a000000
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -367,6 +369,7 @@ MonoBehaviour:
   Benched: 0
   LerpProgress: 0
   Anim: {fileID: 0}
+  AbilityCount: 0
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
@@ -387,12 +390,16 @@ MonoBehaviour:
   OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
-  OnGridReset:
+  OnReset:
     m_PersistentCalls:
       m_Calls: []
   AttackPrefab: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
   AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
+  AttackOverride: {fileID: 0}
   ShopIcon: {fileID: 0}
+  TurnOnMove: 1
+  TurnOnAttack: 1
+  PassiveAbility: 0
   AbilityAffectedByAtkSpeed: 0
   AbilityAnim: {fileID: 7400000, guid: 7cca3ca87279a4444860f4da6d05f720, type: 2}
 --- !u!61 &7505680380406423604

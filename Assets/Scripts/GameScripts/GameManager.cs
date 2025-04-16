@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     public void AddTraits(Unit unit)
     {
-        foreach(TraitDefinition.Traits Trait in unit.Stats.Traits)
+        foreach(TraitDefinition.Traits Trait in unit.Traits)
         {
             if(!ActiveTraits.ContainsKey(Trait))
             {
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
     }
     public void RemoveTraits(Unit unit)
     {
-        foreach(TraitDefinition.Traits Trait in unit.Stats.Traits)
+        foreach(TraitDefinition.Traits Trait in unit.Traits)
         {
             ActiveTraits[Trait]--;
             if(ActiveTraits[Trait] <= 0)
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         foreach(GameObject Unit in GridGen.Instance.Units)
         {
             Unit UnitScript = Unit.GetComponent<Unit>();
-            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Stats.Traits)
+            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Traits)
             {
                 if(UnitTrait == Trait)
                 {
@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
         foreach(GameObject Unit in GridGen.Instance.Units)
         {
             Unit UnitScript = Unit.GetComponent<Unit>();
-            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Stats.Traits)
+            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Traits)
             {
                 if(UnitTrait == Trait)
                 {

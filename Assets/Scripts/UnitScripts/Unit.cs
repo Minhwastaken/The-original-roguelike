@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEditor;
 public class Unit : MonoBehaviour, IDamageable
 {
     public int Team;
     public UnitStats Stats;
+    public enum UnitRole {AttackCarry, MagicCarry, AttackCaster, MagicCaster, AttackTank, MagicTank, AttackFighter, MagicFighter, AttackReaper, MagicReaper};
+    public UnitRole Role; 
+    public List<TraitDefinition.Traits> Traits = new List<TraitDefinition.Traits>();
     public enum StatType {AD, AP, MaxHp, Hp, AtkSpeed, Range, Armor, MagicResist, Movespeed, DamageAmp, Durability, Omnivamp, CritChance, CritDamage};
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
