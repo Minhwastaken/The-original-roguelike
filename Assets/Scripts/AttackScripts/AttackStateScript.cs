@@ -19,7 +19,7 @@ public class AttackStateScript : StateMachineBehaviour
         }
         stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         AtkTriggerTime = AtkTriggerFrame / 60;
-        if(stateInfo.IsName("Attack") || UnitScript.AbilityAffectedByAtkSpeed)
+        if(stateInfo.IsName("Attack") || stateInfo.IsName("AttackOverride") || UnitScript.AbilityAffectedByAtkSpeed)
         {
             animator.speed = UnitScript.AtkSpeed * AnimLength;
         }
@@ -44,15 +44,14 @@ public class AttackStateScript : StateMachineBehaviour
         }
         else if(GameManager.Instance.State != GameManager.GameState.Battle)
         {
-            animator.Play("Idle");
+            animator.Play("Attack", 0, 1f);
         }
     }
     
-
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(AtkTriggered == false)
+        if(AtkTriggered == false && GameManager.Instance.State == GameManager.GameState.Battle)
         {
             Spawn(stateInfo);
         }
@@ -61,7 +60,11 @@ public class AttackStateScript : StateMachineBehaviour
     }
     private void Spawn(AnimatorStateInfo stateInfo)
     {
-        if(stateInfo.IsName("Attack") && UnitScript.AttackPrefab)
+        if(stateInfo.IsName("AttackOverride") && UnitScript.AttackOverride)
+        {
+            UnitScript.SpawnAttack(UnitScript.AttackOverride);
+        }
+        else if(stateInfo.IsName("Attack") && UnitScript.AttackPrefab)
         {
             if(UnitScript.AttackOverride)
                 UnitScript.SpawnAttack(UnitScript.AttackOverride);

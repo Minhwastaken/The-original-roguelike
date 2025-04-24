@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -31,9 +30,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddTraits(Unit unit)
+    public void AddTraits(Unit Unit)
     {
-        foreach(TraitDefinition.Traits Trait in unit.Traits)
+        foreach(GameObject OtherUnit in GridGen.Instance.Units)
+        {
+            Unit OtherUnitScript = OtherUnit.GetComponent<Unit>();
+            if(OtherUnitScript.Stats == Unit.Stats && Unit != OtherUnitScript)
+            {
+                return;
+            }
+        }
+        foreach(TraitDefinition.Traits Trait in Unit.Traits)
         {
             if(!ActiveTraits.ContainsKey(Trait))
             {
@@ -48,9 +55,17 @@ public class GameManager : MonoBehaviour
         }
         UpdateTraitVisuals();
     }
-    public void RemoveTraits(Unit unit)
+    public void RemoveTraits(Unit Unit)
     {
-        foreach(TraitDefinition.Traits Trait in unit.Traits)
+        foreach(GameObject OtherUnit in GridGen.Instance.Units)
+        {
+            Unit OtherUnitScript = OtherUnit.GetComponent<Unit>();
+            if(OtherUnitScript.Stats == Unit.Stats)
+            {
+                return;
+            }
+        }
+        foreach(TraitDefinition.Traits Trait in Unit.Traits)
         {
             ActiveTraits[Trait]--;
             if(ActiveTraits[Trait] <= 0)
@@ -180,17 +195,20 @@ public class GameManager : MonoBehaviour
             GainXp(4);
             LoseGold(4);
         }
-        Debug.Log(Level);
     }
     public void GainXp(int XpGain)
     {
         Xp += XpGain;
+        if(Level > 10)
+        {
+            return;
+        }
         if(Xp >= XpCost[Level])
         {
             Xp -= XpCost[Level];
             Level++;
             UI.Instance.UpdateRollChance();
         }
-        UI.Instance.XpText.text = Xp + "/" + XpCost[Level] + " XP";
+        UI.Instance.XpText.text= Xp + "/" + XpCost[Level];
     }
 }

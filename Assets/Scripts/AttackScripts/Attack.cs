@@ -6,10 +6,10 @@ using UnityEngine.Events;
 public abstract class Attack : MonoBehaviour
 {
     public Unit Attacker, Target;
-    public Unit.DamageType DamageType;
+    public enum DamageTypeEnum {AD, AP, True};
+    public DamageTypeEnum DamageType;
     public List<Unit.StatType> StatScales = new List<Unit.StatType> {Unit.StatType.AD, Unit.StatType.AP};
     public List<float> ScaleValues = new List<float> {1, 0};
-    public float ADScale = 1, APScale;
     public float Hp, MaxHp;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
@@ -67,10 +67,32 @@ public abstract class Attack : MonoBehaviour
             OnAttack.Invoke();
             //float TotalDamage;
             if(!Target.Benched)
-                Target.TakeDamage(AtkDamage * ADScale + AbilityPower * APScale, DamageType, Attacker);
+                DealDamage(Target);
             DamageDealtLogic();
             OnDamageDealt.Invoke();
         }
+    }
+    public void DealDamage(Unit Target)
+    {
+        float TotalDamage = 0;
+        foreach(Unit.StatType Stat in StatScales)
+        {
+            TotalDamage += Attacker.StatTypeToStat(Stat) * ScaleValues[StatScales.IndexOf(Stat)];
+            //Debug.Log(Stat + " : " + Attacker.StatTypeToStat(Stat) + " * " + ScaleValues[StatScales.IndexOf(Stat)]);
+            //Debug.Log("TotalDamage post " + Stat + " : " + TotalDamage);
+        }
+        if(DamageType == DamageTypeEnum.AD)
+        {
+            TotalDamage *= 100 / (Target.Armor + 100);
+        }
+        else if(DamageType == DamageTypeEnum.AP)
+        {
+            TotalDamage *= 100 / (Target.MagicResist + 100);
+        }
+        //Debug.Log("TotalDamage post armor and mr: " + TotalDamage);
+        TotalDamage *= (1+DamageAmp/100)/(1+Target.Durability/100);
+        //Debug.Log("Damage Dealt By " + Attacker.name +  ": " + TotalDamage);
+        Target.TakeDamage(TotalDamage, DamageType, Attacker);
     }
     public void DestroySelf()
     {
@@ -85,6 +107,8 @@ public abstract class Attack : MonoBehaviour
         GridGen.Instance.Attacks.Remove(gameObject);
         foreach(GameObject LingeringParticle in LingeringParticles)
         {
+            if(LingeringParticle == null || LingeringParticle.transform.parent == null)
+                continue;
             LingeringParticle.transform.parent = null;
             LingeringParticle.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
         }

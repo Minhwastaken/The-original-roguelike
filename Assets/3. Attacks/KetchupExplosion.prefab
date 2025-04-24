@@ -9833,10 +9833,10 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
-  ADScale: 1
-  APScale: 0
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 1
+  - 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -9852,14 +9852,22 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 2
+  LingeringParticles: []
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  SingleOverrideAttack: 0
   LingerTime: 0.1
+  TickNumber: 1
+  TickInterval: 0.2
   SpawnAtTarget: 1
+  TickCount: 0
+  HitEnemies: []
 --- !u!58 &7441274680229889695
 CircleCollider2D:
   m_ObjectHideFlags: 0

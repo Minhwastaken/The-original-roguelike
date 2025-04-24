@@ -41,9 +41,9 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2816735863156424805}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 5
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -4874,9 +4874,9 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7532163290274100474}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 5
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -9717,10 +9717,10 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 1
-  StatScales: 
-  ScaleValues: []
-  ADScale: 0
-  APScale: 0.5
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 0
+  - 0.2
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -9754,9 +9754,6 @@ MonoBehaviour:
   SpawnAtTarget: 1
   TickCount: 0
   HitEnemies: []
-  ParticleSystems:
-  - {fileID: 7532163290274100474}
-  - {fileID: 2816735863156424805}
 --- !u!58 &7441274680229889695
 CircleCollider2D:
   m_ObjectHideFlags: 0

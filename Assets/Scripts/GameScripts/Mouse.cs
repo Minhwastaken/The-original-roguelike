@@ -138,7 +138,7 @@ public class Mouse : MonoBehaviour
         if(Nearest)
         {
             Debug.Log("Nearest Hex: " + Nearest.name);
-            ResetHex(UnitScript);
+            UnitScript.ResetHex();
             ChosenUnit.transform.position = (Vector2) Nearest.transform.position;
             OriHex = (Vector2) Nearest.transform.position;
             UnitScript.Hex = Nearest;
@@ -149,7 +149,7 @@ public class Mouse : MonoBehaviour
                 UnitScript.Benched = false;
                 GridGen.Instance.BenchedUnits.Remove(ChosenUnit);
                 GridGen.Instance.Units.Add(ChosenUnit);
-                OnField();
+                OnField(UnitScript);
             }
         }
         else
@@ -168,7 +168,7 @@ public class Mouse : MonoBehaviour
             }
             if(Nearest)
             {
-                ResetHex(UnitScript);
+                UnitScript.ResetHex();
                 ChosenUnit.transform.position = (Vector2) Nearest.transform.position;
                 UnitScript.Hex = Nearest;
                 UnitScript.OGHex = Nearest;
@@ -178,7 +178,7 @@ public class Mouse : MonoBehaviour
                     UnitScript.Benched = true;
                     GridGen.Instance.BenchedUnits.Add(ChosenUnit);
                     GridGen.Instance.Units.Remove(ChosenUnit);
-                    OnBench();
+                    OnBench(UnitScript);
                 }
             }
             else if(OriHex != new Vector2(-1,-1))
@@ -187,27 +187,13 @@ public class Mouse : MonoBehaviour
             }
         }
     }
-    private void OnBench()
+    private void OnBench(Unit Unit)
     {
-        foreach(GameObject Unit in GridGen.Instance.Units)
-        {
-            if(Unit.GetComponent<Unit>().Stats == ChosenObject.GetComponent<Unit>().Stats && Unit != ChosenObject)
-            {
-                return;
-            }
-        }
-        GameManager.Instance.RemoveTraits(ChosenObject.GetComponent<Unit>());
+        GameManager.Instance.RemoveTraits(Unit);
     }
-    private void OnField()
+    private void OnField(Unit Unit)
     {
-        foreach(GameObject Unit in GridGen.Instance.Units)
-        {
-            if(Unit.GetComponent<Unit>().Stats == ChosenObject.GetComponent<Unit>().Stats && Unit != ChosenObject)
-            {
-                return;
-            }
-        }
-        GameManager.Instance.AddTraits(ChosenObject.GetComponent<Unit>());
+        GameManager.Instance.AddTraits(Unit);
     }
     private void Drop()
     {
@@ -224,20 +210,5 @@ public class Mouse : MonoBehaviour
             HexLockIn(ChosenObject);
         }
         Drop();
-    }
-
-    public void ResetHex(Unit UnitScript)
-    {
-        if(UnitScript.Hex)
-        {
-            if(UnitScript.Hex.GetComponent<Hex>())
-            {
-                UnitScript.Hex.GetComponent<Hex>().Taken = null;
-            }
-            else if(UnitScript.Hex.GetComponent<BenchSlot>())
-            {
-                UnitScript.Hex.GetComponent<BenchSlot>().Taken = null;
-            }
-        }
     }
 }

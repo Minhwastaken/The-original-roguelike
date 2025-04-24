@@ -9835,10 +9835,8 @@ MonoBehaviour:
   DamageType: 0
   StatScales: 0000000001000000
   ScaleValues:
-  - 1
   - 0
-  ADScale: 0
-  APScale: 10
+  - 1
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -9872,7 +9870,6 @@ MonoBehaviour:
   SpawnAtTarget: 1
   TickCount: 0
   HitEnemies: []
-  ParticleSystems: []
 --- !u!58 &7441274680229889695
 CircleCollider2D:
   m_ObjectHideFlags: 0

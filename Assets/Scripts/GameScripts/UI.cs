@@ -59,7 +59,21 @@ public class UI : MonoBehaviour
         int Total = 0;
         for(int i = 0; i < 5; i++)
         {
-            Total += RollChance[GameManager.Instance.Level - 1, i];
+            if(GameManager.Instance.Level < 11)
+            {
+                for(int y = 0; y < 5; y++)
+                {
+                    Total += RollChance[GameManager.Instance.Level - 1, i];
+                }
+            }
+            else
+            {
+                for(int y = 0; y < 5; y++)
+                {
+                    Total += RollChance[10, i];
+                }
+            }
+            
             if(Roll < Total)
             {
                 return i;
@@ -88,9 +102,19 @@ public class UI : MonoBehaviour
     }
     public void UpdateRollChance()
     {
-        for(int i = 0; i < 5; i++)
+        if(GameManager.Instance.Level < 11)
         {
-            RollChanceTexts[i].text = RollChance[GameManager.Instance.Level - 1, i] + "%";
+            for(int i = 0; i < 5; i++)
+            {
+                RollChanceTexts[i].text = RollChance[GameManager.Instance.Level - 1, i] + "%";
+            }
+        }
+        else
+        {
+            for(int i = 0; i < 5; i++)
+            {
+                RollChanceTexts[i].text = RollChance[10, i] + "%";
+            }
         }
     }
     public void ToggleShop()

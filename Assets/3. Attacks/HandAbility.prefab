@@ -51,10 +51,8 @@ MonoBehaviour:
   DamageType: 0
   StatScales: 0000000001000000
   ScaleValues:
-  - 1
+  - 3
   - 0
-  ADScale: 7
-  APScale: 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -86,7 +84,6 @@ MonoBehaviour:
   SpawnAtTarget: 1
   TickCount: 0
   HitEnemies: []
-  ParticleSystems: []
 --- !u!50 &3867185046695400114
 Rigidbody2D:
   serializedVersion: 5

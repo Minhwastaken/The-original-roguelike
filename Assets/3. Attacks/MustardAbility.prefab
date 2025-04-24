@@ -5091,12 +5091,8 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  StatScales: 0000000001000000
-  ScaleValues:
-  - 1
-  - 0
-  ADScale: 0
-  APScale: 0
+  StatScales: 
+  ScaleValues: []
   Hp: 0
   MaxHp: 0
   AtkDamage: 0

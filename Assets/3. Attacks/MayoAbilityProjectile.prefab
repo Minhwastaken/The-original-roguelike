@@ -5091,10 +5091,10 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 1
-  StatScales: 
-  ScaleValues: []
-  ADScale: 0
-  APScale: 1
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 0
+  - 0.25
   Hp: 0
   MaxHp: 0
   AtkDamage: 0

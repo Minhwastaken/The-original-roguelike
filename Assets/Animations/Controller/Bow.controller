@@ -119,7 +119,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -993301787386631136}
-    m_Position: {x: 530, y: 160, z: 0}
+    m_Position: {x: 550, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2947124936311649694}
     m_Position: {x: 290, y: 110, z: 0}
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e43e07ef571c73c42ae82ccbac29020f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AtkTriggerFrame: 67
+  AtkTriggerFrame: 50
   AnimLength: -1
 --- !u!1101 &7530974926376170290
 AnimatorStateTransition:

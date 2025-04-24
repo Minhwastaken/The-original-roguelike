@@ -5,7 +5,7 @@ public class Violet : Unit
 {
     private Coroutine RollCoroutine;
     public float RollDuration;
-    public override void Start()
+    protected override void Start()
     {
         base.Start();
         OnAbilityUse.AddListener(StartRoll);

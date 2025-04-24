@@ -20,7 +20,6 @@ public class Unit : MonoBehaviour, IDamageable
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
-    public enum DamageType {AD, AP, True};
     public GameObject Hex, OGHex;
     public bool IsMoving = false, Benched;
     public float LerpProgress = 0;
@@ -44,14 +43,13 @@ public class Unit : MonoBehaviour, IDamageable
     [Header("Specials")]
     public bool PassiveAbility = false;
     public bool AbilityAffectedByAtkSpeed = false;
-    public virtual void Start() 
+    protected virtual void Start() 
     {
         Anim = GetComponent<Animator>();
         OGScale = transform.localScale.x;
         GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
         Sprites = transform.Find("Sprite").gameObject;
         GetStats();
-        OnStart();
     }
     private void Update()
     {
@@ -109,7 +107,7 @@ public class Unit : MonoBehaviour, IDamageable
                 Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
             }
             GainMana(10);
-            if(AttackOverride &&  Anim.HasState(0, Animator.StringToHash("AttackOverride")))
+            if(AttackOverride && Anim.HasState(0, Animator.StringToHash("AttackOverride")))
             {
                 Anim.Play("AttackOverride");
             }
@@ -134,6 +132,8 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void SpawnAttack(GameObject AttackGO)
     {
+        if(Sprites == null)
+            return;
         GameObject Attack = Instantiate(AttackGO, Sprites.transform.position, Sprites.transform.rotation);
         Attack.GetComponent<Attack>().Attacker = this;
         GridGen.Instance.Attacks.Add(Attack);
@@ -169,6 +169,10 @@ public class Unit : MonoBehaviour, IDamageable
             if(Attack.GetComponent<AOEAttack>().SpawnAtTarget)
             {
                 Attack.transform.position = Target.transform.position;
+            }
+            else
+            {
+                Attack.transform.position = transform.position;
             }
         }
     }
@@ -261,6 +265,12 @@ public class Unit : MonoBehaviour, IDamageable
 
 
                 foreach(GameObject Unit in GridGen.Instance.Units)
+                {
+                    if(Unit)
+                        if(Unit.GetComponent<Unit>().Path.To == AdjHex && Unit.GetComponent<Unit>().Team == Team && Unit != gameObject)
+                            CheckTaken = false;
+                }
+                foreach(GameObject Unit in GridGen.Instance.Enemies)
                 {
                     if(Unit)
                         if(Unit.GetComponent<Unit>().Path.To == AdjHex && Unit.GetComponent<Unit>().Team == Team && Unit != gameObject)
@@ -432,9 +442,9 @@ public class Unit : MonoBehaviour, IDamageable
         }
         return offset + YOffset;
     }
-    public void TakeDamage(float damage, DamageType type, Unit Attacker)
+    public void TakeDamage(float Damage, Attack.DamageTypeEnum DamageType, Unit Attacker)
     {
-        Hp -= damage;
+        Hp -= Damage;
         if(Hp <= 0)
         {
             //float OverkillDamage = -Hp;
@@ -480,13 +490,14 @@ public class Unit : MonoBehaviour, IDamageable
     {
         if(Team == 0)
         {
-            GridGen.Instance.Units.Remove(gameObject);
             if(Benched)
             {
+                GridGen.Instance.BenchedUnits.Remove(gameObject);
                 Hex.GetComponent<BenchSlot>().Taken = null;
             }
             else
             {
+                GridGen.Instance.Units.Remove(gameObject);
                 GameManager.Instance.RemoveTraits(this);
                 Hex.GetComponent<Hex>().Taken = null;
             }
@@ -516,10 +527,6 @@ public class Unit : MonoBehaviour, IDamageable
             return false;
         }
         return true;
-    }
-
-    protected virtual void OnStart()
-    {
     }
 
     [ContextMenu("Update Stats")]
@@ -579,7 +586,14 @@ public class Unit : MonoBehaviour, IDamageable
     public void RemoveBuff(Buff buff)
     {
         StatType BuffType = buff.Type;
-        Buffs.Remove(buff);
+        foreach(Buff AppliedBuff in Buffs)
+        {
+            if(AppliedBuff.Name == buff.Name)
+            {
+                Buffs.Remove(AppliedBuff);
+                break;
+            }
+        }
         UpdateTrueStats(BuffType);
     }
     public void ClearBuffs()
@@ -599,7 +613,40 @@ public class Unit : MonoBehaviour, IDamageable
             UpdateTrueStats(Type);
         }
     }
-    private ref float StatTypeToStat(StatType Type)
+    public void ResetHex()
+    {
+        if(Hex)
+        {
+            if(!Benched)
+            {
+                Hex.GetComponent<Hex>().Taken = null;
+            }
+            else
+            {
+                Hex.GetComponent<BenchSlot>().Taken = null;
+            }
+        }
+    }    
+    public void ResetFull()
+    {
+        GetStats();
+        UpdateBaseStats();
+        Hp = MaxHp;
+        ClearBuffs();
+        ResetHex();
+        Hex = OGHex;
+        transform.position = (Vector2) Hex.transform.position;
+        OnReset.Invoke();
+        AbilityCount = 0;
+        //Movement
+        IsMoving = false;
+        LerpProgress = 0;
+        Path = (null, null);
+        //Visuals
+        Sprites.transform.rotation = Quaternion.identity;
+        GetComponent<Animator>().Play("Idle");
+    }
+    public ref float StatTypeToStat(StatType Type)
     {
         if(Type == StatType.Hp)
         {

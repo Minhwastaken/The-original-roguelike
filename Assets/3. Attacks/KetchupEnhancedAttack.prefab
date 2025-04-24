@@ -5093,10 +5093,8 @@ MonoBehaviour:
   DamageType: 0
   StatScales: 0000000001000000
   ScaleValues:
-  - 1
+  - 1.5
   - 0
-  ADScale: 1
-  APScale: 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0

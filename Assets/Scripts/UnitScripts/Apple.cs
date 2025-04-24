@@ -12,8 +12,9 @@ public class Apple : Unit
         GainBuff(AppleKillBuff);
         Heal(this, AbilityPower * AbilityHealAPScale[Star - 1]);
     }
-    protected override void OnStart()
+    protected override void Start()
     {
+        base.Start();
         OnKill.AddListener(Ability);
     }
 }

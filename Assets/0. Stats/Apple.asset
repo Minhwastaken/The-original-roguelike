@@ -13,13 +13,11 @@ MonoBehaviour:
   m_Name: Apple
   m_EditorClassIdentifier: 
   Cost: 4
-  Role: 6
-  Traits: 0100000005000000
   Hp: 1200
   MaxHp: 1200
   Range: 1
   Mana: 0
-  MaxMana: 0
+  MaxMana: 10
   AtkDamage: 150
   AbilityPower: 100
   AtkSpeed: 0.3

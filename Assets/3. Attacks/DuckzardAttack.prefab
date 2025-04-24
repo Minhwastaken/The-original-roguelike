@@ -46,13 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Attacker: {fileID: 0}
   Target: {fileID: 0}
-  DamageType: 0
-  StatScales: 0000000001000000
-  ScaleValues:
-  - 1
-  - 0
-  ADScale: 0
-  APScale: 0
+  DamageType: 1
+  StatScales: 
+  ScaleValues: []
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -68,6 +64,7 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 5
+  LingeringParticles: []
   OnAttack:
     m_PersistentCalls:
       m_Calls: []

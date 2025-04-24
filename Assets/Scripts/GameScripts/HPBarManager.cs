@@ -13,7 +13,7 @@ public class HPBarManager : MonoBehaviour
     public float CUTimer;
     public GameObject Bar, BarHLG;
     public List<GameObject> Bars = new List<GameObject>();
-    public static float HpPerSegment = 5;
+    public static float HpPerSegment = 300;
     private Coroutine CatchUpCoroutine;
     private void Start()
     {
@@ -29,9 +29,6 @@ public class HPBarManager : MonoBehaviour
         Unit.OnTakeDamage.AddListener(UpdateHp);
         Unit.OnReset.AddListener(UpdateHp);
         UpdateHp();
-        HPBar.maxValue = Unit.MaxHp;
-        HPBar.value = Unit.Hp;
-        CUHpBar.maxValue = Unit.MaxHp;
         CUHpBar.value = Unit.Hp;
     }
     public void UpdateHp()
@@ -61,7 +58,7 @@ public class HPBarManager : MonoBehaviour
         {
             if(i<BarNum)
             {
-                Bars[i].transform.GetChild(0).gameObject.SetActive(true);
+                Bars[i].transform.gameObject.SetActive(true);
                 Bars[i].GetComponent<RectTransform>().sizeDelta = new Vector2(SegmentWidth, Bars[i].GetComponent<RectTransform>().sizeDelta.y);
                 if(i < BarsLeft)
                 {
@@ -73,7 +70,9 @@ public class HPBarManager : MonoBehaviour
                 }
             }
             else
-                Bars[i].transform.GetChild(0).gameObject.SetActive(false);
+            {
+                Bars[i].transform.gameObject.SetActive(false);
+            }
         }
     }
     private IEnumerator HpBarCatchUp()

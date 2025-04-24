@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 1923359673204671048}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: 0, y: -0.035, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.55, z: 1}
+  m_LocalPosition: {x: 0, y: -0.101, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8885025376088677647}
@@ -644,8 +644,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.15
-      minScalar: 0.15
+      scalar: 0.25
+      minScalar: 0.175
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1227,7 +1227,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 42.5
+      scalar: 10
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -1280,7 +1280,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 2
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -5242,10 +5242,8 @@ MonoBehaviour:
   DamageType: 0
   StatScales: 0000000001000000
   ScaleValues:
-  - 2
+  - 3
   - 0
-  ADScale: 2
-  APScale: 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -5272,7 +5270,7 @@ MonoBehaviour:
   HitEffect: {fileID: 0}
   HitEffectPos: {fileID: 0}
   SingleOverrideAttack: 0
-  Speed: 18
+  Speed: 30
   Direction: {x: 0, y: 0}
   DestroyOnHit: 1
   Targeted: 0

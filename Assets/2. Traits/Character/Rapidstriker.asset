@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961f4fb0ce1f5aa478fae1b15fac9879, type: 3}
   m_Name: Rapidstriker
   m_EditorClassIdentifier: 
-  TraitType: 6
+  TraitType: 8
   Name: Rapidstriker
   Thresholds: 020000000400000006000000
   StatTypes: 

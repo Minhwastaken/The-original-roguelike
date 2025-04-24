@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961f4fb0ce1f5aa478fae1b15fac9879, type: 3}
   m_Name: Manamaniac
   m_EditorClassIdentifier: 
-  TraitType: 6
-  Name: Brute
+  TraitType: 7
+  Name: Manamaniac
   Thresholds: 02000000040000000600000008000000
   StatTypes: 
   StatMagnitudes: []

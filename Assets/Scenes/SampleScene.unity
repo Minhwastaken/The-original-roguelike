@@ -3760,8 +3760,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cb2ec1fcb9783f41826658138f684c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gold: 3
-  Level: 1
+  Gold: 50000
+  Level: 100
   Xp: 0
   Stage: 0
   MaxInterest: 5
@@ -3797,6 +3797,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80c7490526be2d547beeccb280be61af, type: 2}
   - {fileID: 11400000, guid: 9227dd7bd9245644d91505f2f3dafe27, type: 2}
   - {fileID: 11400000, guid: 972d13968c22aac42a0f52de381b99aa, type: 2}
+  - {fileID: 11400000, guid: ac44e960740cca0458478b598d2a1b83, type: 2}
+  - {fileID: 11400000, guid: 6055ae28496d1944fa9af0ed13d56061, type: 2}
 --- !u!4 &423444397
 Transform:
   m_ObjectHideFlags: 0
@@ -6492,13 +6494,17 @@ MonoBehaviour:
   - {fileID: 7348070789959115077, guid: 66b9059f859474c4c82bb51cd4acd1b6, type: 3}
   - {fileID: 7348070789959115077, guid: 46a365adea2e91a48b456337dfd3c99e, type: 3}
   - {fileID: 7348070789959115077, guid: e32342b3a9313384c98cb5703738efcb, type: 3}
+  - {fileID: 7348070789959115077, guid: 4a5e88029e002bf44b3eca5fc3a366ea, type: 3}
+  - {fileID: 7348070789959115077, guid: 2eff9445461ed1841bb8772e72bb14eb, type: 3}
   EnemyList:
   - {fileID: 7431400569424583945, guid: e17c823851587104fb660b64be651eff, type: 3}
   OneCosts:
   - {fileID: 7348070789959115077, guid: 7756fc98504a38e43b21dfb4cdfac565, type: 3}
+  - {fileID: 7348070789959115077, guid: 4a5e88029e002bf44b3eca5fc3a366ea, type: 3}
   TwoCosts:
   - {fileID: 7348070789959115077, guid: 82e8b33643974674db2b93921412743d, type: 3}
   - {fileID: 7348070789959115077, guid: 023e428e59c43fe4a98d1dcf68326dec, type: 3}
+  - {fileID: 7348070789959115077, guid: 2eff9445461ed1841bb8772e72bb14eb, type: 3}
   ThreeCosts:
   - {fileID: 7348070789959115077, guid: a77869bbcbf6f9f42bdd9f4a6c5afc37, type: 3}
   - {fileID: 7348070789959115077, guid: e97d9f813a5d6af43a8145456c7c360a, type: 3}
@@ -6508,6 +6514,7 @@ MonoBehaviour:
   FiveCosts:
   - {fileID: 7348070789959115077, guid: e3591c35148c35c4780fe5513d94283f, type: 3}
   - {fileID: 7348070789959115077, guid: 46a365adea2e91a48b456337dfd3c99e, type: 3}
+  - {fileID: 7348070789959115077, guid: e32342b3a9313384c98cb5703738efcb, type: 3}
   Units: []
   Enemies: []
   BenchedUnits: []
@@ -13949,11 +13956,11 @@ MonoBehaviour:
   - {fileID: 2108155213}
   TraitVisuals:
   - {fileID: 1735709437}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 211236005}
+  - {fileID: 347853905}
+  - {fileID: 1968001748}
+  - {fileID: 31631909}
+  - {fileID: 501754149}
   RollChanceTexts:
   - {fileID: 181143230}
   - {fileID: 1377528631}
@@ -17864,8 +17871,8 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 1034447529}
   - {fileID: 423444397}
+  - {fileID: 793734284}
+  - {fileID: 544050745}
   - {fileID: 1641375743}
   - {fileID: 1875001552}
   - {fileID: 1103808370}
-  - {fileID: 793734284}
-  - {fileID: 544050745}

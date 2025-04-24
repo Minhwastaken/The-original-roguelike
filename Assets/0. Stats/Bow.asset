@@ -13,16 +13,14 @@ MonoBehaviour:
   m_Name: Bow
   m_EditorClassIdentifier: 
   Cost: 2
-  Role: 0
-  Traits: 0000000006000000
   Hp: 600
   MaxHp: 600
   Range: 4
   Mana: 0
-  MaxMana: 60
+  MaxMana: 50
   AtkDamage: 100
   AbilityPower: 100
-  AtkSpeed: 0.5
+  AtkSpeed: 1
   Armor: 20
   MagicResist: 20
   Movespeed: 100

@@ -169,7 +169,7 @@ public class GridGen : MonoBehaviour
 
         foreach(GameObject Unit in Units)
         {
-            ResetUnit(Unit);
+            Unit.GetComponent<Unit>().ResetFull();
         }
         if(GameManager.Instance.Stage >= 28)
         {
@@ -178,26 +178,7 @@ public class GridGen : MonoBehaviour
         else
             SpawnEnemies(GameManager.Instance.Stage);
     }
-    public void ResetUnit(GameObject Unit)
-    {
-            Unit UnitScript = Unit.GetComponent<Unit>();
-            UnitScript.GetStats();
-            UnitScript.UpdateBaseStats();
-            UnitScript.Hp = UnitScript.MaxHp;
-            UnitScript.ClearBuffs();
-            Mouse.Instance.ResetHex(UnitScript);
-            UnitScript.Hex = UnitScript.OGHex;
-            Unit.transform.position = (Vector2) UnitScript.Hex.transform.position;
-            UnitScript.OnReset.Invoke();
-            UnitScript.AbilityCount = 0;
-            //Movement
-            UnitScript.IsMoving = false;
-            UnitScript.LerpProgress = 0;
-            UnitScript.Path = (null, null);
-            //Visuals
-            UnitScript.Sprites.transform.rotation = Quaternion.identity;
-            Unit.GetComponent<Animator>().Play("Idle");
-    }
+
 
     public IEnumerator ClearAttacks()
     {
@@ -210,11 +191,15 @@ public class GridGen : MonoBehaviour
     }
     public void SpawnEnemies(float Credit)
     {
+        int CreditCount = 0;
         for(int i = 0; i < Credit; i++)
         {
             if(Enemies.Count >= 28)
                 return;
+            if(CreditCount > Credit)
+                break;
             GameObject Enemy = Instantiate(UnitList[Random.Range(0, UnitList.Count)]);
+            CreditCount +=Enemy.GetComponent<Unit>().Stats.Cost;
             Unit.UnitRole EnemyRole = Enemy.GetComponent<Unit>().Role;
             if(EnemyRole == Unit.UnitRole.AttackCarry || EnemyRole == Unit.UnitRole.MagicCarry)
             {
