@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Trait")]
 public abstract class TraitDefinition : ScriptableObject
 {
-    public enum Traits {Weapon, Fruit, Clothes, Staff, Condiment, Duck, Brute, Manamaniac, Rapidstriker, Nuker, Piercer, Paladdin,
+    public enum Traits {Weapon, Fruit, Clothes, Staff, Condiment, Duck, Fish, Brute, Manamaniac, Rapidstriker, Nuker, Piercer, Paladdin,
                         Thicc, Sharpshot, Multiversal}
     public Traits TraitType;
     public string Name;

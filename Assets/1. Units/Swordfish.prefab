@@ -25,13 +25,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5199370644124128012}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.26, y: -0.06, z: -0.1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.17, y: 0.24, z: -0.1}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7652841507971592675}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &5535224108722794277
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -112,13 +112,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5470225782252658537}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7652841507971592675}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &9115260199219801436
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ MonoBehaviour:
   Team: 0
   Stats: {fileID: 0}
   Role: 8
-  Traits: 010000000a000000
+  Traits: 060000000b000000
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -511,7 +511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7626660039451821183, guid: eefeafc9797f79b4ebc79a138584c810, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.71
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 7626660039451821183, guid: eefeafc9797f79b4ebc79a138584c810, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

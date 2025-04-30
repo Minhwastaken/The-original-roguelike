@@ -15,5 +15,17 @@ MonoBehaviour:
   TraitType: 1
   Name: Fruit
   Thresholds: 02000000040000000600000008000000
-  StatTypes: 
-  StatMagnitudes: []
+  StatTypes: 0200000000000000
+  StatMagnitudes:
+  - innerList:
+    - 1000
+    - 2
+  - innerList:
+    - 2000
+    - 4
+  - innerList:
+    - 3000
+    - 10
+  - innerList:
+    - 4000
+    - 100

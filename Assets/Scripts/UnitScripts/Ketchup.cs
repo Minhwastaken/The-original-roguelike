@@ -3,7 +3,7 @@ using UnityEngine;
 public class Ketchup : Unit
 {
     public GameObject EnhancedAttack;
-    public int AttackCount, AttacksPerEnhance;
+    public int AttacksPerEnhance;
     protected override void Start()
     {
         base.Start();
@@ -13,8 +13,7 @@ public class Ketchup : Unit
     {
         if(Target)
         {
-            AttackCount++;
-            if(AttackCount >= AttacksPerEnhance)
+            if(AttackCount % AttacksPerEnhance == 0 && AttackCount != 0)
             {
                 AttackCount = 0;
                 AttackOverride = EnhancedAttack;

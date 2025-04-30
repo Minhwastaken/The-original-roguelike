@@ -22,8 +22,10 @@ public abstract class Attack : MonoBehaviour
     public float Lifespan = 5;
     public List<GameObject> LingeringParticles;
     [HideInInspector]public UnityEvent OnAttack, OnDamageDealt;
+    [Header("Attack Effect")]
     public GameObject HitEffect;
     public Transform HitEffectPos;
+    public List<Buff> AttackDebuffs;
     [Header("Override Attack")]
     public bool SingleOverrideAttack = false;
     protected virtual void Start()
@@ -63,7 +65,7 @@ public abstract class Attack : MonoBehaviour
     {
         if(Target && Target.gameObject.activeSelf)
         {
-            AttackLogic();
+            //AttackLogic();
             OnAttack.Invoke();
             //float TotalDamage;
             if(!Target.Benched)
@@ -83,11 +85,17 @@ public abstract class Attack : MonoBehaviour
         }
         if(DamageType == DamageTypeEnum.AD)
         {
-            TotalDamage *= 100 / (Target.Armor + 100);
+            float TrueTargetArmor = Target.Armor * (1 - Attacker.PercentArmorPierce) - Attacker.FlatArmorPierce;
+            if(TrueTargetArmor < 0)
+                TrueTargetArmor = 0;
+            TotalDamage *= 100 / (TrueTargetArmor + 100);
         }
         else if(DamageType == DamageTypeEnum.AP)
         {
-            TotalDamage *= 100 / (Target.MagicResist + 100);
+            float TrueTargetMR = Target.MagicResist * (1 - Attacker.PercentMRPierce) - Attacker.FlatMRPierce;
+            if(TrueTargetMR < 0)
+                TrueTargetMR = 0;
+            TotalDamage *= 100 / (TrueTargetMR + 100);
         }
         //Debug.Log("TotalDamage post armor and mr: " + TotalDamage);
         TotalDamage *= (1+DamageAmp/100)/(1+Target.Durability/100);
@@ -114,10 +122,12 @@ public abstract class Attack : MonoBehaviour
         }
         Destroy(gameObject);
     }
+    /*
     protected virtual void AttackLogic()
     {
 
     }
+    */
     protected virtual void DamageDealtLogic()
     {
         

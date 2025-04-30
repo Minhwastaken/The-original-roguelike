@@ -56,24 +56,18 @@ public class UI : MonoBehaviour
     public int RollForCost()
     {
         int Roll = Random.Range(0, 100);
+        Debug.Log("Rolled a " + Roll);
         int Total = 0;
         for(int i = 0; i < 5; i++)
         {
             if(GameManager.Instance.Level < 11)
             {
-                for(int y = 0; y < 5; y++)
-                {
-                    Total += RollChance[GameManager.Instance.Level - 1, i];
-                }
+                Total += RollChance[GameManager.Instance.Level - 1, i];
             }
             else
             {
-                for(int y = 0; y < 5; y++)
-                {
-                    Total += RollChance[10, i];
-                }
+                Total += RollChance[10, i];
             }
-            
             if(Roll < Total)
             {
                 return i;
@@ -146,6 +140,7 @@ public class UI : MonoBehaviour
     }
     private void RollIfUnlocked()
     {
+        UpdateRollChance();
         if(!ShopLocked)
         {
             Reroll();

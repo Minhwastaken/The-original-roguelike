@@ -170,6 +170,7 @@ public class GridGen : MonoBehaviour
         foreach(GameObject Unit in Units)
         {
             Unit.GetComponent<Unit>().ResetFull();
+            Unit.GetComponent<Unit>().UpdateMatchTimeBuffs();
         }
         if(GameManager.Instance.Stage >= 28)
         {

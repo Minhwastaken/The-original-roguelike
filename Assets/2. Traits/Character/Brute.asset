@@ -12,8 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961f4fb0ce1f5aa478fae1b15fac9879, type: 3}
   m_Name: Brute
   m_EditorClassIdentifier: 
-  TraitType: 6
+  TraitType: 7
   Name: Brute
-  Thresholds: 02000000040000000600000008000000
-  StatTypes: 
-  StatMagnitudes: []
+  Thresholds: 020000000400000006000000
+  StatTypes: 0300000000000000
+  StatMagnitudes:
+  - innerList:
+    - 0.2
+    - 0.1
+  - innerList:
+    - 0.5
+    - 0.2
+  - innerList:
+    - 0.8
+    - 0.4

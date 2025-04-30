@@ -3761,7 +3761,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Gold: 50000
-  Level: 100
+  Level: 1
   Xp: 0
   Stage: 0
   MaxInterest: 5
@@ -3789,7 +3789,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9014f88e1746c9044952a46a4ba9af4e, type: 2}
   - {fileID: 11400000, guid: c082b7f0d3549f44eaad18859c384ccc, type: 2}
   - {fileID: 11400000, guid: e2ae80d9327876b4d8eb57fdaaa29a13, type: 2}
-  - {fileID: 11400000, guid: 16e8c7964d613404dbd3e4e498dc9dbe, type: 2}
+  - {fileID: 11400000, guid: 02ccc24304eb9c4469ed01342df2fe89, type: 2}
   - {fileID: 11400000, guid: 1cf15c5c2e010254c8fd191ee2e1e70a, type: 2}
   - {fileID: 11400000, guid: e45eacb880c4b8545ab7d2c68e35ae76, type: 2}
   - {fileID: 11400000, guid: e1eef5b8d34f9934eaa3862a809959e5, type: 2}
@@ -3799,6 +3799,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 972d13968c22aac42a0f52de381b99aa, type: 2}
   - {fileID: 11400000, guid: ac44e960740cca0458478b598d2a1b83, type: 2}
   - {fileID: 11400000, guid: 6055ae28496d1944fa9af0ed13d56061, type: 2}
+  - {fileID: 11400000, guid: 6a622ca1e1b4f8e4085aa08caabe5b97, type: 2}
 --- !u!4 &423444397
 Transform:
   m_ObjectHideFlags: 0
@@ -6496,6 +6497,7 @@ MonoBehaviour:
   - {fileID: 7348070789959115077, guid: e32342b3a9313384c98cb5703738efcb, type: 3}
   - {fileID: 7348070789959115077, guid: 4a5e88029e002bf44b3eca5fc3a366ea, type: 3}
   - {fileID: 7348070789959115077, guid: 2eff9445461ed1841bb8772e72bb14eb, type: 3}
+  - {fileID: 7348070789959115077, guid: 4c269d62789934046b20b7ddcb75f758, type: 3}
   EnemyList:
   - {fileID: 7431400569424583945, guid: e17c823851587104fb660b64be651eff, type: 3}
   OneCosts:

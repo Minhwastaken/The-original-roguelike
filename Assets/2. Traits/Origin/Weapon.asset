@@ -14,6 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TraitType: 0
   Name: Weapon
-  Thresholds: 02000000040000000600000008000000
-  StatTypes: 
-  StatMagnitudes: []
+  Thresholds: 020000000400000006000000
+  StatTypes: 0000000004000000
+  StatMagnitudes:
+  - innerList:
+    - 0.15
+    - 0.15
+  - innerList:
+    - 0.4
+    - 0.4
+  - innerList:
+    - 0.75
+    - 0.75

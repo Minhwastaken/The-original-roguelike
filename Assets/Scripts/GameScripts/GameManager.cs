@@ -88,9 +88,9 @@ public class GameManager : MonoBehaviour
     {
         if(ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
             return;
-        for(int level = 0; level < TraitDef[Trait].Thresholds.Count; level++)
+        for(int level = TraitDef[Trait].Thresholds.Count - 1; level >= 0; level--)
         {
-            if(ActiveTraits[Trait] == TraitDef[Trait].Thresholds[level])
+            if(ActiveTraits[Trait] >= TraitDef[Trait].Thresholds[level])
             {
                 ActivateTrait(Trait, level);
                 Debug.Log("Level: " + level);

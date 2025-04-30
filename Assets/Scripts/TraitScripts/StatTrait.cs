@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,16 +5,24 @@ using UnityEngine;
 public class StatTrait : TraitDefinition
 {
     public List<Unit.StatType> StatTypes;
-    public List<NestedList<int>> StatMagnitudes;
-    Buff TraitBuff = new Buff("BruteBuff", 0, 0, 0, Unit.StatType.AD, Buff.DurationType.Permanent, false);
+    public List<NestedList<float>> StatMagnitudes;
+    Buff TraitBuff;
     public override void ApplyTrait(Unit unit, int level)
     {
-        unit.GainBuff(TraitBuff);
+        for(int i = 0; i < StatTypes.Count; i++)
+        {
+            TraitBuff = new Buff(name + StatTypes[i].ToString() + "Buff", 1, 0, StatMagnitudes[level].innerList[i], StatTypes[i], Buff.DurationType.Permanent, false);
+            unit.GainBuff(TraitBuff);
+        }
         Debug.Log("Applying " + name + " trait to " + unit.name);
     }
     public override void UnapplyTrait(Unit unit)
     {
-        unit.RemoveBuff(TraitBuff);
-        Debug.Log("Remove " + name + " trait to " + unit.name);
+        for(int i = 0; i < StatTypes.Count; i++)
+        {
+            TraitBuff = new Buff(name + StatTypes[i].ToString() + "Buff", 1, 0, StatMagnitudes[i].innerList[0], StatTypes[i], Buff.DurationType.Permanent, false);
+            unit.RemoveBuff(TraitBuff);
+        }
+        Debug.Log("Remove " + name + " trait from " + unit.name);
     }
 }

@@ -99,9 +99,10 @@ public class Mouse : MonoBehaviour
                 {
                     Unit HitUnit = Hit.transform.gameObject.GetComponent<Unit>();
                     Debug.Log("Unit: " + HitUnit.name);
-                    foreach(Buff buff in HitUnit.Buffs)
+                    for(int i = 0; i < HitUnit.Buffs.Count; i++)
                     {
-                        Debug.Log(buff.Type + " " + buff.Name + " - Flat: " + buff.FlatAmount + ", Percent: " + buff.PercentAmount + ", Duration: " + buff.Duration + ", DurationType: " + buff.DurType);
+                        Buff buff = HitUnit.Buffs[i];
+                        Debug.Log("Buff " + (i+1) + "/" + HitUnit.Buffs.Count + ": " + buff.Name  + " " + buff.Type + " - Flat: " + buff.FlatAmount + ", Percent: " + buff.PercentAmount + ", Duration: " + buff.Duration + ", DurationType: " + buff.DurType);
                     }
                     Debug.Log("Target: " + HitUnit.Target);
                 }

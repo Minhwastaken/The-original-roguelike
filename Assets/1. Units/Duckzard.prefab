@@ -313,7 +313,7 @@ MonoBehaviour:
   Team: 0
   Stats: {fileID: 11400000, guid: 9ba6bf3be02360e4e8fdf9224a3e4375, type: 2}
   Role: 1
-  Traits: 0500000007000000
+  Traits: 0500000008000000
   Hp: 0
   MaxHp: 0
   AtkDamage: 0

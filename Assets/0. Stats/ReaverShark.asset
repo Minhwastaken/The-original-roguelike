@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
+  m_Name: ReaverShark
+  m_EditorClassIdentifier: 
+  Cost: 1
+  Hp: 600
+  MaxHp: 600
+  Range: 1
+  Mana: 0
+  MaxMana: 10
+  AtkDamage: 120
+  AbilityPower: 100
+  AtkSpeed: 0.5
+  Armor: 40
+  MagicResist: 40
+  Movespeed: 100
+  DamageAmp: 0
+  Durability: 0
+  Omnivamp: 0
+  CritChance: 25
+  CritDamage: 140
+  ADScale: 1.8
+  HpScale: 1.8
+  SizeScale: 1.1

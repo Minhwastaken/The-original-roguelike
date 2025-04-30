@@ -12,8 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961f4fb0ce1f5aa478fae1b15fac9879, type: 3}
   m_Name: Nuker
   m_EditorClassIdentifier: 
-  TraitType: 9
+  TraitType: 10
   Name: Nuker
-  Thresholds: 02000000040000000600000008000000
-  StatTypes: 
-  StatMagnitudes: []
+  Thresholds: 020000000400000006000000
+  StatTypes: 09000000
+  StatMagnitudes:
+  - innerList:
+    - 20
+  - innerList:
+    - 50
+  - innerList:
+    - 100

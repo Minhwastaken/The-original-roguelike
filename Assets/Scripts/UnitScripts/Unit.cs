@@ -20,11 +20,12 @@ public class Unit : MonoBehaviour, IDamageable
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
+    [HideInInspector]public float FlatArmorPierce = 0, PercentArmorPierce = 0, FlatMRPierce = 0, PercentMRPierce = 0;
     public GameObject Hex, OGHex;
     public bool IsMoving = false, Benched;
     public float LerpProgress = 0;
     [HideInInspector]public Animator Anim;
-    [HideInInspector]public int AbilityCount = 0;
+    [HideInInspector]public int AttackCount = 0, AbilityCount = 0;
     public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
@@ -32,7 +33,9 @@ public class Unit : MonoBehaviour, IDamageable
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
-    public UnityEvent OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(), OnReset = new UnityEvent();
+    public UnityEvent OnAttack = new UnityEvent(), OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(),
+    OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(),
+    OnReset = new UnityEvent();
     [Header("Abilities")]
     public GameObject AttackPrefab;
     public GameObject AbilityPrefab;
@@ -51,16 +54,13 @@ public class Unit : MonoBehaviour, IDamageable
         Sprites = transform.Find("Sprite").gameObject;
         GetStats();
     }
-    private void Update()
-    {
-        UpdateRealTimeBuffs();
-    }
     public IEnumerator Action()
     {
         if(!Benched)
         {
             while(GameManager.Instance.State == GameManager.GameState.Battle)
             {
+                UpdateRealTimeBuffs();
                 if(!Anim.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
                 {
                     yield return null;
@@ -101,11 +101,13 @@ public class Unit : MonoBehaviour, IDamageable
     protected virtual void Attack()
     {
         if(Target)
-        {
+        {   
+            AttackCount++;
             if(TurnOnAttack)
             {
                 Sprites.transform.up = (Vector2) (Target.transform.position - transform.position);
             }
+            OnAttack.Invoke();
             GainMana(10);
             if(AttackOverride && Anim.HasState(0, Animator.StringToHash("AttackOverride")))
             {
@@ -511,7 +513,7 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void Heal(Unit Target, float amount)
     {
-        Debug.Log(amount);
+        //Debug.Log(amount);
         if(Target.Hp + amount > Target.MaxHp)
         {
             amount = Target.MaxHp - Target.Hp;
@@ -566,7 +568,6 @@ public class Unit : MonoBehaviour, IDamageable
                 {
                     Buffs[i].FlatAmount += buff.FlatAmount;
                     Buffs[i].PercentAmount += buff.PercentAmount;
-                    Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
                     UpdateTrueStats(buff.Type);
                     return;
                 }
@@ -580,8 +581,13 @@ public class Unit : MonoBehaviour, IDamageable
         }
 
         Buffs.Add(BuffCopy);
-        Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
+        //Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
         UpdateTrueStats(buff.Type);
+        
+        if(BuffCopy.Type == StatType.MaxHp)
+        {
+            Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
+        }
     }
     public void RemoveBuff(Buff buff)
     {
@@ -637,6 +643,7 @@ public class Unit : MonoBehaviour, IDamageable
         Hex = OGHex;
         transform.position = (Vector2) Hex.transform.position;
         OnReset.Invoke();
+        AttackCount = 0;
         AbilityCount = 0;
         //Movement
         IsMoving = false;
@@ -651,6 +658,10 @@ public class Unit : MonoBehaviour, IDamageable
         if(Type == StatType.Hp)
         {
             return ref Hp;
+        }
+        else if(Type == StatType.MaxHp)
+        {
+            return ref MaxHp;
         }
         else if(Type == StatType.AD)
         {
@@ -706,7 +717,11 @@ public class Unit : MonoBehaviour, IDamageable
     {
         if(Type == StatType.Hp)
         {
-            return Stats.MaxHp * Mathf.Pow(Stats.HpScale, Star - 1);
+            return Stats.Hp * Mathf.Pow(Stats.HpScale, Star - 1);
+        }
+        else if(Type == StatType.MaxHp)
+        {
+            return Stats.MaxHp * Mathf.Pow(Stats.ADScale, Star - 1);
         }
         else if(Type == StatType.AD)
         {
@@ -767,6 +782,23 @@ public class Unit : MonoBehaviour, IDamageable
                 if(Buffs[i].DurType == Buff.DurationType.RealTime)
                 {
                     Buffs[i].Duration -= Time.deltaTime;
+                    if (Buffs[i].Duration <= 0)
+                    {
+                        RemoveBuff(Buffs[i]);
+                    }
+                }
+            }
+        }
+    }
+    public void UpdateMatchTimeBuffs()
+    {
+        if(Buffs.Count > 0)
+        {
+            for (int i = Buffs.Count - 1; i >= 0; i--)
+            {
+                if(Buffs[i].DurType == Buff.DurationType.MatchTime)
+                {
+                    Buffs[i].Duration--;
                     if (Buffs[i].Duration <= 0)
                     {
                         RemoveBuff(Buffs[i]);

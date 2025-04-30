@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961f4fb0ce1f5aa478fae1b15fac9879, type: 3}
   m_Name: Sharpshot
   m_EditorClassIdentifier: 
-  TraitType: 13
+  TraitType: 14
   Name: Sharpshot
   Thresholds: 02000000040000000600000008000000
   StatTypes: 
