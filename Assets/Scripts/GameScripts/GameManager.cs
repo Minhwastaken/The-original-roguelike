@@ -87,7 +87,10 @@ public class GameManager : MonoBehaviour
     public void UpdateTrait(TraitDefinition.Traits Trait)
     {
         if(ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
+        {
+            DeactivateTrait(Trait);
             return;
+        }
         for(int level = TraitDef[Trait].Thresholds.Count - 1; level >= 0; level--)
         {
             if(ActiveTraits[Trait] >= TraitDef[Trait].Thresholds[level])
@@ -114,6 +117,18 @@ public class GameManager : MonoBehaviour
     }
     public void DeactivateTrait(TraitDefinition.Traits Trait)
     {
+        foreach(GameObject Unit in GridGen.Instance.BenchedUnits)
+        {
+            Unit UnitScript = Unit.GetComponent<Unit>();
+            foreach(TraitDefinition.Traits UnitTrait in UnitScript.Traits)
+            {
+                if(UnitTrait == Trait)
+                {
+                    TraitDef[Trait].UnapplyTrait(Unit.GetComponent<Unit>());
+                    break;
+                }
+            }
+        }
         foreach(GameObject Unit in GridGen.Instance.Units)
         {
             Unit UnitScript = Unit.GetComponent<Unit>();

@@ -243,18 +243,26 @@ MonoBehaviour:
   Omnivamp: 0
   CritChance: 0
   CritDamage: 0
+  FlatArmorPierce: 0
+  PercentArmorPierce: 0
+  FlatMRPierce: 0
+  PercentMRPierce: 0
   Hex: {fileID: 0}
   OGHex: {fileID: 0}
   IsMoving: 0
   Benched: 0
   LerpProgress: 0
   Anim: {fileID: 0}
+  AttackCount: 0
   AbilityCount: 0
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
   AttackPoint: {fileID: 3784262262007385400, guid: 82e8b33643974674db2b93921412743d, type: 3}
   Sprites: {fileID: 7418736927236695851, guid: 82e8b33643974674db2b93921412743d, type: 3}
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
   OnAbilityUse:
     m_PersistentCalls:
       m_Calls: []
@@ -337,7 +345,7 @@ Animator:
   m_GameObject: {fileID: 7348070789959115077}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c35a8caa62633244e89682a82d627a01, type: 2}
+  m_Controller: {fileID: 9100000, guid: a887fa2a77d506c4fa7b6c8cd0fffb2d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

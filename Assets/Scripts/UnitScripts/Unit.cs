@@ -23,19 +23,19 @@ public class Unit : MonoBehaviour, IDamageable
     [HideInInspector]public float FlatArmorPierce = 0, PercentArmorPierce = 0, FlatMRPierce = 0, PercentMRPierce = 0;
     public GameObject Hex, OGHex;
     public bool IsMoving = false, Benched;
-    public float LerpProgress = 0;
+    [HideInInspector] public float LerpProgress = 0;
     [HideInInspector]public Animator Anim;
     [HideInInspector]public int AttackCount = 0, AbilityCount = 0;
     public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
-    private float OGScale = 1, HealAmount;
+    [HideInInspector]public float OGScale = 1, HealAmount = 0, ManaAmount = 0;
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
     public UnityEvent OnAttack = new UnityEvent(), OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(),
     OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(),
-    OnReset = new UnityEvent();
+    OnReset = new UnityEvent(), OnManaGain = new UnityEvent(), OnStarUp = new UnityEvent();
     [Header("Abilities")]
     public GameObject AttackPrefab;
     public GameObject AbilityPrefab;
@@ -178,8 +178,10 @@ public class Unit : MonoBehaviour, IDamageable
             }
         }
     }
-    protected void GainMana(int amount)
+    public void GainMana(float amount)
     {
+        ManaAmount = amount;
+        OnManaGain.Invoke();
         Mana += amount;
     }
     private void SetUpProjectile(GameObject Attack, GameObject Target)
