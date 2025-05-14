@@ -15,5 +15,13 @@ MonoBehaviour:
   TraitType: 13
   Name: Thicc
   Thresholds: 02000000040000000600000008000000
-  StatTypes: 
-  StatMagnitudes: []
+  StatTypes: 03000000
+  StatMagnitudes:
+  - innerList:
+    - 20
+  - innerList:
+    - 45
+  - innerList:
+    - 75
+  - innerList:
+    - 120

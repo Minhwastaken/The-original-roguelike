@@ -117,8 +117,10 @@ public abstract class Attack : MonoBehaviour
         {
             if(LingeringParticle == null || LingeringParticle.transform.parent == null)
                 continue;
+            float OGScale = LingeringParticle.transform.localScale.x;
             LingeringParticle.transform.parent = null;
             LingeringParticle.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            LingeringParticle.transform.localScale = new Vector3(OGScale, OGScale, OGScale);    
         }
         Destroy(gameObject);
     }

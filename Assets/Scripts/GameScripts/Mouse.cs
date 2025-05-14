@@ -9,7 +9,7 @@ public class Mouse : MonoBehaviour
     public GameObject ChosenObject;
     public float DragThres = 0.1f, SnapDist;
     public bool IsFollowing, IsDragging;
-    private readonly int UnitLayer = 3;
+    private readonly int UnitLayer = 3, ItemLayer = 7;
     // HexLayer = 6;
     void Start()
     {
@@ -18,9 +18,19 @@ public class Mouse : MonoBehaviour
     }
     void Update()
     {
+        RaycastHit2D Hit = Physics2D.Raycast(Cam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        if(Hit)
+        {
+            if(Hit.transform.gameObject.layer == ItemLayer)
+            {
+                GameManager.Instance.ItemList.Add(Hit.transform.gameObject.GetComponent<ItemGO>().Item);
+                Debug.Log("Picked up: " + Hit.transform.gameObject.name + ", current item count: " + GameManager.Instance.ItemList.Count);
+                Destroy(Hit.transform.gameObject);
+                GameManager.Instance.UpdateItemVisuals();
+            }
+        }
         if(Input.GetMouseButtonDown(0))
         {
-            RaycastHit2D Hit = Physics2D.Raycast(Cam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if(Hit)
             {
                 if(Hit.transform.gameObject.layer == UnitLayer)
@@ -92,7 +102,6 @@ public class Mouse : MonoBehaviour
 
         if(Input.GetMouseButtonDown(1))
         {
-            RaycastHit2D Hit = Physics2D.Raycast(Cam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if(Hit)
             {
                 if(Hit.transform.gameObject.layer == UnitLayer)

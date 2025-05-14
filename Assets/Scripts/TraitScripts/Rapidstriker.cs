@@ -17,9 +17,9 @@ public class Rapidstrike : TraitDefinition
         unit.OnAttack.AddListener(Action);
     }
 
-    public override void UnapplyTrait(Unit unit)
+    public override void UnapplyTrait(Unit unit, int level)
     {
-        unit.RemoveBuff(new Buff("RapidstrikeASBuff", 1, 0, StatMagnitudes[0], StatType, Buff.DurationType.MatchTime, true));
+        unit.RemoveBuff(new Buff("RapidstrikeASBuff", 1, 0, 0, StatType, Buff.DurationType.MatchTime, true));
         unit.OnAttack.RemoveListener(Action);
     }
     private void GainRapidstrikeBuff(Unit unit)

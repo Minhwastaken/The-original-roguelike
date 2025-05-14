@@ -13,7 +13,7 @@ public class Manamaniac : TraitDefinition
         unit.OnManaGain.AddListener(Action);
     }
 
-    public override void UnapplyTrait(Unit unit)
+    public override void UnapplyTrait(Unit unit, int level)
     {
         if(Action == null) return;
         unit.OnManaGain.RemoveListener(Action);

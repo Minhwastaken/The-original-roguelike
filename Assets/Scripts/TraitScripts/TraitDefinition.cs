@@ -9,6 +9,6 @@ public abstract class TraitDefinition : ScriptableObject
     public string Name;
     public List<int> Thresholds;
     public abstract void ApplyTrait(Unit unit, int level);
-    public abstract void UnapplyTrait(Unit unit);
+    public abstract void UnapplyTrait(Unit unit, int level);
 
 }

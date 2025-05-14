@@ -7,9 +7,9 @@ public class HPBarManager : MonoBehaviour
 {
     [SerializeField] private Unit Unit;
     [SerializeField] private float CUHpDelay, CUHpBarSpeed;
-    public Slider HPBar, CUHpBar;
+    public Slider HPBar, CUHpBar, ShieldBar;
     public Text HPText;
-    [SerializeField] private Image HPFill, CUHpFill;
+    [SerializeField] private Image HPFill, CUHpFill, ShieldFill;
     public float CUTimer;
     public GameObject Bar, BarHLG;
     public List<GameObject> Bars = new List<GameObject>();
@@ -33,9 +33,12 @@ public class HPBarManager : MonoBehaviour
     }
     public void UpdateHp()
     {
-        HPBar.maxValue = Unit.MaxHp;
-        CUHpBar.maxValue = Unit.MaxHp;
+        float MaxBarValue = Unit.MaxHp + Unit.Shield;
+        HPBar.maxValue = MaxBarValue;
+        CUHpBar.maxValue = MaxBarValue;
+        ShieldBar.maxValue = MaxBarValue;
         HPBar.value = Unit.Hp;
+        ShieldBar.value = Unit.Hp + Unit.Shield;
         UpdateBars();
         //HPText.text = Mathf.Round(Hp).ToString() + " / " + Mathf.Round(MaxHp).ToString();
         if(CatchUpCoroutine != null) 
@@ -46,7 +49,8 @@ public class HPBarManager : MonoBehaviour
     }
     public void UpdateBars()
     {
-        float SegmentNum = Unit.MaxHp / HpPerSegment, SegmentsLeft = Unit.Hp / HpPerSegment;
+        float MaxBarValue = Unit.MaxHp + Unit.Shield;
+        float SegmentNum = MaxBarValue / HpPerSegment, SegmentsLeft = (Unit.Hp + Unit.Shield) / HpPerSegment;
         float BarNum = SegmentNum - 1, BarsLeft = SegmentsLeft - 1;
         while(Bars.Count < BarNum)
         {

@@ -9,12 +9,10 @@ public class Piercer : TraitDefinition
     {
         unit.FlatArmorPierce = StatMagnitudes[level];
         unit.FlatMRPierce = StatMagnitudes[level];
-        Debug.Log("Applying " + name + " trait to " + unit.name);
     }
-    public override void UnapplyTrait(Unit unit)
+    public override void UnapplyTrait(Unit unit, int level)
     {
-        unit.FlatArmorPierce = 0;
-        unit.FlatMRPierce = 0;
-        Debug.Log("Remove " + name + " trait from " + unit.name);
+        unit.FlatArmorPierce -= StatMagnitudes[level];
+        unit.FlatMRPierce -= StatMagnitudes[level];
     }
 }

@@ -9,17 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 961f4fb0ce1f5aa478fae1b15fac9879, type: 3}
-  m_Name: Nuker
+  m_Script: {fileID: 11500000, guid: 6bd989a1ecfcc9d4198f11e151250537, type: 3}
+  m_Name: Belt
   m_EditorClassIdentifier: 
-  TraitType: 10
-  Name: Nuker
-  Thresholds: 020000000400000006000000
-  StatTypes: 09000000
+  StatTypes: 02000000
+  IsFlatBuff: 01
   StatMagnitudes:
-  - innerList:
-    - 20
-  - innerList:
-    - 50
-  - innerList:
-    - 100
+  - 150

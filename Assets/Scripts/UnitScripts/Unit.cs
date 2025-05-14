@@ -10,7 +10,7 @@ public class Unit : MonoBehaviour, IDamageable
     public UnitRole Role; 
     public List<TraitDefinition.Traits> Traits = new List<TraitDefinition.Traits>();
     public enum StatType {AD, AP, MaxHp, Hp, AtkSpeed, Range, Armor, MagicResist, Movespeed, DamageAmp, Durability, Omnivamp, CritChance, CritDamage};
-    public float Hp, MaxHp;
+    public float Hp, MaxHp, Shield = 0;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
     public float Mana, MaxMana;
@@ -20,7 +20,8 @@ public class Unit : MonoBehaviour, IDamageable
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
-    [HideInInspector]public float FlatArmorPierce = 0, PercentArmorPierce = 0, FlatMRPierce = 0, PercentMRPierce = 0;
+    //[HideInInspector]
+    public float FlatArmorPierce = 0, PercentArmorPierce = 0, FlatMRPierce = 0, PercentMRPierce = 0;
     public GameObject Hex, OGHex;
     public bool IsMoving = false, Benched;
     [HideInInspector] public float LerpProgress = 0;
@@ -29,7 +30,8 @@ public class Unit : MonoBehaviour, IDamageable
     public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
-    [HideInInspector]public float OGScale = 1, HealAmount = 0, ManaAmount = 0;
+    [HideInInspector]public float OGScale = 1, HealAmount = 0, ManaAmount = 0, AttackScale = 1;
+    [HideInInspector]public GameObject SpawnedAttack;
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
@@ -136,22 +138,30 @@ public class Unit : MonoBehaviour, IDamageable
     {
         if(Sprites == null)
             return;
-        GameObject Attack = Instantiate(AttackGO, Sprites.transform.position, Sprites.transform.rotation);
-        Attack.GetComponent<Attack>().Attacker = this;
-        GridGen.Instance.Attacks.Add(Attack);
-        Attack.transform.localScale = new Vector3(Attack.transform.localScale.x * Mathf.Pow(Stats.SizeScale, Star - 1), Attack.transform.localScale.y * Mathf.Pow(Stats.SizeScale, Star - 1), 1);
+        SpawnedAttack = Instantiate(AttackGO, Sprites.transform.position, Sprites.transform.rotation);
+        SpawnedAttack.GetComponent<Attack>().Attacker = this;
+        GridGen.Instance.Attacks.Add(SpawnedAttack);
 
+        float TrueAttackScale = SpawnedAttack.transform.localScale.x * Mathf.Pow(Stats.SizeScale, Star - 1) * AttackScale;
+        SpawnedAttack.transform.localScale = new Vector3(TrueAttackScale, TrueAttackScale, 1);
+        foreach(Transform child in SpawnedAttack.transform)
+        {
+            if(child.GetComponent<ParticleSystem>())
+            {
+                child.localScale = new Vector3(TrueAttackScale, TrueAttackScale, TrueAttackScale);
+            }
+        }
         if(AttackPoint)
         {
-            Attack.transform.position = AttackPoint.position;
+            SpawnedAttack.transform.position = AttackPoint.position;
         }
         if(Target)
         {
-            SetUpAttack(Attack, Target);
+            SetUpAttack(SpawnedAttack, Target);
         }
         else
         {
-            SetUpAttack(Attack, GetTarget());
+            SetUpAttack(SpawnedAttack, GetTarget());
         }
     }
     private void SetUpAttack(GameObject Attack, GameObject Target)
@@ -448,11 +458,18 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void TakeDamage(float Damage, Attack.DamageTypeEnum DamageType, Unit Attacker)
     {
-        Hp -= Damage;
-        if(Hp <= 0)
+        if(Shield < Damage)
         {
-            //float OverkillDamage = -Hp;
-            Hp = 0;
+            Hp -= Damage - Shield;
+            if(Hp <= 0)
+            {
+                //float OverkillDamage = -Hp;
+                Hp = 0;
+            }
+        }
+        else
+        {
+            Shield -= Damage;
         }
         OnTakeDamage.Invoke();
         if(Hp == 0)
@@ -640,6 +657,7 @@ public class Unit : MonoBehaviour, IDamageable
         GetStats();
         UpdateBaseStats();
         Hp = MaxHp;
+        Shield = 0;
         ClearBuffs();
         ResetHex();
         Hex = OGHex;

@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +16,7 @@ public class GameManager : MonoBehaviour
     public List<TraitDefinition> TraitList;
     public Dictionary<TraitDefinition.Traits, TraitDefinition> TraitDef = new Dictionary<TraitDefinition.Traits, TraitDefinition>();
     public Dictionary<TraitDefinition.Traits, int> ActiveTraits = new Dictionary<TraitDefinition.Traits, int>();
+    public List<Item> ItemList = new List<Item>();
     // Start is called before the first frame update
     private void Awake() 
     {
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
         }
         foreach(TraitDefinition.Traits Trait in ActiveTraits.Keys)
         {
-            Debug.Log(Trait + " : " + ActiveTraits[Trait] + " activate");
+            //Debug.Log(Trait + " : " + ActiveTraits[Trait] + " activate");
         }
         UpdateTraitVisuals();
     }
@@ -71,7 +74,7 @@ public class GameManager : MonoBehaviour
             if(ActiveTraits[Trait] <= 0)
             {
                 ActiveTraits.Remove(Trait);
-                DeactivateTrait(Trait);
+                DeactivateTrait(Trait, TraitLevel(Trait));
             }
             else
             {
@@ -80,7 +83,7 @@ public class GameManager : MonoBehaviour
         }
         foreach(TraitDefinition.Traits Trait in ActiveTraits.Keys)
         {
-            Debug.Log(Trait + " : " + ActiveTraits[Trait] + " deactivate");
+            //Debug.Log(Trait + " : " + ActiveTraits[Trait] + " deactivate");
         }
         UpdateTraitVisuals();
     }
@@ -88,17 +91,22 @@ public class GameManager : MonoBehaviour
     {
         if(ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
         {
-            DeactivateTrait(Trait);
+            DeactivateTrait(Trait, TraitLevel(Trait));
             return;
         }
+        ActivateTrait(Trait, TraitLevel(Trait));
+    }
+    public int TraitLevel(TraitDefinition.Traits Trait)
+    {
         for(int level = TraitDef[Trait].Thresholds.Count - 1; level >= 0; level--)
         {
             if(ActiveTraits[Trait] >= TraitDef[Trait].Thresholds[level])
             {
-                ActivateTrait(Trait, level);
-                Debug.Log("Level: " + level);
+                return level;
             }
         }
+        Debug.Log("Trait " + Trait + " not activated");
+        return -1;
     }
     public void ActivateTrait(TraitDefinition.Traits Trait, int Level)
     {
@@ -115,8 +123,12 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    public void DeactivateTrait(TraitDefinition.Traits Trait)
+    public void DeactivateTrait(TraitDefinition.Traits Trait, int Level)
     {
+        if(Level < 0)
+        {
+            return;
+        }
         foreach(GameObject Unit in GridGen.Instance.BenchedUnits)
         {
             Unit UnitScript = Unit.GetComponent<Unit>();
@@ -124,7 +136,7 @@ public class GameManager : MonoBehaviour
             {
                 if(UnitTrait == Trait)
                 {
-                    TraitDef[Trait].UnapplyTrait(Unit.GetComponent<Unit>());
+                    TraitDef[Trait].UnapplyTrait(Unit.GetComponent<Unit>(), Level);
                     break;
                 }
             }
@@ -136,7 +148,7 @@ public class GameManager : MonoBehaviour
             {
                 if(UnitTrait == Trait)
                 {
-                    TraitDef[Trait].UnapplyTrait(Unit.GetComponent<Unit>());
+                    TraitDef[Trait].UnapplyTrait(Unit.GetComponent<Unit>(), Level);
                     break;
                 }
             }
@@ -147,7 +159,7 @@ public class GameManager : MonoBehaviour
         List<TraitDefinition.Traits> Traits = ActiveTraits.Keys.OrderByDescending(trait => ActiveTraits[trait]).ThenBy(trait => TraitDef[trait].Thresholds[^1]).ToList();
         foreach(TraitDefinition.Traits Trait in Traits)
         {
-            Debug.Log("sort: " + Trait + " : " + ActiveTraits[Trait]);
+            //Debug.Log("sort: " + Trait + " : " + ActiveTraits[Trait]);
         }
         for(int order = 0; order < UI.Instance.TraitHolder.transform.childCount; order++)
         {
@@ -163,6 +175,23 @@ public class GameManager : MonoBehaviour
             TraitVisual Visual = UI.Instance.TraitHolder.transform.GetChild(order).GetComponent<TraitVisual>();
             Visual.Name.text = TraitDef[Traits[order]].Name;
             Visual.Count.text = ActiveTraits[Traits[order]].ToString();
+        }
+    }
+    public void UpdateItemVisuals()
+    {
+        for(int order = 0; order < UI.Instance.ItemHolder.transform.childCount; order++)
+        {
+            if(order >= ItemList.Count)
+            {
+                UI.Instance.ItemHolder.transform.GetChild(order).gameObject.SetActive(false);
+                continue;
+            }
+            else
+            {
+                UI.Instance.ItemHolder.transform.GetChild(order).gameObject.SetActive(true);
+            }
+            Image Visual = UI.Instance.ItemHolder.transform.GetChild(order).GetComponent<Image>();
+            Visual.sprite = ItemList[order].GetComponent<SpriteRenderer>().sprite;
         }
     }
     public void GainGoldWithInterest()

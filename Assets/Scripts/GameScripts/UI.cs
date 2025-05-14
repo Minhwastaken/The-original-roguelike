@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UI : MonoBehaviour
 {
     public static UI Instance;
-    public GameObject Shop, RollChanceText, RerollButton, ShopButton, TraitHolder;
+    public GameObject Shop, RollChanceText, RerollButton, ShopButton, TraitHolder, ItemHolder;
     public bool ShopLocked = false;
     public int[,] RollChance = new int[11, 5] 
     {
@@ -56,7 +56,7 @@ public class UI : MonoBehaviour
     public int RollForCost()
     {
         int Roll = Random.Range(0, 100);
-        Debug.Log("Rolled a " + Roll);
+        //Debug.Log("Rolled a " + Roll);
         int Total = 0;
         for(int i = 0; i < 5; i++)
         {
@@ -149,5 +149,15 @@ public class UI : MonoBehaviour
         {
             ShopLocked = false;
         }
+    }
+    public void SwitchToTraits()
+    {
+        TraitHolder.SetActive(true);
+        ItemHolder.SetActive(false);
+    }
+    public void SwitchToItems()
+    {
+        TraitHolder.SetActive(false);
+        ItemHolder.SetActive(true);
     }
 }

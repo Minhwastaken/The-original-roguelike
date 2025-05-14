@@ -15,7 +15,7 @@ public class AttackStateScript : StateMachineBehaviour
         if(AnimLength == -1)
         {
             AnimLength = stateInfo.length * animator.speed;
-            Debug.Log("Something wrong with the animator length");
+            //Debug.Log("Something wrong with the animator length");
         }
         stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         AtkTriggerTime = AtkTriggerFrame / 60;
@@ -29,7 +29,7 @@ public class AttackStateScript : StateMachineBehaviour
         }
         else
         {
-            Debug.Log("What state we in???");
+            //Debug.Log("What state we in???");
         }
     }
 
