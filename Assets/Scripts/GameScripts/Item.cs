@@ -3,6 +3,9 @@ using UnityEngine;
 
 public abstract class Item : ScriptableObject
 {
+    public bool Component;
+    public int ItemID;
+    public Sprite ItemSprite;
     public List<Unit.StatType> StatTypes;
     public List<bool> IsFlatBuff;
     public List<float> StatMagnitudes;

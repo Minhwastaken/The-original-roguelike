@@ -5244,8 +5244,6 @@ MonoBehaviour:
   ScaleValues:
   - 1
   - 0
-  ADScale: 1
-  APScale: 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -5269,6 +5267,7 @@ MonoBehaviour:
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  CanCrit: 1
   HitEffect: {fileID: 0}
   HitEffectPos: {fileID: 0}
   SingleOverrideAttack: 0

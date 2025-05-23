@@ -9,7 +9,7 @@ public class Unit : MonoBehaviour, IDamageable
     public enum UnitRole {AttackCarry, MagicCarry, AttackCaster, MagicCaster, AttackTank, MagicTank, AttackFighter, MagicFighter, AttackReaper, MagicReaper};
     public UnitRole Role; 
     public List<TraitDefinition.Traits> Traits = new List<TraitDefinition.Traits>();
-    public enum StatType {AD, AP, MaxHp, Hp, AtkSpeed, Range, Armor, MagicResist, Movespeed, DamageAmp, Durability, Omnivamp, CritChance, CritDamage};
+    public enum StatType {AD, AP, MaxHp, Hp, AtkSpeed, Range, Armor, MagicResist, Movespeed, DamageAmp, Durability, Omnivamp, CritChance, CritDamage, Mana};
     public float Hp, MaxHp, Shield = 0;
     public float AtkDamage, AbilityPower;
     public float AtkSpeed;
@@ -20,8 +20,8 @@ public class Unit : MonoBehaviour, IDamageable
     public float DamageAmp, Durability;
     public float Omnivamp;
     public float CritChance, CritDamage;
-    //[HideInInspector]
-    public float FlatArmorPierce = 0, PercentArmorPierce = 0, FlatMRPierce = 0, PercentMRPierce = 0;
+    public List<Item> Items;
+    [HideInInspector] public float FlatArmorPierce = 0, PercentArmorPierce = 0, FlatMRPierce = 0, PercentMRPierce = 0;
     public GameObject Hex, OGHex;
     public bool IsMoving = false, Benched;
     [HideInInspector] public float LerpProgress = 0;
@@ -35,16 +35,17 @@ public class Unit : MonoBehaviour, IDamageable
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
-    public UnityEvent OnAttack = new UnityEvent(), OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(),
+    [HideInInspector]public UnityEvent OnAttack = new UnityEvent(), OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(),
     OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(),
-    OnReset = new UnityEvent(), OnManaGain = new UnityEvent(), OnStarUp = new UnityEvent();
+    OnReset = new UnityEvent(), OnManaGain = new UnityEvent(), OnStarUp = new UnityEvent(),
+    OnBuffGain = new UnityEvent();
     [Header("Abilities")]
     public GameObject AttackPrefab;
     public GameObject AbilityPrefab;
     public GameObject AttackOverride;
     [Header("Visuals")]
     public Sprite ShopIcon;
-    public bool TurnOnMove = true, TurnOnAttack = true;
+    public bool TurnOnMove = true, TurnOnAttack = true, HasManaBar = true;
     [Header("Specials")]
     public bool PassiveAbility = false;
     public bool AbilityAffectedByAtkSpeed = false;
@@ -188,11 +189,14 @@ public class Unit : MonoBehaviour, IDamageable
             }
         }
     }
-    public void GainMana(float amount)
+    public void GainMana(float amount, bool IsBonus = false)
     {
-        ManaAmount = amount;
-        OnManaGain.Invoke();
         Mana += amount;
+        if(!IsBonus)
+        {
+            ManaAmount = amount;
+            OnManaGain.Invoke();
+        }
     }
     private void SetUpProjectile(GameObject Attack, GameObject Target)
     {
@@ -208,7 +212,7 @@ public class Unit : MonoBehaviour, IDamageable
         }
         LerpProgress += Time.deltaTime * Movespeed / 100f;
         transform.position = Vector2.Lerp(Path.From.transform.position, Path.To.transform.position, LerpProgress);
-        if(LerpProgress >= 0.1f && Hex.GetComponent<Hex>().Taken == gameObject)
+        if(LerpProgress >= 0.3f && Hex.GetComponent<Hex>().Taken == gameObject)
         {
             Hex.GetComponent<Hex>().Taken = null;
         }
@@ -325,7 +329,7 @@ public class Unit : MonoBehaviour, IDamageable
     {
         int MinCnt = 99;
         GameObject ClosestEnemy = null;
-        List<GameObject> Targets= new List<GameObject>();
+        List<GameObject> Targets;
         if(Team == 0)
         {
             Targets = GridGen.Instance.Enemies;    
@@ -351,7 +355,7 @@ public class Unit : MonoBehaviour, IDamageable
     {
         float MinDist = 99;
         GameObject ClosestEnemy = null;
-        List<GameObject> Targets= new List<GameObject>();
+        List<GameObject> Targets;
         if(Team == 0)
         {
             Targets = GridGen.Instance.Enemies;    
@@ -532,7 +536,6 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void Heal(Unit Target, float amount)
     {
-        //Debug.Log(amount);
         if(Target.Hp + amount > Target.MaxHp)
         {
             amount = Target.MaxHp - Target.Hp;
@@ -580,7 +583,7 @@ public class Unit : MonoBehaviour, IDamageable
     {
         Buff BuffCopy = new Buff(buff.Name, buff.Duration, buff.FlatAmount, buff.PercentAmount, buff.Type, buff.DurType, buff.Stack);
         for (int i = 0; i < Buffs.Count; i++)
-        {   
+        {
             if (Buffs[i].Name == buff.Name)
             {
                 if (buff.Stack)
@@ -588,12 +591,24 @@ public class Unit : MonoBehaviour, IDamageable
                     Buffs[i].FlatAmount += buff.FlatAmount;
                     Buffs[i].PercentAmount += buff.PercentAmount;
                     UpdateTrueStats(buff.Type);
+
+                    if (BuffCopy.Type == StatType.MaxHp)
+                    {
+                        Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
+                    }
+                    OnBuffGain.Invoke();
                     return;
                 }
                 else
-                {   
+                {
                     Buffs[i] = BuffCopy;
                     UpdateTrueStats(buff.Type);
+
+                    if (BuffCopy.Type == StatType.MaxHp)
+                    {
+                        Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
+                    }
+                    OnBuffGain.Invoke();
                     return;
                 }
             }
@@ -602,11 +617,12 @@ public class Unit : MonoBehaviour, IDamageable
         Buffs.Add(BuffCopy);
         //Debug.Log("Buffed " + buff.Type + " by " + buff.FlatAmount + " " + buff.PercentAmount);
         UpdateTrueStats(buff.Type);
-        
-        if(BuffCopy.Type == StatType.MaxHp)
+
+        if (BuffCopy.Type == StatType.MaxHp)
         {
             Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
         }
+        OnBuffGain.Invoke();
     }
     public void RemoveBuff(Buff buff)
     {
@@ -624,9 +640,10 @@ public class Unit : MonoBehaviour, IDamageable
     public void ClearBuffs()
     {
         HashSet<StatType> CurrentlyBuffedStats = new HashSet<StatType>();
-        foreach(Buff buff in Buffs)
+        foreach (Buff buff in Buffs)
         {
             CurrentlyBuffedStats.Add(buff.Type);
+            Debug.Log(buff.Name + " " + buff.Type.ToString());
         }
         for(int i = Buffs.Count - 1; i >= 0; i--)
         {
@@ -651,20 +668,27 @@ public class Unit : MonoBehaviour, IDamageable
                 Hex.GetComponent<BenchSlot>().Taken = null;
             }
         }
-    }    
+    }
     public void ResetFull()
     {
+        for(int i = Buffs.Count - 1; i >= 0; i--)
+        {
+            if(Buffs[i].DurType == Buff.DurationType.RealTime)
+                Buffs.RemoveAt(i);
+        }
         GetStats();
         UpdateBaseStats();
-        Hp = MaxHp;
         Shield = 0;
-        ClearBuffs();
         ResetHex();
         Hex = OGHex;
-        transform.position = (Vector2) Hex.transform.position;
-        OnReset.Invoke();
+        transform.position = (Vector2)Hex.transform.position;
         AttackCount = 0;
         AbilityCount = 0;
+        foreach (Buff buff in Buffs)
+        {
+            UpdateTrueStats(buff.Type);
+        }
+        Hp = MaxHp;
         //Movement
         IsMoving = false;
         LerpProgress = 0;
@@ -672,6 +696,8 @@ public class Unit : MonoBehaviour, IDamageable
         //Visuals
         Sprites.transform.rotation = Quaternion.identity;
         GetComponent<Animator>().Play("Idle");
+        
+        OnReset.Invoke();
     }
     public ref float StatTypeToStat(StatType Type)
     {
@@ -683,47 +709,51 @@ public class Unit : MonoBehaviour, IDamageable
         {
             return ref MaxHp;
         }
-        else if(Type == StatType.AD)
+        else if(Type == StatType.Mana)
+        {
+            return ref Mana;
+        }
+        else if (Type == StatType.AD)
         {
             return ref AtkDamage;
         }
-        else if(Type == StatType.AP)
+        else if (Type == StatType.AP)
         {
             return ref AbilityPower;
         }
-        else if(Type == StatType.AtkSpeed)
+        else if (Type == StatType.AtkSpeed)
         {
             return ref AtkSpeed;
         }
-        else if(Type == StatType.Armor)
+        else if (Type == StatType.Armor)
         {
             return ref Armor;
         }
-        else if(Type == StatType.MagicResist)
+        else if (Type == StatType.MagicResist)
         {
             return ref MagicResist;
         }
-        else if(Type == StatType.Movespeed)
+        else if (Type == StatType.Movespeed)
         {
             return ref Movespeed;
         }
-        else if(Type == StatType.DamageAmp)
+        else if (Type == StatType.DamageAmp)
         {
             return ref DamageAmp;
         }
-        else if(Type == StatType.Durability)
+        else if (Type == StatType.Durability)
         {
             return ref Durability;
         }
-        else if(Type == StatType.Omnivamp)
+        else if (Type == StatType.Omnivamp)
         {
             return ref Omnivamp;
         }
-        else if(Type == StatType.CritChance)
+        else if (Type == StatType.CritChance)
         {
             return ref CritChance;
         }
-        else if(Type == StatType.CritDamage)
+        else if (Type == StatType.CritDamage)
         {
             return ref CritDamage;
         }
@@ -743,47 +773,51 @@ public class Unit : MonoBehaviour, IDamageable
         {
             return Stats.MaxHp * Mathf.Pow(Stats.ADScale, Star - 1);
         }
-        else if(Type == StatType.AD)
+        else if(Type == StatType.Mana)
+        {
+            return Stats.Mana;
+        }
+        else if (Type == StatType.AD)
         {
             return Stats.AtkDamage * Mathf.Pow(Stats.ADScale, Star - 1);
         }
-        else if(Type == StatType.AP)
+        else if (Type == StatType.AP)
         {
             return Stats.AbilityPower;
         }
-        else if(Type == StatType.AtkSpeed)
+        else if (Type == StatType.AtkSpeed)
         {
             return Stats.AtkSpeed;
         }
-        else if(Type == StatType.Armor)
+        else if (Type == StatType.Armor)
         {
             return Stats.Armor;
         }
-        else if(Type == StatType.MagicResist)
+        else if (Type == StatType.MagicResist)
         {
             return Stats.MagicResist;
         }
-        else if(Type == StatType.Movespeed)
+        else if (Type == StatType.Movespeed)
         {
             return Stats.Movespeed;
         }
-        else if(Type == StatType.DamageAmp)
+        else if (Type == StatType.DamageAmp)
         {
             return Stats.DamageAmp;
         }
-        else if(Type == StatType.Durability)
+        else if (Type == StatType.Durability)
         {
             return Stats.Durability;
         }
-        else if(Type == StatType.Omnivamp)
+        else if (Type == StatType.Omnivamp)
         {
             return Stats.Omnivamp;
         }
-        else if(Type == StatType.CritChance)
+        else if (Type == StatType.CritChance)
         {
             return Stats.CritChance;
         }
-        else if(Type == StatType.CritDamage)
+        else if (Type == StatType.CritDamage)
         {
             return Stats.CritDamage;
         }

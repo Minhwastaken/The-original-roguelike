@@ -3,7 +3,6 @@ using System.Linq;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
-using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,13 +11,14 @@ public class GameManager : MonoBehaviour
     public List<int> XpCost = new List<int>{0, 2, 2, 6, 10, 20, 36, 48, 72, 84, 120};
     public enum GameState {Prep, Battle};
     public GameState State;
-    public UnityEvent OnPrepStart, OnPrepEnd, OnBattleStart, OnBattleEnd, OnGoldGain;
+    [HideInInspector] public UnityEvent OnPrepStart, OnPrepEnd, OnBattleStart, OnBattleEnd, OnGoldGain;
     public List<TraitDefinition> TraitList;
     public Dictionary<TraitDefinition.Traits, TraitDefinition> TraitDef = new Dictionary<TraitDefinition.Traits, TraitDefinition>();
     public Dictionary<TraitDefinition.Traits, int> ActiveTraits = new Dictionary<TraitDefinition.Traits, int>();
-    public List<Item> ItemList = new List<Item>();
+    public List<Item> Items = new List<Item>();
+    public List<Item> ComponentList = new List<Item>(), ItemList = new List<Item>();
     // Start is called before the first frame update
-    private void Awake() 
+    private void Awake()
     {
         Instance = this;
     }
@@ -27,9 +27,13 @@ public class GameManager : MonoBehaviour
         State = GameState.Prep;
         OnPrepStart.AddListener(GainGoldWithInterest);
         OnPrepStart.AddListener(() => GainXp(2));
-        foreach(TraitDefinition Trait in TraitList)
+        foreach (TraitDefinition Trait in TraitList)
         {
             TraitDef[Trait.TraitType] = Trait;
+        }
+        foreach (Item Item in ComponentList)
+        {
+            Item.ItemID = ComponentList.IndexOf(Item) + 1;
         }
     }
 
@@ -89,7 +93,7 @@ public class GameManager : MonoBehaviour
     }
     public void UpdateTrait(TraitDefinition.Traits Trait)
     {
-        if(ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
+        if (ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
         {
             DeactivateTrait(Trait, TraitLevel(Trait));
             return;
@@ -98,6 +102,11 @@ public class GameManager : MonoBehaviour
     }
     public int TraitLevel(TraitDefinition.Traits Trait)
     {
+        if(ActiveTraits.ContainsKey(Trait) == false)
+        {
+            Debug.Log("Trait not found: " + Trait);
+            return -1;
+        }
         for(int level = TraitDef[Trait].Thresholds.Count - 1; level >= 0; level--)
         {
             if(ActiveTraits[Trait] >= TraitDef[Trait].Thresholds[level])
@@ -105,7 +114,6 @@ public class GameManager : MonoBehaviour
                 return level;
             }
         }
-        Debug.Log("Trait " + Trait + " not activated");
         return -1;
     }
     public void ActivateTrait(TraitDefinition.Traits Trait, int Level)
@@ -177,21 +185,41 @@ public class GameManager : MonoBehaviour
             Visual.Count.text = ActiveTraits[Traits[order]].ToString();
         }
     }
+    public void EquipItem(Item item, Unit unit)
+    {
+        Items.Remove(item);
+        UpdateItemVisuals();
+        /* Uncomment when full items are implemented, the new item ID is purely bullshit btw
+        if (unit.Items.Count > 0 && unit.Items[^1].Component && item.Component)
+        {
+            int NewItemID = unit.Items[^1].ItemID * item.ItemID - 1;
+            unit.Items[^1].UnapplyItem(unit);
+            unit.Items.RemoveAt(unit.Items.Count - 1);
+            EquipItem(ItemList[NewItemID], unit);
+            return;
+        }
+        */
+        unit.Items.Add(item);
+        item.ApplyItem(unit);
+    }
     public void UpdateItemVisuals()
     {
-        for(int order = 0; order < UI.Instance.ItemHolder.transform.childCount; order++)
+        Transform ItemHolderTransform = UI.Instance.ItemHolder.transform;
+        for (int order = 0; order < ItemHolderTransform.childCount; order++)
         {
-            if(order >= ItemList.Count)
+            GameObject CurrentChild = ItemHolderTransform.GetChild(order).gameObject;
+            if (order >= Items.Count)
             {
-                UI.Instance.ItemHolder.transform.GetChild(order).gameObject.SetActive(false);
+                CurrentChild.SetActive(false);
                 continue;
             }
             else
             {
-                UI.Instance.ItemHolder.transform.GetChild(order).gameObject.SetActive(true);
+                CurrentChild.SetActive(true);
             }
-            Image Visual = UI.Instance.ItemHolder.transform.GetChild(order).GetComponent<Image>();
-            Visual.sprite = ItemList[order].GetComponent<SpriteRenderer>().sprite;
+            Image Visual = CurrentChild.GetComponent<Image>();
+            Visual.sprite = Items[order].ItemSprite;
+            CurrentChild.GetComponent<DraggableUI>().Item = Items[order];
         }
     }
     public void GainGoldWithInterest()
@@ -251,8 +279,9 @@ public class GameManager : MonoBehaviour
         {
             Xp -= XpCost[Level];
             Level++;
+            UI.Instance.LevelText.text = "Lv " + Level;
             UI.Instance.UpdateRollChance();
         }
-        UI.Instance.XpText.text= Xp + "/" + XpCost[Level];
+        UI.Instance.XpText.text = "Xp " + Xp + "/" + XpCost[Level];
     }
 }

@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Mouse : MonoBehaviour
 {
     public static Mouse Instance;
-    private Camera Cam;
+    public Camera Cam;
     private Vector2 OriMousePos, OriHex = new Vector2(-1,-1);
     public GameObject ChosenObject;
     public float DragThres = 0.1f, SnapDist;
@@ -23,8 +24,8 @@ public class Mouse : MonoBehaviour
         {
             if(Hit.transform.gameObject.layer == ItemLayer)
             {
-                GameManager.Instance.ItemList.Add(Hit.transform.gameObject.GetComponent<ItemGO>().Item);
-                Debug.Log("Picked up: " + Hit.transform.gameObject.name + ", current item count: " + GameManager.Instance.ItemList.Count);
+                GameManager.Instance.Items.Add(Hit.transform.GetComponent<ItemGO>().Item);
+                //Debug.Log("Picked up: " + Hit.transform.name + ", current item count: " + GameManager.Instance.Items.Count);
                 Destroy(Hit.transform.gameObject);
                 GameManager.Instance.UpdateItemVisuals();
             }

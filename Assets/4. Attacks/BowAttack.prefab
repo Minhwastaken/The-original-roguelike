@@ -240,8 +240,10 @@ MonoBehaviour:
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  ADScale: 1
-  APScale: 0
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 1
+  - 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -257,18 +259,24 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 5
+  LingeringParticles: []
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  CanCrit: 1
   HitEffect: {fileID: 687861059256311685, guid: 15301dec2d8683540ba116f4efdb089f, type: 3}
   HitEffectPos: {fileID: 6790253917917607335}
+  SingleOverrideAttack: 0
   Speed: 10
   Direction: {x: 0, y: 0}
-  Targeted: 0
   DestroyOnHit: 1
+  Targeted: 0
+  RotationSpeed: 0
+  HitDistance: 1
+  RotationSpeedIncreaseRate: 1
   SpawnOnHit: 0
   SpawnOnHitPrefab: {fileID: 0}
 --- !u!61 &4268696863591175344

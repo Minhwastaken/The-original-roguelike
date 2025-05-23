@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -164,7 +164,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -235,7 +235,7 @@ Transform:
   m_GameObject: {fileID: 7532163290274100474}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.26, z: -0.1}
+  m_LocalPosition: {x: 0, y: 0.26, z: -0.10000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -377,8 +377,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
-      minScalar: 0.5
+      scalar: 1.5
+      minScalar: 0.75
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -430,8 +430,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor: {r: 0.9960785, g: 0, b: 0, a: 1}
+      maxColor: {r: 0.9960785, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -495,8 +495,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.15
-      minScalar: 0.1
+      scalar: 0.275
+      minScalar: 0.15
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -959,7 +959,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.1
+      value: 0.15
       mode: 0
       spread: 0
       speed:
@@ -5050,11 +5050,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2972556764487798037}
-  - component: {fileID: 6338507085703689865}
+  - component: {fileID: 1283455883506259419}
   - component: {fileID: 7441274680229889695}
   - component: {fileID: 8447699576664672629}
   m_Layer: 0
-  m_Name: MayoAttack
+  m_Name: KetchupEnhancedAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5070,13 +5070,13 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8885025376088677647}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6338507085703689865
+--- !u!114 &1283455883506259419
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5093,10 +5093,8 @@ MonoBehaviour:
   DamageType: 0
   StatScales: 0000000001000000
   ScaleValues:
-  - 1
+  - 1.5
   - 0
-  ADScale: 1
-  APScale: 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -5120,9 +5118,10 @@ MonoBehaviour:
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  CanCrit: 1
   HitEffect: {fileID: 0}
   HitEffectPos: {fileID: 0}
-  SingleOverrideAttack: 0
+  SingleOverrideAttack: 1
   Speed: 6
   Direction: {x: 0, y: 0}
   DestroyOnHit: 1
@@ -5130,8 +5129,8 @@ MonoBehaviour:
   RotationSpeed: 0
   HitDistance: 1
   RotationSpeedIncreaseRate: 1
-  SpawnOnHit: 0
-  SpawnOnHitPrefab: {fileID: 0}
+  SpawnOnHit: 1
+  SpawnOnHitPrefab: {fileID: 8984733544962408346, guid: 3f3c849feb396594398ddf9fd852f004, type: 3}
 --- !u!58 &7441274680229889695
 CircleCollider2D:
   m_ObjectHideFlags: 0

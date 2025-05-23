@@ -304,10 +304,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5973223677130886005}
+  - component: {fileID: 4656149402506281449}
   - component: {fileID: 7505680380406423604}
   - component: {fileID: 7385987966726955729}
   - component: {fileID: 6547108367831065458}
-  - component: {fileID: 4656149402506281449}
   m_Layer: 3
   m_Name: Starfruit
   m_TagString: Untagged
@@ -332,6 +332,101 @@ Transform:
   - {fileID: 7652841507971592675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4656149402506281449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7348070789959115077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbe69c893de432d4280ded53c8a6dd92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Team: 0
+  Stats: {fileID: 11400000, guid: d2b631914eca2f6468ad5bda20e5715c, type: 2}
+  Role: 0
+  Traits: 010000000b000000
+  Hp: 0
+  MaxHp: 0
+  Shield: 0
+  AtkDamage: 0
+  AbilityPower: 0
+  AtkSpeed: 0
+  Mana: 0
+  MaxMana: 0
+  Range: 0
+  Armor: 0
+  MagicResist: 0
+  Movespeed: 0
+  DamageAmp: 0
+  Durability: 0
+  Omnivamp: 0
+  CritChance: 0
+  CritDamage: 0
+  Items: []
+  FlatArmorPierce: 0
+  PercentArmorPierce: 0
+  FlatMRPierce: 0
+  PercentMRPierce: 0
+  Hex: {fileID: 0}
+  OGHex: {fileID: 0}
+  IsMoving: 0
+  Benched: 0
+  LerpProgress: 0
+  Anim: {fileID: 0}
+  AttackCount: 0
+  AbilityCount: 0
+  Target: {fileID: 0}
+  TargetHex: {fileID: 0}
+  Star: 1
+  OGScale: 1
+  HealAmount: 0
+  ManaAmount: 0
+  AttackScale: 1
+  SpawnedAttack: {fileID: 0}
+  AttackPoint: {fileID: 0}
+  Sprites: {fileID: 0}
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnAbilityUse:
+    m_PersistentCalls:
+      m_Calls: []
+  OnKill:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHeal:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReset:
+    m_PersistentCalls:
+      m_Calls: []
+  OnManaGain:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStarUp:
+    m_PersistentCalls:
+      m_Calls: []
+  OnBuffGain:
+    m_PersistentCalls:
+      m_Calls: []
+  AttackPrefab: {fileID: 8984733544962408346, guid: 0c908837728ea6e4992f768fde347422, type: 3}
+  AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
+  AttackOverride: {fileID: 0}
+  ShopIcon: {fileID: 0}
+  TurnOnMove: 1
+  TurnOnAttack: 1
+  HasManaBar: 1
+  PassiveAbility: 1
+  AbilityAffectedByAtkSpeed: 0
 --- !u!61 &7505680380406423604
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -427,76 +522,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4656149402506281449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7348070789959115077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbe69c893de432d4280ded53c8a6dd92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Team: 0
-  Stats: {fileID: 11400000, guid: d2b631914eca2f6468ad5bda20e5715c, type: 2}
-  Role: 0
-  Traits: 010000000b000000
-  Hp: 0
-  MaxHp: 0
-  AtkDamage: 0
-  AbilityPower: 0
-  AtkSpeed: 0
-  Mana: 0
-  MaxMana: 0
-  Range: 0
-  Armor: 0
-  MagicResist: 0
-  Movespeed: 0
-  DamageAmp: 0
-  Durability: 0
-  Omnivamp: 0
-  CritChance: 0
-  CritDamage: 0
-  Hex: {fileID: 0}
-  OGHex: {fileID: 0}
-  IsMoving: 0
-  Benched: 0
-  LerpProgress: 0
-  Anim: {fileID: 0}
-  AbilityCount: 0
-  Target: {fileID: 0}
-  TargetHex: {fileID: 0}
-  Star: 1
-  AttackPoint: {fileID: 0}
-  Sprites: {fileID: 0}
-  OnAbilityUse:
-    m_PersistentCalls:
-      m_Calls: []
-  OnKill:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
-  OnTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  OnReset:
-    m_PersistentCalls:
-      m_Calls: []
-  AttackPrefab: {fileID: 8984733544962408346, guid: 0c908837728ea6e4992f768fde347422, type: 3}
-  AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
-  AttackOverride: {fileID: 0}
-  ShopIcon: {fileID: 0}
-  TurnOnMove: 1
-  TurnOnAttack: 1
-  PassiveAbility: 1
-  AbilityAffectedByAtkSpeed: 0
 --- !u!1 &7418736927236695851
 GameObject:
   m_ObjectHideFlags: 0

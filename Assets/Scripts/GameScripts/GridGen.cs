@@ -24,6 +24,7 @@ public class GridGen : MonoBehaviour
     public List<GameObject> Attacks = new List<GameObject>();
     [HideInInspector] public InputField LengthIP, CrossIP, HeightIP;
     [HideInInspector] public readonly int UnitLayer = 3, HexLayer = 6;
+    public static readonly int MaxUnitCost = 5;
     private void Awake()
     {
         Instance = this;
@@ -157,9 +158,27 @@ public class GridGen : MonoBehaviour
             }
         }
     }
+    public void RemoveUnitFromPool(GameObject Unit)
+    {
+        Unit UnitScript = Unit.GetComponent<Unit>();
+        int Cost = UnitScript.Stats.Cost;
+        int UnitID = UnitPool[Cost - 1].FindIndex(x => x.Unit.GetComponent<Unit>().Stats == UnitScript.Stats);
+        (GameObject Unit, int Count) UnitPoolTuple = UnitPool[Cost - 1][UnitID];
+        UnitPool[Cost - 1][UnitID] = (UnitPoolTuple.Unit, UnitPoolTuple.Count - 1);
+        //Debug.Log("Removed " + Unit.name + ". " + UnitPool[Cost - 1][UnitID].Count + " left.");
+    }
+    public void AddUnitToPool(GameObject Unit)
+    {
+        Unit UnitScript = Unit.GetComponent<Unit>();
+        int Cost = UnitScript.Stats.Cost;
+        int UnitID = UnitPool[Cost - 1].FindIndex(x => x.Unit.GetComponent<Unit>().Stats == UnitScript.Stats);
+        (GameObject Unit, int Count) UnitPoolTuple = UnitPool[Cost - 1][UnitID];
+        UnitPool[Cost - 1][UnitID] = (UnitPoolTuple.Unit, UnitPoolTuple.Count + 1);
+        //Debug.Log("Added " + Unit.name + ". " + UnitPool[Cost - 1][UnitID].Count + " left.");
+    }
     public void ResetGrid()
     {
-        foreach(GameObject Unit in DeadUnits)
+        foreach (GameObject Unit in DeadUnits)
         {
             Unit.SetActive(true);
             Units.Add(Unit);
@@ -167,12 +186,12 @@ public class GridGen : MonoBehaviour
         DeadUnits.Clear();
         ClearAttacks();
 
-        foreach(GameObject Unit in Units)
+        foreach (GameObject Unit in Units)
         {
             Unit.GetComponent<Unit>().ResetFull();
             Unit.GetComponent<Unit>().UpdateMatchTimeBuffs();
         }
-        if(GameManager.Instance.Stage >= 28)
+        if (GameManager.Instance.Stage >= 28)
         {
             SpawnEnemies(28);
         }
@@ -200,7 +219,7 @@ public class GridGen : MonoBehaviour
             if(CreditCount > Credit)
                 break;
             GameObject Enemy = Instantiate(UnitList[Random.Range(0, UnitList.Count)]);
-            CreditCount +=Enemy.GetComponent<Unit>().Stats.Cost;
+            CreditCount += Enemy.GetComponent<Unit>().Stats.Cost;
             Unit.UnitRole EnemyRole = Enemy.GetComponent<Unit>().Role;
             if(EnemyRole == Unit.UnitRole.AttackCarry || EnemyRole == Unit.UnitRole.MagicCarry)
             {

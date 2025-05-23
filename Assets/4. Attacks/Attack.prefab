@@ -92,17 +92,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc8cb1ef2919892428a05043a0e9d5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Dictionary:
-    entries:
-    - key: 0
-      value: 0
   Attacker: {fileID: 0}
   Target: {fileID: 0}
   DamageType: 0
-  HitEffect: {fileID: 0}
-  HitEffectPos: {fileID: 0}
-  ADScale: 1
-  APScale: 0
+  StatScales: 0000000001000000
+  ScaleValues:
+  - 1
+  - 0
   Hp: 0
   MaxHp: 0
   AtkDamage: 0
@@ -118,12 +114,17 @@ MonoBehaviour:
   CritChance: 0
   CritDamage: 0
   Lifespan: 5
+  LingeringParticles: []
   OnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  CanCrit: 1
+  HitEffect: {fileID: 0}
+  HitEffectPos: {fileID: 0}
+  SingleOverrideAttack: 0
 --- !u!1 &9045250023221557362
 GameObject:
   m_ObjectHideFlags: 0

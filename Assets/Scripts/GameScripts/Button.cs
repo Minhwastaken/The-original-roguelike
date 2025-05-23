@@ -34,6 +34,7 @@ public class Button : MonoBehaviour
                 SpawnedUnit.name = Unit.name + " *";
                 CheckStarUp(SpawnedUnit);
 
+                //GridGen.Instance.RemoveUnitFromPool(SpawnedUnit);
                 GameManager.Instance.LoseGold(SpawnedUnit.GetComponent<Unit>().Stats.Cost);
                 UI.Instance.GoldText.text = GameManager.Instance.Gold + "G";
                 break;

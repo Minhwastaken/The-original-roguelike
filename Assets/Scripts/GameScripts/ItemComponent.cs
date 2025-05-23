@@ -6,15 +6,15 @@ public class ItemComponent : Item
     public Buff ComponentBuff;
     public override void ApplyItem(Unit unit)
     {
-        for(int i = 0; i < StatTypes.Count; i++)
+        for (int i = 0; i < StatTypes.Count; i++)
         {
-            if(IsFlatBuff[i])
+            if (IsFlatBuff[i])
             {
-                ComponentBuff = new Buff(name + StatTypes[i].ToString() + "Buff", 1, StatMagnitudes[i], 0, StatTypes[i], Buff.DurationType.Permanent, false);
+                ComponentBuff = new Buff(name + StatTypes[i].ToString() + "Buff", 1, StatMagnitudes[i], 0, StatTypes[i], Buff.DurationType.Permanent, true);
             }
             else
             {
-                ComponentBuff = new Buff(name + StatTypes[i].ToString() + "Buff", 1, 0, StatMagnitudes[i], StatTypes[i], Buff.DurationType.Permanent, false);
+                ComponentBuff = new Buff(name + StatTypes[i].ToString() + "Buff", 1, 0, StatMagnitudes[i], StatTypes[i], Buff.DurationType.Permanent, true);
             }
             unit.GainBuff(ComponentBuff);
         }

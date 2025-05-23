@@ -15,7 +15,7 @@ public class UnitStats : ScriptableObject
     public float Movespeed;
     public float DamageAmp, Durability;
     public float Omnivamp;
-    public float CritChance = 25, CritDamage = 1.4f;
+    public float CritChance = 25, CritDamage = 140;
     public float ADScale = 1.8f, HpScale = 1.8f;
     public float SizeScale = 1.1f;
 }

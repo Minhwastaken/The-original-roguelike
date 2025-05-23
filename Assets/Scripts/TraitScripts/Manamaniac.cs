@@ -9,7 +9,7 @@ public class Manamaniac : TraitDefinition
     private UnityAction Action;
     public override void ApplyTrait(Unit unit, int level)
     {
-        Action = () => unit.Mana += unit.ManaAmount * StatMagnitudes[level];
+        Action = () => unit.GainMana(unit.ManaAmount * StatMagnitudes[level], true);
         unit.OnManaGain.AddListener(Action);
     }
 

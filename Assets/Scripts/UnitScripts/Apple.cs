@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Apple : Unit
@@ -8,7 +6,7 @@ public class Apple : Unit
     [SerializeField] private float[] AbilityHealAPScale = new float[3] { 1, 2, 3 };
     private void Ability()
     {
-        Buff AppleKillBuff = new Buff("AppleKillBuff", 0, 0, 0.1f, Unit.StatType.AD, Buff.DurationType.Permanent, true);
+        Buff AppleKillBuff = new Buff("AppleKillBuff", 0, 0, 0.1f, StatType.AD, Buff.DurationType.Permanent, true);
         GainBuff(AppleKillBuff);
         Heal(this, AbilityPower * AbilityHealAPScale[Star - 1]);
     }

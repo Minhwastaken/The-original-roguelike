@@ -23,6 +23,7 @@ public abstract class Attack : MonoBehaviour
     public List<GameObject> LingeringParticles;
     [HideInInspector]public UnityEvent OnAttack, OnDamageDealt;
     [Header("Attack Effect")]
+    public bool CanCrit;
     public GameObject HitEffect;
     public Transform HitEffectPos;
     public List<Buff> AttackDebuffs;
@@ -99,6 +100,14 @@ public abstract class Attack : MonoBehaviour
         }
         //Debug.Log("TotalDamage post armor and mr: " + TotalDamage);
         TotalDamage *= (1+DamageAmp/100)/(1+Target.Durability/100);
+        
+        int CritRoll = Random.Range(0, 100);
+        if(CanCrit && CritRoll < Attacker.CritChance)
+        {
+            TotalDamage *= Attacker.CritDamage/100;
+            Debug.Log("Crit Roll: " + CritRoll + " : " + Attacker.CritChance);
+            Debug.Log("TotalDamage post crit: " + TotalDamage);
+        }
         //Debug.Log("Damage Dealt By " + Attacker.name +  ": " + TotalDamage);
         Target.TakeDamage(TotalDamage, DamageType, Attacker);
     }

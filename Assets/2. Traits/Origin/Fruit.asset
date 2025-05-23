@@ -18,14 +18,14 @@ MonoBehaviour:
   StatTypes: 0200000000000000
   StatMagnitudes:
   - innerList:
-    - 1000
-    - 2
+    - 0.15
+    - 0.1
   - innerList:
-    - 2000
-    - 4
+    - 0.4
+    - 0.2
   - innerList:
-    - 3000
-    - 10
+    - 0.8
+    - 0.4
   - innerList:
-    - 4000
-    - 100
+    - 1.5
+    - 1

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TraitType: 14
   Name: Sharpshot
-  Thresholds: 
-  StatTypes: 
-  StatMagnitudes: []
+  Thresholds: 00000000
+  StatTypes: 00000000
+  StatMagnitudes:
+  - innerList:
+    - 0

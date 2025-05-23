@@ -121,6 +121,7 @@ MonoBehaviour:
   OnDamageDealt:
     m_PersistentCalls:
       m_Calls: []
+  CanCrit: 1
   HitEffect: {fileID: 0}
   HitEffectPos: {fileID: 0}
   SingleOverrideAttack: 0

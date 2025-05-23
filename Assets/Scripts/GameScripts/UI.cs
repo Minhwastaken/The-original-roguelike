@@ -21,7 +21,7 @@ public class UI : MonoBehaviour
         {5, 10, 20, 40, 25},
         {1, 2, 12, 50, 35}
     };
-    public Text GoldText, XpText, StageText;
+    public Text GoldText, XpText, StageText, LevelText;
     public List<GameObject> BuyButtons, TraitVisuals;
     public List<Text> RollChanceTexts;
     private void Awake()
@@ -45,22 +45,47 @@ public class UI : MonoBehaviour
     {
         foreach(GameObject Button in BuyButtons)
         {
-            Button.SetActive(true);
+            if(!Button.activeSelf)
+            {
+                Button.SetActive(true);
+            }
+            else if(Button.GetComponent<Button>().Unit)
+            {
+                    GridGen.Instance.AddUnitToPool(Button.GetComponent<Button>().Unit);
+            }
             int UnitCost = RollForCost();
             //Debug.Log("Rolling for cost " + (UnitCost + 1));
             GameObject RandomUnit = RandomUnitFromPool(UnitCost);
+            GridGen.Instance.RemoveUnitFromPool(RandomUnit);
             Button.GetComponent<Button>().Unit = RandomUnit;
             Button.transform.GetChild(0).GetComponent<Text>().text = RandomUnit.GetComponent<Unit>().Stats.Cost.ToString();
         }
     }
     public int RollForCost()
     {
-        int Roll = Random.Range(0, 100);
+        int TotalAvailableCostWeight = 0;
+        List<bool> AvailableCosts = new List<bool> {true, true, true, true, true};
+        for (int i = 0; i < GridGen.MaxUnitCost; i++)
+        {
+            if (RandomUnitFromPool(i + 1))
+            {
+                TotalAvailableCostWeight += RollChance[GameManager.Instance.Level - 1, i];
+            }
+            else
+            {
+                AvailableCosts[i] = false;
+            }
+        }
+        int Roll = Random.Range(0, TotalAvailableCostWeight);
         //Debug.Log("Rolled a " + Roll);
         int Total = 0;
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < GridGen.MaxUnitCost; i++)
         {
-            if(GameManager.Instance.Level < 11)
+            if(!AvailableCosts[i])
+            {
+                continue;
+            }
+            if (GameManager.Instance.Level < 11)
             {
                 Total += RollChance[GameManager.Instance.Level - 1, i];
             }
@@ -70,7 +95,7 @@ public class UI : MonoBehaviour
             }
             if(Roll < Total)
             {
-                return i;
+                return i + 1;
             }
         }
         return 0;
@@ -78,17 +103,31 @@ public class UI : MonoBehaviour
     public GameObject RandomUnitFromPool(int Cost)
     {
         int Sum = 0;
-        foreach((GameObject Unit, int Count) Tuple in GridGen.Instance.UnitPool[Cost])
+        List<(GameObject Unit, int Count)> UnitPoolOfCost = GridGen.Instance.UnitPool[Cost - 1];
+        foreach ((GameObject Unit, int Count) Tuple in UnitPoolOfCost)
         {
+            if(Tuple.Count <= 0)
+            {
+                continue;
+            }
             Sum += Tuple.Count;
         }
-        int Roll = Random.Range(0, Sum);
-        foreach((GameObject Unit, int Count) Tuple in GridGen.Instance.UnitPool[Cost])
+        if (Sum == 0)
         {
-            Roll -= Tuple.Count;
-            if(Roll <= 0)
+            Debug.Log("No units of cost " + Cost);
+            return null;
+        }
+        int Roll = Random.Range(0, Sum);
+        for (int i = 0; i < UnitPoolOfCost.Count; i++)
+        {
+            if(UnitPoolOfCost[i].Count <= 0)
             {
-                return Tuple.Unit;
+                continue;
+            }
+            Roll -= UnitPoolOfCost[i].Count;
+            if (Roll <= 0)
+            {
+                return UnitPoolOfCost[i].Unit;
             }
         }
         Debug.LogError("Couldn't find a unit of cost " + Cost);
@@ -98,14 +137,14 @@ public class UI : MonoBehaviour
     {
         if(GameManager.Instance.Level < 11)
         {
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < GridGen.MaxUnitCost; i++)
             {
                 RollChanceTexts[i].text = RollChance[GameManager.Instance.Level - 1, i] + "%";
             }
         }
         else
         {
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < GridGen.MaxUnitCost; i++)
             {
                 RollChanceTexts[i].text = RollChance[10, i] + "%";
             }
