@@ -23,14 +23,9 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     {
         rectTransform.anchoredPosition += eventData.delta / GetCanvasScaleFactor();
         RaycastHit2D Hit = Physics2D.Raycast(Mouse.Instance.Cam.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        //Debug.Log("Is Dragging");
         if(Hit)
         {
             Debug.Log(Hit.transform.gameObject.name);
-            if(Hit.transform.gameObject.layer == 3)
-            {
-                //Debug.Log("Something");
-            }
         }
     }
 
@@ -47,7 +42,6 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         {
             if(Hit.transform.gameObject.layer == 3)
             {
-                //Debug.Log("Equip");
                 GameManager.Instance.EquipItem(Item ,Hit.transform.gameObject.GetComponent<Unit>());
             }
         }

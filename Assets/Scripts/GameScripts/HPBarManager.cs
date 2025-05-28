@@ -28,7 +28,6 @@ public class HPBarManager : MonoBehaviour
         }
         Unit.OnTakeDamage.AddListener(UpdateHp);
         Unit.OnReset.AddListener(UpdateHp);
-        Unit.OnBuffGain.AddListener(UpdateHp);
 
         if (Unit.HasManaBar)
         {

@@ -4242,6 +4242,7 @@ MonoBehaviour:
   Stage: 0
   MaxInterest: 5
   RerollCost: 2
+  MatchStartTime: 0
   XpCost: 000000000200000002000000060000000a000000140000002400000030000000480000005400000078000000
   State: 0
   OnPrepStart:
@@ -7160,7 +7161,7 @@ MonoBehaviour:
   OneCostCount: 27
   TwoCostCount: 27
   ThreeCostCount: 27
-  FourCostCount: 10
+  FourCostCount: 12
   FiveCostCount: 9
   ColorOne: {r: 0, g: 0, b: 0, a: 0}
   ColorTwo: {r: 1, g: 0, b: 0, a: 0}

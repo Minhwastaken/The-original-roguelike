@@ -37,7 +37,7 @@ public class GridGen : MonoBehaviour
         WorldGridHeight = GridHeight * HexHeight;
         WorldGridLength = GridLength * HexLength;
 
-        GameManager.Instance.OnBattleEnd.AddListener(ResetGrid);
+        GameManager.Instance.OnPrepStart.AddListener(ResetGrid);
         //GenerateGrid();
         //AddAdjHexes();
     }
@@ -189,7 +189,6 @@ public class GridGen : MonoBehaviour
         foreach (GameObject Unit in Units)
         {
             Unit.GetComponent<Unit>().ResetFull();
-            Unit.GetComponent<Unit>().UpdateMatchTimeBuffs();
         }
         if (GameManager.Instance.Stage >= 28)
         {

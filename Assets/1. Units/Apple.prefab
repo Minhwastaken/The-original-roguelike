@@ -524,11 +524,15 @@ MonoBehaviour:
   OGScale: 1
   HealAmount: 0
   ManaAmount: 0
+  ScaleMult: 1
   AttackScale: 1
   SpawnedAttack: {fileID: 0}
   AttackPoint: {fileID: 0}
   Sprites: {fileID: 7418736927236695851}
   OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpawnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnAbilityUse:
@@ -538,9 +542,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
     m_PersistentCalls:
       m_Calls: []
   OnTakeDamage:
@@ -555,9 +556,6 @@ MonoBehaviour:
   OnStarUp:
     m_PersistentCalls:
       m_Calls: []
-  OnBuffGain:
-    m_PersistentCalls:
-      m_Calls: []
   AttackPrefab: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
   AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
   AttackOverride: {fileID: 0}
@@ -565,6 +563,7 @@ MonoBehaviour:
   TurnOnMove: 1
   TurnOnAttack: 1
   HasManaBar: 0
+  UI: {fileID: 0}
   PassiveAbility: 1
   AbilityAffectedByAtkSpeed: 0
   AbilityHealAPScale:
@@ -637,7 +636,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.716503, y: 0.5971359}
+  m_Size: {x: 0.7, y: 0.7}
   m_EdgeRadius: 0
 --- !u!50 &6547108367831065458
 Rigidbody2D:

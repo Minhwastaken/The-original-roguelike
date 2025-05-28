@@ -384,11 +384,15 @@ MonoBehaviour:
   OGScale: 1
   HealAmount: 0
   ManaAmount: 0
+  ScaleMult: 1
   AttackScale: 1
   SpawnedAttack: {fileID: 0}
   AttackPoint: {fileID: 0}
   Sprites: {fileID: 0}
   OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpawnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnAbilityUse:
@@ -398,9 +402,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHeal:
     m_PersistentCalls:
       m_Calls: []
   OnTakeDamage:
@@ -415,9 +416,6 @@ MonoBehaviour:
   OnStarUp:
     m_PersistentCalls:
       m_Calls: []
-  OnBuffGain:
-    m_PersistentCalls:
-      m_Calls: []
   AttackPrefab: {fileID: 8984733544962408346, guid: 0c908837728ea6e4992f768fde347422, type: 3}
   AbilityPrefab: {fileID: 597858823987937271, guid: 69a431f24bbf7f7468617d5fcefc7d0a, type: 3}
   AttackOverride: {fileID: 0}
@@ -425,6 +423,7 @@ MonoBehaviour:
   TurnOnMove: 1
   TurnOnAttack: 1
   HasManaBar: 1
+  UI: {fileID: 0}
   PassiveAbility: 1
   AbilityAffectedByAtkSpeed: 0
 --- !u!61 &7505680380406423604
@@ -461,7 +460,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.03158319, y: 0.08503145}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -471,7 +470,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.9359344, y: 0.48009324}
+  m_Size: {x: 0.7, y: 0.7}
   m_EdgeRadius: 0
 --- !u!95 &7385987966726955729
 Animator:

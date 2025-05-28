@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public int Gold, Level = 1, Xp, Stage = 1, MaxInterest = 5, RerollCost = 2;
-    public List<int> XpCost = new List<int>{0, 2, 2, 6, 10, 20, 36, 48, 72, 84, 120};
+    [SerializeField]private float MatchStartTime = 0;
+    public List<int> XpCost = new List<int> { 0, 2, 2, 6, 10, 20, 36, 48, 72, 84, 120 };
     public enum GameState {Prep, Battle};
     public GameState State;
     [HideInInspector] public UnityEvent OnPrepStart, OnPrepEnd, OnBattleStart, OnBattleEnd, OnGoldGain;
@@ -93,9 +94,10 @@ public class GameManager : MonoBehaviour
     }
     public void UpdateTrait(TraitDefinition.Traits Trait)
     {
+        Debug.Log("Updating trait: " + Trait + " : " + ActiveTraits[Trait] + " : " + TraitDef[Trait].Thresholds[0]);
         if (ActiveTraits[Trait] < TraitDef[Trait].Thresholds[0])
         {
-            DeactivateTrait(Trait, TraitLevel(Trait));
+            DeactivateTrait(Trait, TraitLevel(Trait) + 1);
             return;
         }
         ActivateTrait(Trait, TraitLevel(Trait));
@@ -133,7 +135,7 @@ public class GameManager : MonoBehaviour
     }
     public void DeactivateTrait(TraitDefinition.Traits Trait, int Level)
     {
-        if(Level < 0)
+        if (Level < 0)
         {
             return;
         }
@@ -189,18 +191,60 @@ public class GameManager : MonoBehaviour
     {
         Items.Remove(item);
         UpdateItemVisuals();
-        /* Uncomment when full items are implemented, the new item ID is purely bullshit btw
-        if (unit.Items.Count > 0 && unit.Items[^1].Component && item.Component)
+        if (item.Component)
         {
-            int NewItemID = unit.Items[^1].ItemID * item.ItemID - 1;
-            unit.Items[^1].UnapplyItem(unit);
-            unit.Items.RemoveAt(unit.Items.Count - 1);
-            EquipItem(ItemList[NewItemID], unit);
-            return;
+            Item OtherComponent = null;
+            for (int i = 0; i < unit.Items.Count; i++)
+            {
+                if (unit.Items[i].Component)
+                {
+                    OtherComponent = unit.Items[i];
+                }
+            }
+            if (OtherComponent != null)
+            {
+                foreach (Item FullItem in ItemList)
+                {
+                    if (FullItem.Recipe[0].ItemID == item.ItemID && FullItem.Recipe[1].ItemID == OtherComponent.ItemID ||
+                        FullItem.Recipe[1].ItemID == item.ItemID && FullItem.Recipe[0].ItemID == OtherComponent.ItemID)
+                    {
+                        unit.Items.Add(FullItem);
+                        if (OtherComponent != null)
+                        {
+                            OtherComponent.UnapplyItem(unit);
+                        }
+                        if (unit.Items.Contains(OtherComponent))
+                        {
+                            unit.Items.Remove(OtherComponent);
+                        }
+                        FullItem.ApplyItem(unit);
+                        UpdateItemVisuals();
+                        return;
+                    }
+                    {
+                        FullItem.ApplyItem(unit);
+                        if (OtherComponent != null)
+                        {
+                            OtherComponent.UnapplyItem(unit);
+                        }
+                        if (unit.Items.Contains(OtherComponent))
+                        {
+                            unit.Items.Remove(OtherComponent);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                unit.Items.Add(item);
+                item.ApplyItem(unit);
+            }
         }
-        */
-        unit.Items.Add(item);
-        item.ApplyItem(unit);
+        else
+        {
+            unit.Items.Add(item);
+            item.ApplyItem(unit);
+        }
     }
     public void UpdateItemVisuals()
     {
@@ -222,9 +266,13 @@ public class GameManager : MonoBehaviour
             CurrentChild.GetComponent<DraggableUI>().Item = Items[order];
         }
     }
+    public float MatchTime()
+    {
+        return Time.time - MatchStartTime;
+    }
     public void GainGoldWithInterest()
     {
-        Gold += 5 + Mathf.Min(Gold/10, MaxInterest);
+        Gold += 5 + Mathf.Min(Gold / 10, MaxInterest);
         UI.Instance.GoldText.text = Gold + "G";
     }
     public void GainGold(int Amount)
@@ -244,11 +292,12 @@ public class GameManager : MonoBehaviour
     }
     public void ChangeState()
     {
-        if(State == GameState.Prep)
+        if (State == GameState.Prep)
         {
             State = GameState.Battle;
             OnPrepEnd.Invoke();
             OnBattleStart.Invoke();
+            MatchStartTime = Time.time;
         }
         else
         {
@@ -257,6 +306,7 @@ public class GameManager : MonoBehaviour
             State = GameState.Prep;
             OnBattleEnd.Invoke();
             OnPrepStart.Invoke();
+            Debug.Log("Match ended: " + (Time.time - MatchStartTime) + " seconds");
         }
         Debug.Log("It's currently in " + State + " state");
     }

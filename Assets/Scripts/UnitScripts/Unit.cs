@@ -30,15 +30,15 @@ public class Unit : MonoBehaviour, IDamageable
     public GameObject Target, TargetHex;
     public int Star = 1;
     public (GameObject From, GameObject To) Path;
-    [HideInInspector]public float OGScale = 1, HealAmount = 0, ManaAmount = 0, AttackScale = 1;
+    [HideInInspector]public float OGScale = 1, HealAmount = 0, ManaAmount = 0, ScaleMult = 1, AttackScale = 1;
     [HideInInspector]public GameObject SpawnedAttack;
     public Transform AttackPoint;
     public GameObject Sprites;
     public List<Buff> Buffs = new List<Buff>(), Debuffs = new List<Buff>();
-    [HideInInspector]public UnityEvent OnAttack = new UnityEvent(), OnAbilityUse = new UnityEvent(), OnKill = new UnityEvent(),
-    OnDeath = new UnityEvent(), OnHeal = new UnityEvent(), OnTakeDamage = new UnityEvent(),
-    OnReset = new UnityEvent(), OnManaGain = new UnityEvent(), OnStarUp = new UnityEvent(),
-    OnBuffGain = new UnityEvent();
+    [HideInInspector]
+    public UnityEvent OnAttack = new UnityEvent(), OnSpawnAttack = new UnityEvent(), OnAbilityUse = new UnityEvent(),
+    OnKill = new UnityEvent(), OnDeath = new UnityEvent(), OnTakeDamage = new UnityEvent(),
+    OnReset = new UnityEvent(), OnManaGain = new UnityEvent(), OnStarUp = new UnityEvent();
     [Header("Abilities")]
     public GameObject AttackPrefab;
     public GameObject AbilityPrefab;
@@ -46,6 +46,7 @@ public class Unit : MonoBehaviour, IDamageable
     [Header("Visuals")]
     public Sprite ShopIcon;
     public bool TurnOnMove = true, TurnOnAttack = true, HasManaBar = true;
+    public HPBarManager UI;
     [Header("Specials")]
     public bool PassiveAbility = false;
     public bool AbilityAffectedByAtkSpeed = false;
@@ -54,7 +55,9 @@ public class Unit : MonoBehaviour, IDamageable
         Anim = GetComponent<Animator>();
         OGScale = transform.localScale.x;
         GameManager.Instance.OnBattleStart.AddListener(() => StartCoroutine(Action()));
+        GameManager.Instance.OnBattleEnd.AddListener(() => UpdateMatchTimeBuffs());
         Sprites = transform.Find("Sprite").gameObject;
+        UI = transform.Find("UI").GetComponent<HPBarManager>();
         GetStats();
     }
     public IEnumerator Action()
@@ -142,6 +145,7 @@ public class Unit : MonoBehaviour, IDamageable
         SpawnedAttack = Instantiate(AttackGO, Sprites.transform.position, Sprites.transform.rotation);
         SpawnedAttack.GetComponent<Attack>().Attacker = this;
         GridGen.Instance.Attacks.Add(SpawnedAttack);
+        OnSpawnAttack.Invoke();
 
         float TrueAttackScale = SpawnedAttack.transform.localScale.x * Mathf.Pow(Stats.SizeScale, Star - 1) * AttackScale;
         SpawnedAttack.transform.localScale = new Vector3(TrueAttackScale, TrueAttackScale, 1);
@@ -536,17 +540,22 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void Heal(Unit Target, float amount)
     {
-        if(Target.Hp + amount > Target.MaxHp)
+        if (Target.Hp + amount > Target.MaxHp)
         {
             amount = Target.MaxHp - Target.Hp;
         }
         Target.Hp += amount;
         Target.HealAmount = amount;
-        Target.OnHeal.Invoke();
+        UI.UpdateHp();
+    }
+    public void GainShield(float amount)
+    {
+        Shield += amount;
+        UI.UpdateHp();
     }
     private bool ValidTarget(GameObject Target)
     {
-        if(Target == null || !Target.activeSelf)
+        if (Target == null || !Target.activeSelf)
         {
             return false;
         }
@@ -595,8 +604,8 @@ public class Unit : MonoBehaviour, IDamageable
                     if (BuffCopy.Type == StatType.MaxHp)
                     {
                         Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
+                        UI.UpdateHp();
                     }
-                    OnBuffGain.Invoke();
                     return;
                 }
                 else
@@ -607,8 +616,8 @@ public class Unit : MonoBehaviour, IDamageable
                     if (BuffCopy.Type == StatType.MaxHp)
                     {
                         Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
+                        UI.UpdateHp();
                     }
-                    OnBuffGain.Invoke();
                     return;
                 }
             }
@@ -621,8 +630,8 @@ public class Unit : MonoBehaviour, IDamageable
         if (BuffCopy.Type == StatType.MaxHp)
         {
             Heal(this, BuffCopy.FlatAmount + MaxHp * BuffCopy.PercentAmount / (1 + BuffCopy.PercentAmount));
+            UI.UpdateHp();
         }
-        OnBuffGain.Invoke();
     }
     public void RemoveBuff(Buff buff)
     {
@@ -671,9 +680,9 @@ public class Unit : MonoBehaviour, IDamageable
     }
     public void ResetFull()
     {
-        for(int i = Buffs.Count - 1; i >= 0; i--)
+        for (int i = Buffs.Count - 1; i >= 0; i--)
         {
-            if(Buffs[i].DurType == Buff.DurationType.RealTime)
+            if (Buffs[i].DurType == Buff.DurationType.RealTime)
                 Buffs.RemoveAt(i);
         }
         GetStats();
@@ -688,7 +697,6 @@ public class Unit : MonoBehaviour, IDamageable
         {
             UpdateTrueStats(buff.Type);
         }
-        Hp = MaxHp;
         //Movement
         IsMoving = false;
         LerpProgress = 0;
@@ -696,7 +704,8 @@ public class Unit : MonoBehaviour, IDamageable
         //Visuals
         Sprites.transform.rotation = Quaternion.identity;
         GetComponent<Animator>().Play("Idle");
-        
+
+        Hp = MaxHp;
         OnReset.Invoke();
     }
     public ref float StatTypeToStat(StatType Type)
@@ -861,15 +870,19 @@ public class Unit : MonoBehaviour, IDamageable
             }
         }
     }
-    private void OnDrawGizmos() 
+    public void UpdateScale()
+    {
+        transform.localScale = new Vector3(OGScale * Mathf.Pow(Stats.SizeScale, Star - 1), OGScale * Mathf.Pow(Stats.SizeScale, Star - 1), 1) * ScaleMult;
+    }
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        for(int i = 0; i<360; i++)
+        for (int i = 0; i < 360; i++)
         {
             //Gizmos.DrawLine(transform.position + new Vector3(Mathf.Sin(i * Mathf.Deg2Rad), Mathf.Cos(i * Mathf.Deg2Rad), 0) * Stats.Range, transform.position + new Vector3(Mathf.Sin((i+1) * Mathf.Deg2Rad), Mathf.Cos((i+1) * Mathf.Deg2Rad), 0) * Stats.Range);
         }
         Gizmos.color = Color.blue;
-        if(Path.From && Path.To)
+        if (Path.From && Path.To)
             Gizmos.DrawLine(Path.From.transform.position, Path.To.transform.position);
     }
 }

@@ -316,6 +316,7 @@ MonoBehaviour:
   Traits: 060000000f000000
   Hp: 0
   MaxHp: 0
+  Shield: 0
   AtkDamage: 0
   AbilityPower: 0
   AtkSpeed: 0
@@ -330,6 +331,7 @@ MonoBehaviour:
   Omnivamp: 0
   CritChance: 0
   CritDamage: 0
+  Items: []
   FlatArmorPierce: 0
   PercentArmorPierce: 0
   FlatMRPierce: 0
@@ -345,9 +347,18 @@ MonoBehaviour:
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
+  OGScale: 1
+  HealAmount: 0
+  ManaAmount: 0
+  ScaleMult: 1
+  AttackScale: 1
+  SpawnedAttack: {fileID: 0}
   AttackPoint: {fileID: 3784262262007385400, guid: 82e8b33643974674db2b93921412743d, type: 3}
   Sprites: {fileID: 7418736927236695851, guid: 82e8b33643974674db2b93921412743d, type: 3}
   OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpawnAttack:
     m_PersistentCalls:
       m_Calls: []
   OnAbilityUse:
@@ -359,13 +370,16 @@ MonoBehaviour:
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
   OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
   OnReset:
+    m_PersistentCalls:
+      m_Calls: []
+  OnManaGain:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStarUp:
     m_PersistentCalls:
       m_Calls: []
   AttackPrefab: {fileID: 8984733544962408346, guid: 0c908837728ea6e4992f768fde347422, type: 3}
@@ -374,6 +388,8 @@ MonoBehaviour:
   ShopIcon: {fileID: 0}
   TurnOnMove: 1
   TurnOnAttack: 1
+  HasManaBar: 1
+  UI: {fileID: 0}
   PassiveAbility: 0
   AbilityAffectedByAtkSpeed: 0
 --- !u!61 &7505680380406423604
@@ -420,7 +436,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8366516, y: 0.56696564}
+  m_Size: {x: 0.7, y: 0.7}
   m_EdgeRadius: 0
 --- !u!95 &7385987966726955729
 Animator:

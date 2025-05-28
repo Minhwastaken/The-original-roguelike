@@ -9,13 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae0e42dca5413b142a37597958ec26ea, type: 3}
+  m_Script: {fileID: 11500000, guid: c939a28b72c75744698d6e61f4067ab5, type: 3}
   m_Name: Sharpshot
   m_EditorClassIdentifier: 
   TraitType: 14
   Name: Sharpshot
-  Thresholds: 00000000
-  StatTypes: 00000000
+  Thresholds: 0200000004000000
+  StatTypes: 0c0000000d000000
   StatMagnitudes:
   - innerList:
-    - 0
+    - 25
+    - 35
+    - 25
+  - innerList:
+    - 50
+    - 100
+    - 50

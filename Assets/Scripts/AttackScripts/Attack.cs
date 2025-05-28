@@ -26,7 +26,7 @@ public abstract class Attack : MonoBehaviour
     public bool CanCrit;
     public GameObject HitEffect;
     public Transform HitEffectPos;
-    public List<Buff> AttackDebuffs;
+    public List<Buff> AttackEffects;
     [Header("Override Attack")]
     public bool SingleOverrideAttack = false;
     protected virtual void Start()
@@ -105,8 +105,8 @@ public abstract class Attack : MonoBehaviour
         if(CanCrit && CritRoll < Attacker.CritChance)
         {
             TotalDamage *= Attacker.CritDamage/100;
-            Debug.Log("Crit Roll: " + CritRoll + " : " + Attacker.CritChance);
-            Debug.Log("TotalDamage post crit: " + TotalDamage);
+            //Debug.Log("Crit Roll: " + CritRoll + " : " + Attacker.CritChance);
+            //Debug.Log("TotalDamage post crit: " + TotalDamage);
         }
         //Debug.Log("Damage Dealt By " + Attacker.name +  ": " + TotalDamage);
         Target.TakeDamage(TotalDamage, DamageType, Attacker);

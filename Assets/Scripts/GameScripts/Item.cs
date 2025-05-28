@@ -4,6 +4,7 @@ using UnityEngine;
 public abstract class Item : ScriptableObject
 {
     public bool Component;
+    public List<Item> Recipe;
     public int ItemID;
     public Sprite ItemSprite;
     public List<Unit.StatType> StatTypes;

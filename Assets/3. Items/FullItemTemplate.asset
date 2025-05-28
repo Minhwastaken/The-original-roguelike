@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6bd989a1ecfcc9d4198f11e151250537, type: 3}
-  m_Name: Warmog
+  m_Name: FullItemTemplate
   m_EditorClassIdentifier: 
   Component: 0
+  Recipe:
+  - {fileID: 0}
+  - {fileID: 0}
   ItemID: 0
   ItemSprite: {fileID: 21300000, guid: 06e1fa083f3f81e41b6cae75b4089e1c, type: 3}
-  StatTypes: 03000000
+  StatTypes: 00000000
   IsFlatBuff: 00
   StatMagnitudes:
   - 1

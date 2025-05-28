@@ -502,6 +502,7 @@ MonoBehaviour:
   Traits: 00000000050000000e0000000f000000
   Hp: 0
   MaxHp: 0
+  Shield: 0
   AtkDamage: 0
   AbilityPower: 0
   AtkSpeed: 0
@@ -516,18 +517,36 @@ MonoBehaviour:
   Omnivamp: 0
   CritChance: 0
   CritDamage: 0
+  Items: []
+  FlatArmorPierce: 0
+  PercentArmorPierce: 0
+  FlatMRPierce: 0
+  PercentMRPierce: 0
   Hex: {fileID: 0}
   OGHex: {fileID: 0}
   IsMoving: 0
   Benched: 0
   LerpProgress: 0
   Anim: {fileID: 0}
+  AttackCount: 0
   AbilityCount: 0
   Target: {fileID: 0}
   TargetHex: {fileID: 0}
   Star: 1
+  OGScale: 1
+  HealAmount: 0
+  ManaAmount: 0
+  ScaleMult: 1
+  AttackScale: 1
+  SpawnedAttack: {fileID: 0}
   AttackPoint: {fileID: 7001429314638614668}
   Sprites: {fileID: 7418736927236695851}
+  OnAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSpawnAttack:
+    m_PersistentCalls:
+      m_Calls: []
   OnAbilityUse:
     m_PersistentCalls:
       m_Calls: []
@@ -537,13 +556,16 @@ MonoBehaviour:
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
-  OnHeal:
-    m_PersistentCalls:
-      m_Calls: []
   OnTakeDamage:
     m_PersistentCalls:
       m_Calls: []
   OnReset:
+    m_PersistentCalls:
+      m_Calls: []
+  OnManaGain:
+    m_PersistentCalls:
+      m_Calls: []
+  OnStarUp:
     m_PersistentCalls:
       m_Calls: []
   AttackPrefab: {fileID: 8984733544962408346, guid: 868ea073e4f62314f987e627a481e8af, type: 3}
@@ -552,6 +574,8 @@ MonoBehaviour:
   ShopIcon: {fileID: 0}
   TurnOnMove: 1
   TurnOnAttack: 1
+  HasManaBar: 1
+  UI: {fileID: 0}
   PassiveAbility: 0
   AbilityAffectedByAtkSpeed: 0
   RollDuration: 0.5
@@ -589,7 +613,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.03158319, y: 0.08503145}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -599,7 +623,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.9359344, y: 0.48009324}
+  m_Size: {x: 0.7, y: 0.7}
   m_EdgeRadius: 0
 --- !u!95 &7385987966726955729
 Animator:
