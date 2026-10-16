@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Hand
   m_EditorClassIdentifier: 
+  Name: Hand
   Cost: 3
-  Role: 8
-  Traits: 0200000006000000
   Hp: 800
   MaxHp: 800
   Range: 1

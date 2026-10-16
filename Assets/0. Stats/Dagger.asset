@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Dagger
   m_EditorClassIdentifier: 
+  Name: Dagger
   Cost: 1
-  Role: 8
-  Traits: 0000000008000000
   Hp: 500
   MaxHp: 500
   Range: 1

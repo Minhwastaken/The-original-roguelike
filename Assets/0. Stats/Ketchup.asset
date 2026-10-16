@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Ketchup
   m_EditorClassIdentifier: 
+  Name: Ketchup
   Cost: 2
-  Role: 0
-  Traits: 0400000006000000
   Hp: 650
   MaxHp: 650
   Range: 4

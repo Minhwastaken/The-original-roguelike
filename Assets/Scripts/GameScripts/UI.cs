@@ -58,7 +58,7 @@ public class UI : MonoBehaviour
             GameObject RandomUnit = RandomUnitFromPool(UnitCost);
             GridGen.Instance.RemoveUnitFromPool(RandomUnit);
             Button.GetComponent<Button>().Unit = RandomUnit;
-            Button.transform.GetChild(0).GetComponent<Text>().text = RandomUnit.GetComponent<Unit>().Stats.Cost.ToString();
+            Button.transform.GetChild(0).GetComponent<Text>().text = RandomUnit.GetComponent<Unit>().Stats.Name + " (" +  RandomUnit.GetComponent<Unit>().Stats.Cost.ToString() + ")";
         }
     }
     public int RollForCost()

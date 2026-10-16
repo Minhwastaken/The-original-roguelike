@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public Dictionary<TraitDefinition.Traits, int> ActiveTraits = new Dictionary<TraitDefinition.Traits, int>();
     public List<Item> Items = new List<Item>();
     public List<Item> ComponentList = new List<Item>(), ItemList = new List<Item>();
-    // Start is called before the first frame update
+
     private void Awake()
     {
         Instance = this;

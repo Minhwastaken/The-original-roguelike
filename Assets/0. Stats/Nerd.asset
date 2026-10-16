@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Nerd
   m_EditorClassIdentifier: 
+  Name: Nerd
   Cost: 1
   Hp: 10
   MaxHp: 10
@@ -32,8 +33,3 @@ MonoBehaviour:
   ADScale: 1.8
   HpScale: 1.8
   SizeScale: 1.1
-  Attack: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
-  Ability: {fileID: 8412880745274351775, guid: ebfa216e23310cc48b08a25e49bb8976, type: 3}
-  Unit: {fileID: 7348070789959115077, guid: 7756fc98504a38e43b21dfb4cdfac565, type: 3}
-  ShopIcon: {fileID: 0}
-  AbilityAffectedByAtkSpeed: 0

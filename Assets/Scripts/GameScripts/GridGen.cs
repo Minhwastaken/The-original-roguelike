@@ -53,7 +53,6 @@ public class GridGen : MonoBehaviour
         {
             DestroyImmediate(SpawnedHex);
         }
-        //Camera.main.gameObject.transform.position = new Vector3(GridLength / 5f, GridHeight / 2.225f, -10);
         Camera.main.gameObject.transform.position = new Vector3(WorldGridLength / 2f, WorldGridHeight / 2.225f, -10);
         for (int i = 0; i < GridHeight; i++)
         {
@@ -185,6 +184,7 @@ public class GridGen : MonoBehaviour
         }
         DeadUnits.Clear();
         ClearAttacks();
+        ClearEnemies();
 
         foreach (GameObject Unit in Units)
         {
@@ -278,5 +278,14 @@ public class GridGen : MonoBehaviour
         Hex.GetComponent<Hex>().Taken = Enemy;
         Enemy.transform.position = (Vector2) Enemy.GetComponent<Unit>().Hex.transform.position;
         Enemies.Add(Enemy);
+    }
+
+    public void ClearEnemies()
+    {
+        foreach(GameObject enemy in Enemies)
+        {
+            Destroy(enemy);
+        }
+        Enemies.Clear();
     }
 }

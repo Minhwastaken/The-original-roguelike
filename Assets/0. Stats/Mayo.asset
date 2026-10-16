@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Mayo
   m_EditorClassIdentifier: 
+  Name: Mayo
   Cost: 3
-  Role: 0
-  Traits: 0400000006000000
   Hp: 700
   MaxHp: 700
   Range: 4

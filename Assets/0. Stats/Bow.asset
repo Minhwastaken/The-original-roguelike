@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Bow
   m_EditorClassIdentifier: 
+  Name: Bow
   Cost: 2
   Hp: 600
   MaxHp: 600

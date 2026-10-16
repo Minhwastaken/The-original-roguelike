@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Mustard
   m_EditorClassIdentifier: 
+  Name: Mustard
   Cost: 4
-  Role: 0
-  Traits: 0400000006000000
   Hp: 800
   MaxHp: 800
   Range: 4

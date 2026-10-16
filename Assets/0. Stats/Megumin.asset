@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea409e62b91dfb4fa51932aca25aff4, type: 3}
   m_Name: Megumin
   m_EditorClassIdentifier: 
+  Name: Megumin
   Cost: 5
-  Role: 3
-  Traits: 0300000007000000
   Hp: 1000
   MaxHp: 1000
   Range: 10
